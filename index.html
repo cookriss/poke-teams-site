@@ -13,487 +13,235 @@
             --light: #f8f9fa;
             --dark: #343a40;
             --success: #30c58b;
-            --danger: #dc3545; /* Color para errores */
+            --danger: #dc3545;
+            /* Colores de tipos Pokémon (aproximados) */
+            --type-normal: #A8A77A; --type-fire: #EE8130; --type-water: #6390F0; --type-electric: #F7D02C;
+            --type-grass: #7AC74C; --type-ice: #96D9D6; --type-fighting: #C22E28; --type-poison: #A33EA1;
+            --type-ground: #E2BF65; --type-flying: #A98FF3; --type-psychic: #F95587; --type-bug: #A6B91A;
+            --type-rock: #B6A136; --type-ghost: #735797; --type-dragon: #6F35FC; --type-dark: #705746;
+            --type-steel: #B7B7CE; --type-fairy: #D685AD;
         }
 
-        /* ... (tus estilos CSS existentes, asegúrate de que son responsivos y se ven bien) ... */
-        /* Estilos adicionales para formularios y mensajes */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background-color: #f4f4f4;
-            color: var(--dark);
-            line-height: 1.6;
+            background-color: #f4f4f4; color: var(--dark); line-height: 1.6;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
         header {
-            background-color: var(--primary);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            background-color: var(--primary); color: white; padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 1000;
         }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .logo span {
-            color: var(--secondary);
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            flex-wrap: wrap;
-        }
-
-        .nav-links li {
-            margin-left: 1rem; 
-            margin-bottom: 0.5rem;
-        }
-
+        .navbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo { font-size: 1.8rem; font-weight: bold; margin-bottom: 0.5rem; text-decoration: none; color: white;}
+        .logo span { color: var(--secondary); }
+        .nav-links { display: flex; list-style: none; flex-wrap: wrap; padding-left: 0;}
+        .nav-links li { margin-left: 1rem; margin-bottom: 0.5rem; }
         .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s, background-color 0.3s;
-            padding: 0.3rem 0.5rem;
-            border-radius: 5px;
+            color: white; text-decoration: none; font-weight: 500;
+            transition: color 0.3s, background-color 0.3s; padding: 0.3rem 0.5rem; border-radius: 5px;
         }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); background-color: white; }
 
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--primary);
-            background-color: white;
-        }
-        /* Estilos para la sección de autenticación */
         .auth-section {
-            background-color: white;
-            padding: 2rem;
-            margin: 2rem auto;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            max-width: 500px;
+            background-color: white; padding: 2rem; margin: 2rem auto; border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 500px;
         }
-
-        .auth-section h2 {
-            text-align: center;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
+        .auth-section h2 { text-align: center; color: var(--primary); margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--dark); }
+        .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="password"] {
+            width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;
+            font-size: 1rem; transition: border-color 0.3s; box-sizing: border-box;
         }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--dark);
-        }
-
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group input[type="password"] {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input[type="text"]:focus,
-        .form-group input[type="email"]:focus,
-        .form-group input[type="password"]:focus {
-            border-color: var(--secondary);
-            outline: none;
-        }
-
+        .form-group input:focus { border-color: var(--secondary); outline: none; }
         .auth-button {
-            background-color: var(--secondary);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            display: block;
-            width: 100%;
-            margin-top: 1rem;
+            background-color: var(--secondary); color: white; padding: 0.75rem 1.5rem; border: none;
+            border-radius: 25px; font-weight: bold; font-size: 1rem; cursor: pointer;
+            transition: background-color 0.3s; display: block; width: 100%; margin-top: 1rem;
         }
-
-        .auth-button:hover {
-            background-color: #2a3ba9; /* Un poco más oscuro que var(--secondary) */
-        }
-        
+        .auth-button:hover { background-color: #2a3ba9; }
         .auth-toggle-link {
-            display: block;
-            text-align: center;
-            margin-top: 1.5rem;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
+            display: block; text-align: center; margin-top: 1.5rem; color: var(--primary);
+            text-decoration: none; font-weight: 500;
         }
-        .auth-toggle-link:hover {
-            text-decoration: underline;
-        }
+        .auth-toggle-link:hover { text-decoration: underline; }
+        .feedback-message { padding: 0.75rem; margin-top: 1rem; border-radius: 5px; text-align: center; font-size: 0.9rem;}
+        .feedback-message.success { background-color: var(--success); color: white; }
+        .feedback-message.error { background-color: var(--danger); color: white; }
+        #login-section, #register-section { display: none; } /* Ocultos por defecto */
+        #user-greeting { display: none; color: white; font-weight: 500; margin-left: 1rem; align-self: center;}
 
-        /* Mensajes de feedback */
-        .feedback-message {
-            padding: 0.75rem;
-            margin-top: 1rem;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .feedback-message.success {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .feedback-message.error {
-            background-color: var(--danger);
-            color: white;
-        }
-        
-        /* Ocultar formularios por defecto */
-        #login-section, #register-section {
-            display: none; /* Se mostrarán con JS */
-        }
-        #user-greeting {
-            display: none; /* Se mostrará cuando el usuario inicie sesión */
-            color: white;
-            font-weight: 500;
-            margin-left: 1rem;
-        }
-
-        /* ... (resto de tus estilos CSS que tenías en el HTML original) ... */
         .search-bar {
-            background-color: white;
-            border-radius: 25px;
-            padding: 0.6rem 1rem;
-            margin: 1rem 0;
-            display: flex;
-            align-items: center;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            background-color: white; border-radius: 25px; padding: 0.6rem 1rem; margin: 1rem auto;
+            display: flex; align-items: center; width: 100%; max-width: 600px;
         }
-
-        .search-bar input {
-            flex: 1;
-            border: none;
-            outline: none;
-            font-size: 0.9rem;
-            padding-right: 1rem;
-        }
-
+        .search-bar input { flex: 1; border: none; outline: none; font-size: 0.9rem; padding-right: 1rem; }
         .search-bar button {
-            background-color: var(--secondary);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 0.4rem 1rem;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
+            background-color: var(--secondary); color: white; border: none; border-radius: 20px;
+            padding: 0.4rem 1rem; cursor: pointer; font-weight: bold; transition: background-color 0.3s;
         }
-        .search-bar button:hover {
-            background-color: #2a3ba9;
-        }
-        main.container {
-            padding-top: 1rem;
-        }
-        .featured-section {
-            margin: 2rem 0;
-        }
+        .search-bar button:hover { background-color: #2a3ba9; }
+        main.container { padding-top: 1rem; padding-bottom: 2rem; }
+        .featured-section { margin: 2rem 0; }
         .section-title {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 3px solid var(--primary);
-            padding-bottom: 0.5rem;
-            display: inline-block;
+            font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 3px solid var(--primary);
+            padding-bottom: 0.5rem; display: inline-block;
         }
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
         .team-card {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
+            background-color: white; border-radius: 10px; overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column;
+            transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column;
         }
-        .team-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
+        .team-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
         .team-header {
-            background-color: var(--primary);
-            color: white;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background-color: var(--primary); color: white; padding: 1rem;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .team-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
+        .team-title { font-size: 1.2rem; font-weight: bold; }
         .team-format {
-            background-color: var(--secondary);
-            padding: 0.3rem 0.6rem;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            font-weight: bold;
+            background-color: var(--secondary); padding: 0.3rem 0.6rem;
+            border-radius: 10px; font-size: 0.8rem; font-weight: bold;
         }
-        .team-pokemon {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
-            padding: 1rem;
-            flex-grow: 1;
+        .team-pokemon-preview {
+            display: flex; justify-content: space-around; padding: 1rem; flex-wrap: wrap;
         }
-        .pokemon-icon {
-            text-align: center;
+        .pokemon-icon-preview {
+            text-align: center; margin: 0.25rem;
+            width: calc(100%/3 - 1rem); /* Ajustado para mejor espaciado */
+            max-width: 80px;
         }
-        .pokemon-icon img {
-            width: 100%;
-            max-width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 50%;
-            background-color: #f0f0f0;
-            border: 2px solid #ddd;
-            margin-bottom: 0.3rem;
+        .pokemon-icon-preview img {
+            width: 60px; height: 60px; object-fit: contain;
+            border-radius: 50%; background-color: #e9e9e9; border: 1px solid #ccc;
+            margin-bottom: 0.2rem; image-rendering: pixelated; /* Para sprites pixel art */
         }
-        .pokemon-icon img[alt="Placeholder"] {
-            object-fit: scale-down;
-        }
-        .pokemon-name {
-            font-size: 0.85rem;
-            margin-top: 0.3rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-weight: 500;
+        .pokemon-name-preview {
+            font-size: 0.75rem; margin-top: 0.1rem; overflow: hidden;
+            text-overflow: ellipsis; white-space: nowrap; font-weight: 500;
         }
         .team-footer {
-            padding: 1rem;
-            background-color: #f8f8f8;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            align-items: stretch;
-            border-top: 1px solid #eee;
-            font-size: 0.9rem;
+            padding: 1rem; background-color: #f8f8f8;
+            border-top: 1px solid #eee; font-size: 0.9rem; margin-top: auto;
         }
-        .team-info-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
+        .team-footer-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;}
+        .team-stats { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        .stat { display: flex; align-items: center; gap: 0.3rem; }
+        .team-creator { font-weight: 500; color: var(--secondary); white-space: nowrap; }
+        .team-actions { display: flex; gap: 0.5rem; justify-content: center; margin-top: 0.5rem; }
+        .team-action-button {
+            background-color: var(--secondary); color: white; border: none; border-radius: 20px;
+            padding: 0.5rem 1rem; cursor: pointer; font-weight: bold; transition: background-color 0.3s;
+            font-size: 0.8rem; flex-grow: 1; text-align: center;
         }
-        .team-stats {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        .stat {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-        .team-creator {
-            font-weight: 500;
-            color: var(--secondary);
-            text-align: right;
-        }
-        .pokepaste-button {
-            background-color: var(--success);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            text-align: center;
-            display: block;
-            margin-top: 0.5rem;
-        }
-        .pokepaste-button:hover {
-            background-color: #28a745;
-        }
+        .team-action-button.view-details { background-color: var(--success); }
+        .team-action-button:hover { filter: brightness(110%); }
+
         .cta-section {
-            text-align: center;
-            margin: 3rem 0;
-            padding: 2.5rem 1rem;
+            text-align: center; margin: 3rem 0; padding: 2.5rem 1rem;
             background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        .cta-title {
-            font-size: 2.2rem;
-            margin-bottom: 1rem;
-        }
-        .cta-description {
-            max-width: 600px;
-            margin: 0 auto 1.5rem;
-            line-height: 1.7;
-            font-size: 1.1rem;
-        }
-        .cta-button { /* Estilo del botón de Crear Equipo */
-            background-color: white;
-            color: var(--primary);
-            text-decoration: none;
-            padding: 0.9rem 2.2rem;
-            border-radius: 25px;
-            font-weight: bold;
-            display: inline-block;
-            transition: all 0.3s;
+        .cta-title { font-size: 2.2rem; margin-bottom: 1rem; }
+        .cta-description { max-width: 600px; margin: 0 auto 1.5rem; line-height: 1.7; font-size: 1.1rem; }
+        .cta-button {
+            background-color: white; color: var(--primary); text-decoration: none; padding: 0.9rem 2.2rem;
+            border-radius: 25px; font-weight: bold; display: inline-block; transition: all 0.3s;
             border: 2px solid transparent;
         }
-        .cta-button:hover {
-            background-color: transparent;
-            color: white;
-            border-color: white;
-            transform: translateY(-3px);
-        }
-        .categories-section {
-            margin: 2rem 0;
-        }
+        .cta-button:hover { background-color: transparent; color: white; border-color: white; transform: translateY(-3px); }
+
+        .categories-section { margin: 2rem 0; }
         .category-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin: 1rem 0;
-            justify-content: center;
+            display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; justify-content: center;
         }
         .category-item {
-            background-color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            background-color: white; padding: 0.8rem 1.5rem; border-radius: 25px; font-weight: 500;
+            cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             border: 1px solid #ddd;
         }
-        .category-item:hover,
-        .category-item.active {
-            background-color: var(--secondary);
-            color: white;
-            border-color: var(--secondary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        .category-item:hover, .category-item.active {
+            background-color: var(--secondary); color: white; border-color: var(--secondary);
+            transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+
         footer {
-            background-color: var(--dark);
-            color: white;
-            padding: 3rem 0 2rem;
-            margin-top: 3rem;
+            background-color: var(--dark); color: white; padding: 3rem 0 2rem; margin-top: 3rem;
         }
         .footer-content {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 2rem;
-            margin-bottom: 2rem;
+            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; margin-bottom: 2rem;
         }
-        .footer-column {
-            flex: 1;
-            min-width: 220px;
-        }
-        .footer-column h3 {
-            margin-bottom: 1.2rem;
-            font-size: 1.3rem;
-            color: var(--primary);
-        }
-        .footer-column p {
-            color: #ccc;
-            line-height: 1.7;
-        }
-        .footer-links {
-            list-style: none;
-        }
-        .footer-links li {
-            margin-bottom: 0.8rem;
-        }
-        .footer-links a {
-            color: #aaa;
-            text-decoration: none;
-            transition: color 0.3s, padding-left 0.3s;
-        }
-        .footer-links a:hover {
-            color: white;
-            padding-left: 5px;
-        }
+        .footer-column { flex: 1; min-width: 220px; }
+        .footer-column h3 { margin-bottom: 1.2rem; font-size: 1.3rem; color: var(--primary); }
+        .footer-column p { color: #ccc; line-height: 1.7; }
+        .footer-links { list-style: none; padding-left: 0; }
+        .footer-links li { margin-bottom: 0.8rem; }
+        .footer-links a { color: #aaa; text-decoration: none; transition: color 0.3s, padding-left 0.3s; }
+        .footer-links a:hover { color: white; padding-left: 5px; }
         .footer-bottom {
-            margin-top: 2rem;
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid #555;
-            color: #aaa;
-            font-size: 0.9rem;
+            margin-top: 2rem; text-align: center; padding-top: 2rem;
+            border-top: 1px solid #555; color: #aaa; font-size: 0.9rem;
         }
-        /* Media Queries para responsividad */
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .nav-links {
-                margin-top: 1rem;
-                width: 100%;
-                justify-content: space-around;
-            }
-            .nav-links li {
-                margin-left: 0;
-            }
-            .search-bar {
-                max-width: 100%;
-            }
-            .team-footer {
-                align-items: center;
-            }
-            .team-info-actions {
-                flex-direction: column;
-                gap: 0.5rem;
-                align-items: flex-start;
-            }
-            .team-creator {
-                text-align: left;
-            }
+
+        /* Modal para Detalles del Equipo */
+        .modal {
+            display: none; position: fixed; z-index: 1001; left: 0; top: 0;
+            width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6);
+            align-items: center; justify-content: center;
         }
+        .modal-content {
+            background-color: #fff; margin: auto; padding: 25px; border-radius: 10px;
+            width: 90%; max-width: 800px; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            position: relative; max-height: 90vh; overflow-y: auto;
+        }
+        .modal-close {
+            color: #aaa; float: right; font-size: 28px; font-weight: bold;
+            position: absolute; top: 10px; right: 20px;
+        }
+        .modal-close:hover, .modal-close:focus { color: var(--dark); text-decoration: none; cursor: pointer; }
+        .modal-title { color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid var(--primary); padding-bottom: 0.5rem;}
+
+        .modal-team-pokemon-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Ajustado para más espacio */
+            gap: 1rem; margin-bottom: 1.5rem;
+        }
+        .modal-pokemon-card {
+            border: 1px solid #eee; border-radius: 8px; padding: 1rem; background-color: #f9f9f9;
+            display: flex; flex-direction: column;
+        }
+        .modal-pokemon-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+        .modal-pokemon-sprite {
+            width: 72px; height: 72px; object-fit: contain; background-color: #e0e0e0;
+            border-radius: 50%; image-rendering: pixelated; border: 1px solid #ccc;
+        }
+        .modal-pokemon-item-sprite {
+            width: 32px; height: 32px; object-fit: contain; margin-left: auto;
+            background-color: #e0e0e0; border-radius: 5px; padding: 2px; border: 1px solid #ccc;
+        }
+        .modal-pokemon-name { font-size: 1.1rem; font-weight: bold; color: var(--secondary); flex-grow: 1; }
+        .modal-pokemon-info { font-size: 0.85rem; margin-bottom: 0.3rem; }
+        .modal-pokemon-info strong { color: var(--dark); }
+        .modal-pokemon-moves-title { font-weight: bold; margin-top: 0.75rem; margin-bottom: 0.5rem; font-size: 0.9rem;}
+        .modal-pokemon-moves-list { list-style: none; padding-left: 0; }
+        .modal-pokemon-moves-list li {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.4rem 0.6rem; border-radius: 5px; margin-bottom: 0.3rem;
+            font-size: 0.85rem; color: white;
+        }
+        .move-name { flex-grow: 1; }
+        .move-category-icon { width: 18px; height: 18px; margin-left: 0.5rem; }
+        .modal-team-description, .modal-team-video, .modal-team-analysis { margin-bottom: 1.5rem; }
+        .modal-team-description h3, .modal-team-video h3, .modal-team-analysis h3 { color: var(--secondary); margin-bottom: 0.5rem; }
+        .youtube-embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 8px;}
+        .youtube-embed-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        
+        .type-tag { padding: 0.2em 0.5em; border-radius: 4px; color: white; font-size: 0.8em; text-transform: uppercase; margin-left: 5px;}
 
     </style>
 </head>
@@ -502,19 +250,20 @@
     <header>
         <div class="container">
             <div class="navbar">
-                <div class="logo">Poké<span>Teams</span></div>
+                <a href="#" class="logo">Poké<span>Teams</span></a>
                 <ul class="nav-links">
                     <li><a href="#" id="home-link" class="active">Inicio</a></li>
                     <li><a href="#" id="popular-link">Populares</a></li>
                     <li id="login-nav-link"><a href="#">Iniciar Sesión</a></li>
                     <li id="register-nav-link"><a href="#">Registrarse</a></li>
                     <li id="logout-nav-link" style="display:none;"><a href="#">Cerrar Sesión</a></li>
-                    <li id="user-greeting"></li> </ul>
+                    <li id="user-greeting"></li>
+                </ul>
             </div>
-             <div class="search-bar">
-                <input type="text" placeholder="Buscar equipos, Pokémon o usuarios...">
-                <button>Buscar</button>
-            </div>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Buscar equipos, Pokémon o usuarios...">
+                <button id="search-button">Buscar</button>
+                </div>
         </div>
     </header>
 
@@ -560,55 +309,16 @@
         <div id="main-content">
             <section class="featured-section">
                 <h2 class="section-title">Equipos Destacados</h2>
-                <div class="team-grid">
-                    <div class="team-card" data-team-id="equipo1">
-                        <div class="team-header">
-                            <div class="team-title">Campeones de la Liga</div>
-                            <div class="team-format">VGC 2025</div>
-                        </div>
-                        <div class="team-pokemon">
-                            <div class="pokemon-icon">
-                                <img src="https://placehold.co/70x70/E9544E/white?text=Pika&font=roboto" alt="Pikachu">
-                                <div class="pokemon-name">Pikachu</div>
-                            </div>
-                             <div class="pokemon-icon">
-                                <img src="https://placehold.co/70x70/F7A04A/white?text=Char&font=roboto" alt="Charizard">
-                                <div class="pokemon-name">Charizard</div>
-                            </div>
-                            <div class="pokemon-icon">
-                                <img src="https://placehold.co/70x70/6A93D8/white?text=Blas&font=roboto" alt="Blastoise">
-                                <div class="pokemon-name">Blastoise</div>
-                            </div>
-                            <div class="pokemon-icon">
-                                <img src="https://placehold.co/70x70/7AC74C/white?text=Venu&font=roboto" alt="Venusaur">
-                                <div class="pokemon-name">Venusaur</div>
-                            </div>
-                            <div class="pokemon-icon">
-                                <img src="https://placehold.co/70x70/A8A77A/white?text=Snor&font=roboto" alt="Snorlax">
-                                <div class="pokemon-name">Snorlax</div>
-                            </div>
-                            <div class="pokemon-icon">
-                                <img src="https://placehold.co/70x70/FFC107/white?text=Drag&font=roboto" alt="Dragonite">
-                                <div class="pokemon-name">Dragonite</div>
-                            </div>
-                        </div>
-                        <div class="team-footer">
-                            <div class="team-info-actions">
-                                <div class="team-stats">
-                                    <div class="stat">👍 245</div> <div class="stat">💬 32</div> <div class="stat">💾 189</div>
-                                </div>
-                                <div class="team-creator">Por: MaestroPoké</div>
-                            </div>
-                            <button class="pokepaste-button">Copiar a Pokepaste</button>
-                        </div>
-                    </div>
+                <div class="team-grid" id="team-grid-destacados">
                     </div>
             </section>
+
             <section class="cta-section">
                 <h2 class="cta-title">Crea y Comparte Tu Propio Equipo</h2>
                 <p class="cta-description">¿Tienes una combinación ganadora? Compártela con la comunidad, recibe comentarios y ayuda a otros entrenadores a mejorar.</p>
-                <a href="#" class="cta-button">Crear Equipo</a>
+                <a href="#" id="create-team-cta-button" class="cta-button">Crear Equipo</a>
             </section>
+
             <section class="categories-section">
                 <h2 class="section-title">Explorar por Formato</h2>
                 <div class="category-list">
@@ -622,13 +332,14 @@
                     <div class="category-item">Little Cup</div>
                 </div>
             </section>
-             <section class="featured-section">
+
+            <section class="featured-section">
                 <h2 class="section-title">Equipos Populares</h2>
-                <div class="team-grid">
-                    </div>
+                <div class="team-grid" id="team-grid-populares">
+                    <p style="text-align:center; grid-column: 1 / -1;">Más equipos populares próximamente...</p>
+                </div>
             </section>
         </div>
-
     </main>
 
     <footer>
@@ -674,10 +385,38 @@
         </div>
     </footer>
 
+    <div id="team-details-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="modal-close-button">&times;</span>
+            <h2 id="modal-team-title" class="modal-title">Detalles del Equipo</h2>
+            
+            <div class="modal-team-description">
+                <h3>Descripción del Creador</h3>
+                <p id="modal-team-creator-description">Cargando descripción...</p>
+            </div>
+
+            <div class="modal-team-video">
+                <h3>Vídeo Guía</h3>
+                <div id="modal-youtube-embed" class="youtube-embed-container">
+                    </div>
+            </div>
+            
+            <h3 style="color: var(--secondary); margin-top: 1.5rem;">Pokémon del Equipo</h3>
+            <div id="modal-pokemon-container" class="modal-team-pokemon-grid">
+                </div>
+
+            <div class="modal-team-analysis">
+                <h3>Análisis de Tipos del Equipo</h3>
+                <div id="modal-type-weakness-chart">Gráfico de Debilidades (placeholder)</div>
+                <div id="modal-type-offense-chart">Gráfico de Cobertura Ofensiva (placeholder)</div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // ----- URLs y Selectores -----
-            const WORKER_BASE_URL = 'https://poke-teams-auth.srcookriss.workers.dev'; // URL de tu Worker actualizada
+            const WORKER_BASE_URL = 'https://poke-teams-auth.srcookriss.workers.dev';
             const REGISTER_URL = `${WORKER_BASE_URL}/api/register`;
             const LOGIN_URL = `${WORKER_BASE_URL}/api/login`;
 
@@ -694,15 +433,17 @@
             const registerFeedback = document.getElementById('register-feedback');
 
             // Enlaces de navegación
+            const navLogo = document.querySelector('.navbar .logo');
             const loginNav = document.getElementById('login-nav-link');
             const registerNav = document.getElementById('register-nav-link');
             const logoutNav = document.getElementById('logout-nav-link');
             const userGreeting = document.getElementById('user-greeting');
             
-            // Enlaces para cambiar entre formularios
-            const showRegisterLink = document.getElementById('show-register-link');
-            const showLoginLink = document.getElementById('show-login-link');
-            const homeLink = document.getElementById('home-link');
+            const showRegisterLink = document.getElementById('show-register-link'); // En el form de login
+            const showLoginLink = document.getElementById('show-login-link'); // En el form de registro
+            const homeLink = document.getElementById('home-link'); // Enlace "Inicio" del nav
+
+            const createTeamCtaButton = document.getElementById('create-team-cta-button');
 
 
             // ----- Funciones de UI -----
@@ -711,19 +452,19 @@
                 element.textContent = message;
                 element.className = 'feedback-message ' + (isError ? 'error' : 'success');
                 element.style.display = 'block';
-                setTimeout(() => { element.style.display = 'none'; }, 5000); // Ocultar después de 5 segundos
+                setTimeout(() => { if(element) element.style.display = 'none'; }, 5000);
             }
 
             function showLoginForm() {
                 if (loginSection) loginSection.style.display = 'block';
                 if (registerSection) registerSection.style.display = 'none';
-                if (mainContent) mainContent.style.display = 'none'; // Ocultar contenido principal
+                if (mainContent) mainContent.style.display = 'none';
             }
 
             function showRegisterForm() {
                 if (loginSection) loginSection.style.display = 'none';
                 if (registerSection) registerSection.style.display = 'block';
-                if (mainContent) mainContent.style.display = 'none'; // Ocultar contenido principal
+                if (mainContent) mainContent.style.display = 'none';
             }
             
             function showMainContent() {
@@ -735,36 +476,26 @@
             function updateNavForLoggedInUser(username) {
                 if (loginNav) loginNav.style.display = 'none';
                 if (registerNav) registerNav.style.display = 'none';
-                if (logoutNav) logoutNav.style.display = 'block'; // Mostrar enlace de logout
+                if (logoutNav) logoutNav.style.display = 'list-item'; // o 'block' si es un div
                 if (userGreeting) {
                     userGreeting.textContent = `Hola, ${username}`;
-                    userGreeting.style.display = 'block'; // Mostrar saludo
+                    userGreeting.style.display = 'list-item'; // o 'block'
                 }
-                showMainContent(); // Mostrar contenido principal después del login
+                showMainContent();
             }
 
             function updateNavForLoggedOutUser() {
-                if (loginNav) loginNav.style.display = 'block'; // Mostrar enlace de login
-                if (registerNav) registerNav.style.display = 'block'; // Mostrar enlace de registro
-                if (logoutNav) logoutNav.style.display = 'none'; // Ocultar enlace de logout
-                if (userGreeting) userGreeting.style.display = 'none'; // Ocultar saludo
-                showMainContent(); // Por defecto mostrar contenido principal
+                if (loginNav) loginNav.style.display = 'list-item';
+                if (registerNav) registerNav.style.display = 'list-item';
+                if (logoutNav) logoutNav.style.display = 'none';
+                if (userGreeting) userGreeting.style.display = 'none';
+                showMainContent();
             }
 
-
             // ----- Lógica de Autenticación -----
-
-            // Registro
             if (registerForm) {
                 registerForm.addEventListener('submit', async (event) => {
                     event.preventDefault();
-                    // Validación simple para la URL del worker (ya está configurada arriba)
-                    if (!WORKER_BASE_URL || WORKER_BASE_URL === 'URL_DE_TU_WORKER_AQUI') {
-                         showFeedback(registerFeedback, 'Error: La URL del Worker no está configurada correctamente.', true);
-                         console.error("WORKER_BASE_URL no está configurada.");
-                         return;
-                    }
-
                     const formData = new FormData(registerForm);
                     const data = Object.fromEntries(formData.entries());
 
@@ -775,7 +506,6 @@
                             body: JSON.stringify(data),
                         });
                         const result = await response.json();
-
                         if (response.ok) {
                             showFeedback(registerFeedback, `¡Registro exitoso! ${result.message}. Ahora puedes iniciar sesión.`, false);
                             registerForm.reset();
@@ -784,25 +514,16 @@
                             showFeedback(registerFeedback, `Error en registro: ${result.error || response.statusText}`, true);
                         }
                     } catch (error) {
-                        console.error('Error de red en registro:', error);
-                        showFeedback(registerFeedback, 'Error de conexión al intentar registrar. Intenta de nuevo.', true);
+                        showFeedback(registerFeedback, 'Error de conexión al intentar registrar.', true);
                     }
                 });
             }
 
-            // Login
             if (loginForm) {
                 loginForm.addEventListener('submit', async (event) => {
                     event.preventDefault();
-                     if (!WORKER_BASE_URL || WORKER_BASE_URL === 'URL_DE_TU_WORKER_AQUI') {
-                        showFeedback(loginFeedback, 'Error: La URL del Worker no está configurada correctamente.', true);
-                        console.error("WORKER_BASE_URL no está configurada.");
-                        return;
-                    }
-
                     const formData = new FormData(loginForm);
                     const data = Object.fromEntries(formData.entries());
-
                     try {
                         const response = await fetch(LOGIN_URL, {
                             method: 'POST',
@@ -810,7 +531,6 @@
                             body: JSON.stringify(data),
                         });
                         const result = await response.json();
-
                         if (response.ok) {
                             showFeedback(loginFeedback, `¡Inicio de sesión exitoso! Bienvenido, ${result.user.username}.`, false);
                             loginForm.reset();
@@ -820,37 +540,42 @@
                             showFeedback(loginFeedback, `Error en login: ${result.error || response.statusText}`, true);
                         }
                     } catch (error) {
-                        console.error('Error de red en login:', error);
-                        showFeedback(loginFeedback, 'Error de conexión al intentar iniciar sesión. Intenta de nuevo.', true);
+                        showFeedback(loginFeedback, 'Error de conexión al intentar iniciar sesión.', true);
                     }
                 });
             }
             
-            // Logout
             if (logoutNav) {
                 logoutNav.addEventListener('click', (e) => {
                     e.preventDefault();
                     localStorage.removeItem('userData'); 
                     updateNavForLoggedOutUser();
-                    showMainContent(); 
+                    // No es necesario llamar a showMainContent() aquí, updateNavForLoggedOutUser ya lo hace
                 });
             }
 
             // ----- Manejo de Navegación y Estado Inicial -----
+            if (navLogo) navLogo.addEventListener('click', (e) => { e.preventDefault(); showMainContent(); });
             if (loginNav) loginNav.addEventListener('click', (e) => { e.preventDefault(); showLoginForm(); });
             if (registerNav) registerNav.addEventListener('click', (e) => { e.preventDefault(); showRegisterForm(); });
             if (showLoginLink) showLoginLink.addEventListener('click', (e) => { e.preventDefault(); showLoginForm(); });
             if (showRegisterLink) showRegisterLink.addEventListener('click', (e) => { e.preventDefault(); showRegisterForm(); });
             if (homeLink) homeLink.addEventListener('click', (e) => { e.preventDefault(); showMainContent(); });
+            if (createTeamCtaButton) createTeamCtaButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Aquí iría la lógica para mostrar la página/modal de creación de equipo
+                alert('Página de "Crear Equipo" pendiente de implementación.');
+                // Por ahora, podrías redirigir a una sección de formulario si la tuvieras
+                // o mostrar un modal específico para crear equipos.
+            });
 
-            // Comprobar si hay un usuario logueado al cargar la página
+
             const storedUser = localStorage.getItem('userData');
             if (storedUser) {
                 try {
                     const userData = JSON.parse(storedUser);
                     updateNavForLoggedInUser(userData.username);
                 } catch (e) {
-                    console.error("Error al parsear userData de localStorage", e);
                     localStorage.removeItem('userData'); 
                     updateNavForLoggedOutUser();
                 }
@@ -858,22 +583,261 @@
                 updateNavForLoggedOutUser();
             }
             
-            // Lógica para tus botones de Pokepaste (integración básica)
-            const pokepasteButtons = document.querySelectorAll('.pokepaste-button');
-            pokepasteButtons.forEach(button => {
-                button.addEventListener('click', (event) => {
-                    // Aquí iría tu lógica específica para obtener los datos del equipo de la tarjeta
-                    // y generar el string de Pokepaste.
-                    // Por ahora, solo un console.log y un alert de ejemplo.
-                    const teamCard = event.target.closest('.team-card');
-                    const teamTitle = teamCard ? teamCard.querySelector('.team-title').textContent : "Equipo Desconocido";
-                    console.log(`Botón Pokepaste clickeado para: ${teamTitle}`);
-                    alert(`Funcionalidad "Copiar a Pokepaste" para "${teamTitle}" aún por implementar completamente con datos dinámicos del equipo.`);
-                    // Ejemplo: const teamId = teamCard.dataset.teamId;
-                    // const teamDetails = teamsData[teamId]; // Necesitarías `teamsData` definido
-                    // if (teamDetails) { const pokepasteText = generatePokepasteString(teamDetails); /* ... copiar ... */ }
+            // --- Datos de Equipos (Ejemplo Expandido) ---
+            const teamsData = {
+                "equipo1": {
+                    id: "equipo1",
+                    title: "Campeones de la Liga",
+                    format: "VGC 2025",
+                    creator: "MaestroPoké",
+                    description: "Este equipo se centra en un control de velocidad agresivo con Tailwind y ataques potentes. Pikachu puede sorprender con Fake Out y Volt Switch para pivotar, mientras Charizard y Dragonite ofrecen una gran presión ofensiva. Venusaur con Sleep Powder puede neutralizar amenazas clave.",
+                    youtubeLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Ejemplo Rick Astley
+                    likes: 245, comments: 32, saves: 189, // Stats de ejemplo
+                    pokemons: [
+                        { name: "pikachu", item: "light-ball", ability: "lightning-rod", evs: "4 HP / 252 SpA / 252 Spe", nature: "Timid", teraType: "water", moves: ["thunderbolt", "fake-out", "grass-knot", "protect"] },
+                        { name: "charizard", item: "choice-specs", ability: "solar-power", evs: "252 SpA / 4 SpD / 252 Spe", nature: "Timid", teraType: "grass", moves: ["heat-wave", "solar-beam", "air-slash", "protect"] },
+                        { name: "blastoise", item: "white-herb", ability: "torrent", evs: "252 HP / 252 SpA / 4 SpD", nature: "Modest", teraType: "steel", moves: ["shell-smash", "hydro-pump", "ice-beam", "protect"] },
+                        { name: "venusaur", item: "focus-sash", ability: "chlorophyll", evs: "4 HP / 252 SpA / 252 Spe", nature: "Modest", teraType: "fire", moves: ["sleep-powder", "leaf-storm", "sludge-bomb", "protect"] },
+                        { name: "snorlax", item: "sitrus-berry", ability: "gluttony", evs: "252 HP / 252 Def / 4 SpD", nature: "Impish", teraType: "normal", moves: ["belly-drum", "body-slam", "darkest-lariat", "recycle"] },
+                        { name: "dragonite", item: "lum-berry", ability: "multiscale", evs: "252 Atk / 4 Def / 252 Spe", nature: "Adamant", teraType: "flying", moves: ["dragon-dance", "dragon-claw", "extreme-speed", "iron-head"] }
+                    ]
+                },
+                "equipo2": { // Ejemplo adicional para más tarjetas
+                    id: "equipo2",
+                    title: "Defensa Metálica",
+                    format: "OU Singles",
+                    creator: "SteelMaster",
+                    description: "Un equipo robusto basado en Pokémon de tipo Acero, con Skarmory y Ferrothorn para hazards y Metagross como atacante principal.",
+                    youtubeLink: "", // Sin vídeo
+                    likes: 183, comments: 27, saves: 142,
+                    pokemons: [
+                        { name: "metagross", item: "metagrossite", ability: "clear-body", evs: "252 Atk / 4 Def / 252 Spe", nature: "Jolly", teraType: "steel", moves: ["meteor-mash", "zen-headbutt", "bullet-punch", "hammer-arm"] },
+                        { name: "scizor", item: "choice-band", ability: "technician", evs: "248 HP / 252 Atk / 8 SpD", nature: "Adamant", teraType: "bug", moves: ["bullet-punch", "u-turn", "superpower", "pursuit"] },
+                        { name: "skarmory", item: "leftovers", ability: "sturdy", evs: "252 HP / 252 Def / 4 SpD", nature: "Impish", teraType: "flying", moves: ["spikes", "roost", "brave-bird", "whirlwind"] },
+                        { name: "magnezone", item: "choice-specs", ability: "magnet-pull", evs: "4 Def / 252 SpA / 252 Spe", nature: "Timid", teraType: "electric", moves: ["thunderbolt", "flash-cannon", "volt-switch", "hidden-power-fire"] },
+                        { name: "ferrothorn", item: "leftovers", ability: "iron-barbs", evs: "252 HP / 88 Def / 168 SpD", nature: "Relaxed", teraType: "water", moves: ["stealth-rock", "leech-seed", "power-whip", "gyro-ball"] },
+                        { name: "jirachi", item: "leftovers", ability: "serene-grace", evs: "252 HP / 224 SpD / 32 Spe", nature: "Careful", teraType: "steel", moves: ["iron-head", "body-slam", "wish", "protect"] }
+                    ]
+                }
+            };
+
+            // --- Modal de Detalles del Equipo ---
+            const modal = document.getElementById('team-details-modal');
+            const modalCloseButton = document.getElementById('modal-close-button');
+            const modalTeamTitle = document.getElementById('modal-team-title');
+            const modalPokemonContainer = document.getElementById('modal-pokemon-container');
+            const modalDescription = document.getElementById('modal-team-creator-description');
+            const modalYoutubeEmbed = document.getElementById('modal-youtube-embed');
+
+            if (modalCloseButton) {
+                modalCloseButton.onclick = () => { if(modal) modal.style.display = "none"; };
+            }
+            window.onclick = (event) => {
+                if (event.target == modal && modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            async function fetchFromPokeAPI(endpoint) { // Función genérica para PokéAPI
+                try {
+                    const response = await fetch(`https://pokeapi.co/api/v2/${endpoint}`);
+                    if (!response.ok) {
+                        console.warn(`Recurso no encontrado en PokéAPI: ${endpoint} (Status: ${response.status})`);
+                        return null;
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error(`Error fetching de PokéAPI (${endpoint}):`, error);
+                    return null;
+                }
+            }
+            
+            function getMoveCategoryIcon(category) {
+                const iconPath = "M50,50 L10,90 L90,90 Z"; // Default
+                if (category === 'physical') return `<svg viewBox="0 0 100 100" class="move-category-icon" fill="#E9544E" title="Físico"><path d="M82.5,52.2c-2.4-5.4-5.8-9.3-10.1-11.7l-1.3-0.7L29.4,14.1c-2.9-1.7-6.6-1.7-9.5,0L9.8,20.3c-2.9,1.7-4.7,4.9-4.7,8.3v52.8c0,3.4,1.8,6.6,4.7,8.3l10.1,6.2c1.5,0.8,3.1,1.3,4.7,1.3s3.3-0.4,4.7-1.3l41.7-25.7c2.9-1.7,4.7-4.9,4.7-8.3V44.1C80.5,44.1,82.5,52.2,82.5,52.2z M19.1,81.7V30.1l10.1-5.8l29.7,17.8v39.5L19.1,81.7z M69.2,50.4L39.5,68.2V32.6L69.2,50.4z"></path></svg>`;
+                if (category === 'special') return `<svg viewBox="0 0 100 100" class="move-category-icon" fill="#3B4CCA" title="Especial"><path d="M50,5C25.2,5,5,25.2,5,50s20.2,45,45,45s45-20.2,45-45S74.8,5,50,5z M50,86.4c-20.1,0-36.4-16.3-36.4-36.4S29.9,13.6,50,13.6s36.4,16.3,36.4,36.4S70.1,86.4,50,86.4z"></path><circle cx="50" cy="50" r="20"></circle></svg>`;
+                if (category === 'status') return `<svg viewBox="0 0 100 100" class="move-category-icon" fill="#888888" title="Estado"><path d="M50,10c-22.1,0-40,17.9-40,40s17.9,40,40,40s40-17.9,40-40S72.1,10,50,10z M50,82c-17.7,0-32-14.3-32-32s14.3-32,32-32s32,14.3,32,32S67.7,82,50,82z"></path><path d="M50,30c-11,0-20,9-20,20s9,20,20,20s20-9,20-20S61,30,50,30z M50,62c-6.6,0-12-5.4-12-12s5.4-12,12-12s12,5.4,12,12S56.6,62,50,62z"></path></svg>`;
+                return '';
+            }
+            function getTypeColor(typeName) {
+                return `var(--type-${typeName}, var(--dark))`;
+            }
+
+            async function displayTeamDetails(teamId) {
+                const team = teamsData[teamId];
+                if (!team || !modal || !modalTeamTitle || !modalDescription || !modalYoutubeEmbed || !modalPokemonContainer) {
+                     console.error("Equipo no encontrado o elementos del modal faltantes:", teamId); return;
+                }
+
+                modalTeamTitle.textContent = team.title || "Detalles del Equipo";
+                modalDescription.textContent = team.description || "No hay descripción disponible.";
+                
+                modalYoutubeEmbed.innerHTML = '';
+                if (team.youtubeLink) {
+                    const videoId = extractYouTubeVideoID(team.youtubeLink);
+                    if (videoId) {
+                        const iframe = document.createElement('iframe');
+                        iframe.src = `https://www.youtube.com/embed/${videoId}`; // URL correcta para embed
+                        iframe.frameBorder = "0";
+                        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                        iframe.allowFullscreen = true;
+                        modalYoutubeEmbed.appendChild(iframe);
+                    } else {
+                         modalYoutubeEmbed.innerHTML = '<p>Enlace de YouTube no válido.</p>';
+                    }
+                } else {
+                    modalYoutubeEmbed.innerHTML = '<p>No hay vídeo guía disponible.</p>';
+                }
+
+                modalPokemonContainer.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">Cargando Pokémon...</p>';
+                let pokemonDetailsHtml = '';
+
+                for (const p of team.pokemons) {
+                    const pokeApiData = await fetchFromPokeAPI(`pokemon/${p.name.toLowerCase()}`);
+                    const itemApiData = p.item ? await fetchFromPokeAPI(`item/${p.item.toLowerCase().replace(/\s+/g, '-')}`) : null;
+                    
+                    let movesHtml = '<ul class="modal-pokemon-moves-list">';
+                    for (const moveName of p.moves) {
+                        const moveData = await fetchFromPokeAPI(`move/${moveName.toLowerCase().replace(/\s+/g, '-')}`);
+                        if (moveData) {
+                            const typeName = moveData.type.name;
+                            const category = moveData.damage_class.name;
+                            const moveDisplayName = moveData.names.find(n => n.language.name === 'es')?.name || moveName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                            movesHtml += `<li style="background-color: ${getTypeColor(typeName)};">
+                                            <span class="move-name">${moveDisplayName}</span>
+                                            ${getMoveCategoryIcon(category)}
+                                          </li>`;
+                        } else {
+                            movesHtml += `<li>${moveName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} (datos no disp.)</li>`;
+                        }
+                    }
+                    movesHtml += '</ul>';
+
+                    pokemonDetailsHtml += `
+                        <div class="modal-pokemon-card">
+                            <div class="modal-pokemon-header">
+                                <img src="${pokeApiData?.sprites?.front_default || 'https://placehold.co/72x72/cccccc/969696?text=?'}" alt="${p.name}" class="modal-pokemon-sprite">
+                                <div>
+                                    <h4 class="modal-pokemon-name">${p.name.charAt(0).toUpperCase() + p.name.slice(1)}</h4>
+                                    ${p.teraType ? `<div class="modal-pokemon-info"><strong>Teratipo:</strong> <span class="type-tag" style="background-color:${getTypeColor(p.teraType.toLowerCase())};">${p.teraType.toUpperCase()}</span></div>` : ''}
+                                </div>
+                                ${itemApiData?.sprites?.default ? `<img src="${itemApiData.sprites.default}" alt="${p.item}" class="modal-pokemon-item-sprite" title="${p.item}">` : `<span class="modal-pokemon-item-sprite" title="${p.item || 'Ninguno'}">${p.item ? '📦' : ''}</span>`}
+                            </div>
+                            <div class="modal-pokemon-info"><strong>Objeto:</strong> ${p.item ? p.item.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Ninguno'}</div>
+                            <div class="modal-pokemon-info"><strong>Habilidad:</strong> ${p.ability ? p.ability.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'N/A'}</div>
+                            <div class="modal-pokemon-info"><strong>EVs:</strong> ${p.evs || 'N/A'}</div>
+                            <div class="modal-pokemon-info"><strong>Naturaleza:</strong> ${p.nature || 'N/A'}</div>
+                            <h5 class="modal-pokemon-moves-title">Movimientos:</h5>
+                            ${movesHtml}
+                        </div>
+                    `;
+                }
+                modalPokemonContainer.innerHTML = pokemonDetailsHtml;
+                if (modal) modal.style.display = "flex";
+            }
+            
+            function extractYouTubeVideoID(url) {
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                const match = url.match(regExp);
+                return (match && match[2].length === 11) ? match[2] : null;
+            }
+
+            // --- Renderizar Tarjetas de Equipo Iniciales ---
+            const teamGridDestacados = document.getElementById('team-grid-destacados');
+
+            function renderTeamCard(team) {
+                let pokemonIconsHtml = '';
+                team.pokemons.slice(0, 6).forEach(p => {
+                    const pokemonSpriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${getPokemonIdFromName(p.name)}.png`;
+                    pokemonIconsHtml += `
+                        <div class="pokemon-icon-preview">
+                            <img src="${pokemonSpriteUrl}" 
+                                 alt="${p.name}" 
+                                 onerror="this.src='https://placehold.co/60x60/cccccc/969696?text=${p.name.substring(0,1).toUpperCase()}&font=roboto'; this.alt='Error al cargar ${p.name}'">
+                            <div class="pokemon-name-preview">${p.name.charAt(0).toUpperCase() + p.name.slice(1)}</div>
+                        </div>
+                    `;
                 });
-            });
+
+                return `
+                    <div class="team-card" data-team-id="${team.id}">
+                        <div class="team-header">
+                            <div class="team-title">${team.title}</div>
+                            <div class="team-format">${team.format}</div>
+                        </div>
+                        <div class="team-pokemon-preview">${pokemonIconsHtml}</div>
+                        <div class="team-footer">
+                            <div class="team-footer-top-row">
+                                <div class="team-stats">
+                                    <div class="stat">👍 ${team.likes || 0}</div>
+                                    <div class="stat">💬 ${team.comments || 0}</div>
+                                    <div class="stat">💾 ${team.saves || 0}</div>
+                                </div>
+                                <div class="team-creator">Por: ${team.creator}</div>
+                            </div>
+                            <div class="team-actions">
+                                <button class="team-action-button pokepaste-button">Copiar Pokepaste</button>
+                                <button class="team-action-button view-details-button">Ver Detalles</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            const POKEMON_ID_MAP = { /* ... tu mapa si es necesario ... */ };
+            function getPokemonIdFromName(name) {
+                return POKEMON_ID_MAP[name.toLowerCase()] || name.toLowerCase();
+            }
+
+            if (teamGridDestacados) {
+                teamGridDestacados.innerHTML = Object.values(teamsData).map(renderTeamCard).join('');
+                
+                document.querySelectorAll('.view-details-button').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const teamCard = event.target.closest('.team-card');
+                        if (teamCard) {
+                            const teamId = teamCard.dataset.teamId;
+                            displayTeamDetails(teamId);
+                        }
+                    });
+                });
+                 document.querySelectorAll('.pokepaste-button').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const teamCard = event.target.closest('.team-card');
+                        if (teamCard) {
+                            const teamId = teamCard.dataset.teamId;
+                            const team = teamsData[teamId];
+                            if (team) {
+                                const pokepasteText = generatePokepasteStringFromTeamData(team);
+                                navigator.clipboard.writeText(pokepasteText).then(() => {
+                                    alert('¡Equipo copiado a Pokepaste!\n\n' + pokepasteText);
+                                }).catch(err => {
+                                    console.error('Error al copiar a Pokepaste: ', err);
+                                    alert('Error al copiar. Revisa la consola.');
+                                });
+                            }
+                        }
+                    });
+                });
+            }
+
+            function generatePokepasteStringFromTeamData(teamDetails) {
+                if (!teamDetails || !teamDetails.pokemons) return "";
+                let pasteString = "";
+                teamDetails.pokemons.forEach(p => {
+                    pasteString += `${p.name.charAt(0).toUpperCase() + p.name.slice(1)} @ ${p.item ? p.item.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Ninguno'}\n`;
+                    pasteString += `Ability: ${p.ability ? p.ability.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'N/A'}\n`;
+                    if (p.level) pasteString += `Level: ${p.level}\n`;
+                    if (p.teraType) pasteString += `Tera Type: ${p.teraType.charAt(0).toUpperCase() + p.teraType.slice(1)}\n`;
+                    pasteString += `EVs: ${p.evs}\n`;
+                    pasteString += `${p.nature} Nature\n`;
+                    p.moves.forEach(move => {
+                        pasteString += `- ${move.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}\n`;
+                    });
+                    pasteString += `\n`;
+                });
+                return pasteString.trim();
+            }
 
         });
     </script>
