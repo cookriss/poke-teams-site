@@ -13,21 +13,24 @@
             --light: #f8f9fa;
             --dark: #343a40;
             --success: #30c58b;
+            --danger: #dc3545; /* Color para errores */
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
+        /* ... (tus estilos CSS existentes, asegúrate de que son responsivos y se ven bien) ... */
+        /* Estilos adicionales para formularios y mensajes */
         body {
             background-color: #f4f4f4;
             color: var(--dark);
             line-height: 1.6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
         header {
             background-color: var(--primary);
             color: white;
@@ -38,23 +41,17 @@
             z-index: 1000;
         }
 
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap; /* Para mejor responsividad */
+            flex-wrap: wrap;
         }
 
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
-            margin-bottom: 0.5rem; /* Espacio en móviles */
+            margin-bottom: 0.5rem;
         }
 
         .logo span {
@@ -64,19 +61,19 @@
         .nav-links {
             display: flex;
             list-style: none;
-            flex-wrap: wrap; /* Para mejor responsividad */
+            flex-wrap: wrap;
         }
 
         .nav-links li {
-            margin-left: 1rem; /* Reducido para más espacio */
-            margin-bottom: 0.5rem; /* Espacio en móviles */
+            margin-left: 1rem; 
+            margin-bottom: 0.5rem;
         }
 
         .nav-links a {
             color: white;
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: color 0.3s, background-color 0.3s;
             padding: 0.3rem 0.5rem;
             border-radius: 5px;
         }
@@ -86,16 +83,121 @@
             color: var(--primary);
             background-color: white;
         }
+        /* Estilos para la sección de autenticación */
+        .auth-section {
+            background-color: white;
+            padding: 2rem;
+            margin: 2rem auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-width: 500px;
+        }
+
+        .auth-section h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group input[type="password"]:focus {
+            border-color: var(--secondary);
+            outline: none;
+        }
+
+        .auth-button {
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .auth-button:hover {
+            background-color: #2a3ba9; /* Un poco más oscuro que var(--secondary) */
+        }
         
+        .auth-toggle-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .auth-toggle-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Mensajes de feedback */
+        .feedback-message {
+            padding: 0.75rem;
+            margin-top: 1rem;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .feedback-message.success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .feedback-message.error {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        /* Ocultar formularios por defecto */
+        #login-section, #register-section {
+            display: none; /* Se mostrarán con JS */
+        }
+        #user-greeting {
+            display: none; /* Se mostrará cuando el usuario inicie sesión */
+            color: white;
+            font-weight: 500;
+            margin-left: 1rem;
+        }
+
+        /* ... (resto de tus estilos CSS que tenías en el HTML original) ... */
         .search-bar {
             background-color: white;
             border-radius: 25px;
-            padding: 0.6rem 1rem; /* Ajustado */
+            padding: 0.6rem 1rem;
             margin: 1rem 0;
             display: flex;
             align-items: center;
-            width: 100%; /* Ocupa todo el ancho disponible */
-            max-width: 600px; /* Límite para que no sea demasiado ancho */
+            width: 100%;
+            max-width: 600px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -104,7 +206,7 @@
             flex: 1;
             border: none;
             outline: none;
-            font-size: 0.9rem; /* Ajustado */
+            font-size: 0.9rem;
             padding-right: 1rem;
         }
 
@@ -113,53 +215,45 @@
             color: white;
             border: none;
             border-radius: 20px;
-            padding: 0.4rem 1rem; /* Ajustado */
+            padding: 0.4rem 1rem;
             cursor: pointer;
             font-weight: bold;
             transition: background-color 0.3s;
         }
-
         .search-bar button:hover {
             background-color: #2a3ba9;
         }
-
         main.container {
             padding-top: 1rem;
         }
-
         .featured-section {
             margin: 2rem 0;
         }
-
         .section-title {
-            font-size: 1.8rem; /* Aumentado */
-            margin-bottom: 1.5rem; /* Aumentado */
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
             border-bottom: 3px solid var(--primary);
             padding-bottom: 0.5rem;
             display: inline-block;
         }
-
         .team-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Ligeramente más ancho */
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
         }
-
         .team-card {
             background-color: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s, box-shadow 0.3s;
             display: flex;
-            flex-direction: column; /* Asegura que el footer esté abajo */
+            flex-direction: column;
         }
-
         .team-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
-
         .team-header {
             background-color: var(--primary);
             color: white;
@@ -168,12 +262,10 @@
             justify-content: space-between;
             align-items: center;
         }
-
         .team-title {
             font-size: 1.2rem;
             font-weight: bold;
         }
-
         .team-format {
             background-color: var(--secondary);
             padding: 0.3rem 0.6rem;
@@ -181,50 +273,44 @@
             font-size: 0.8rem;
             font-weight: bold;
         }
-
         .team-pokemon {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 0.5rem;
             padding: 1rem;
-            flex-grow: 1; /* Permite que esta sección crezca */
+            flex-grow: 1;
         }
-
         .pokemon-icon {
             text-align: center;
         }
-
         .pokemon-icon img {
             width: 100%;
-            max-width: 70px; /* Ligeramente más grande */
-            height: 70px; /* Para que sea cuadrado */
-            object-fit: cover; /* Asegura que la imagen cubra sin deformarse */
+            max-width: 70px;
+            height: 70px;
+            object-fit: cover;
             border-radius: 50%;
             background-color: #f0f0f0;
-            border: 2px solid #ddd; /* Borde sutil */
+            border: 2px solid #ddd;
             margin-bottom: 0.3rem;
         }
-        .pokemon-icon img[alt="Placeholder"] { /* Estilo específico para placeholders */
-            object-fit: scale-down; /* Para que el texto del placeholder se vea bien */
+        .pokemon-icon img[alt="Placeholder"] {
+            object-fit: scale-down;
         }
-
-
         .pokemon-name {
-            font-size: 0.85rem; /* Ligeramente más grande */
+            font-size: 0.85rem;
             margin-top: 0.3rem;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
             font-weight: 500;
         }
-
         .team-footer {
             padding: 1rem;
             background-color: #f8f8f8;
             display: flex;
-            flex-direction: column; /* Para apilar elementos verticalmente */
-            gap: 0.75rem; /* Espacio entre elementos del footer */
-            align-items: stretch; /* Para que los elementos ocupen el ancho */
+            flex-direction: column;
+            gap: 0.75rem;
+            align-items: stretch;
             border-top: 1px solid #eee;
             font-size: 0.9rem;
         }
@@ -234,27 +320,22 @@
             align-items: center;
             width: 100%;
         }
-
-
         .team-stats {
             display: flex;
             align-items: center;
             gap: 1rem;
-            flex-wrap: wrap; /* Para que quepan en móviles */
+            flex-wrap: wrap;
         }
-
         .stat {
             display: flex;
             align-items: center;
             gap: 0.3rem;
         }
-
         .team-creator {
             font-weight: 500;
             color: var(--secondary);
-            text-align: right; /* Alineado a la derecha */
+            text-align: right;
         }
-        
         .pokepaste-button {
             background-color: var(--success);
             color: white;
@@ -265,68 +346,58 @@
             font-weight: bold;
             transition: background-color 0.3s;
             text-align: center;
-            display: block; /* Para que ocupe todo el ancho disponible si es el único */
-            margin-top: 0.5rem; /* Espacio arriba */
+            display: block;
+            margin-top: 0.5rem;
         }
-
         .pokepaste-button:hover {
-            background-color: #28a745; /* Un verde más oscuro */
+            background-color: #28a745;
         }
-
-
         .cta-section {
             text-align: center;
             margin: 3rem 0;
-            padding: 2.5rem 1rem; /* Más padding */
-            background: linear-gradient(45deg, var(--primary), var(--secondary)); /* Gradiente */
+            padding: 2.5rem 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
             color: white;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-
         .cta-title {
             font-size: 2.2rem;
             margin-bottom: 1rem;
         }
-
         .cta-description {
             max-width: 600px;
             margin: 0 auto 1.5rem;
-            line-height: 1.7; /* Más espaciado */
+            line-height: 1.7;
             font-size: 1.1rem;
         }
-
-        .cta-button {
+        .cta-button { /* Estilo del botón de Crear Equipo */
             background-color: white;
             color: var(--primary);
             text-decoration: none;
-            padding: 0.9rem 2.2rem; /* Más grande */
+            padding: 0.9rem 2.2rem;
             border-radius: 25px;
             font-weight: bold;
             display: inline-block;
             transition: all 0.3s;
             border: 2px solid transparent;
         }
-
         .cta-button:hover {
             background-color: transparent;
             color: white;
             border-color: white;
             transform: translateY(-3px);
         }
-
         .categories-section {
             margin: 2rem 0;
         }
-
         .category-list {
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
             margin: 1rem 0;
-            justify-content: center; /* Centrar categorías */
+            justify-content: center;
         }
-
         .category-item {
             background-color: white;
             padding: 0.8rem 1.5rem;
@@ -337,7 +408,6 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             border: 1px solid #ddd;
         }
-
         .category-item:hover,
         .category-item.active {
             background-color: var(--secondary);
@@ -346,14 +416,12 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-
         footer {
             background-color: var(--dark);
             color: white;
-            padding: 3rem 0 2rem; /* Más padding */
+            padding: 3rem 0 2rem;
             margin-top: 3rem;
         }
-
         .footer-content {
             display: flex;
             justify-content: space-between;
@@ -361,14 +429,12 @@
             gap: 2rem;
             margin-bottom: 2rem;
         }
-
         .footer-column {
             flex: 1;
-            min-width: 220px; /* Un poco más de espacio */
+            min-width: 220px;
         }
-
         .footer-column h3 {
-            margin-bottom: 1.2rem; /* Más espacio */
+            margin-bottom: 1.2rem;
             font-size: 1.3rem;
             color: var(--primary);
         }
@@ -376,54 +442,29 @@
             color: #ccc;
             line-height: 1.7;
         }
-
         .footer-links {
             list-style: none;
         }
-
         .footer-links li {
-            margin-bottom: 0.8rem; /* Más espacio */
+            margin-bottom: 0.8rem;
         }
-
         .footer-links a {
             color: #aaa;
             text-decoration: none;
             transition: color 0.3s, padding-left 0.3s;
         }
-
         .footer-links a:hover {
             color: white;
-            padding-left: 5px; /* Efecto sutil al pasar el ratón */
+            padding-left: 5px;
         }
-
         .footer-bottom {
             margin-top: 2rem;
             text-align: center;
-            padding-top: 2rem; /* Más espacio */
+            padding-top: 2rem;
             border-top: 1px solid #555;
             color: #aaa;
             font-size: 0.9rem;
         }
-
-        /* Estilos para el mensaje de copiado */
-        .copy-message {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--success);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 1001;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-        .copy-message.show {
-            opacity: 1;
-        }
-
         /* Media Queries para responsividad */
         @media (max-width: 768px) {
             .navbar {
@@ -442,7 +483,7 @@
                 max-width: 100%;
             }
             .team-footer {
-                align-items: center; /* Centrar en móviles */
+                align-items: center;
             }
             .team-info-actions {
                 flex-direction: column;
@@ -453,6 +494,7 @@
                 text-align: left;
             }
         }
+
     </style>
 </head>
 
@@ -462,16 +504,14 @@
             <div class="navbar">
                 <div class="logo">Poké<span>Teams</span></div>
                 <ul class="nav-links">
-                    <li><a href="#" class="active">Inicio</a></li>
-                    <li><a href="#">Populares</a></li>
-                    <li><a href="#">Formato</a></li>
-                    <li><a href="#">Guías</a></li>
-                    <li><a href="#">Iniciar Sesión</a></li>
-                    <li><a href="#">Registrarse</a></li>
-                </ul>
+                    <li><a href="#" id="home-link" class="active">Inicio</a></li>
+                    <li><a href="#" id="popular-link">Populares</a></li>
+                    <li id="login-nav-link"><a href="#">Iniciar Sesión</a></li>
+                    <li id="register-nav-link"><a href="#">Registrarse</a></li>
+                    <li id="logout-nav-link" style="display:none;"><a href="#">Cerrar Sesión</a></li>
+                    <li id="user-greeting"></li> </ul>
             </div>
-
-            <div class="search-bar">
+             <div class="search-bar">
                 <input type="text" placeholder="Buscar equipos, Pokémon o usuarios...">
                 <button>Buscar</button>
             </div>
@@ -479,226 +519,116 @@
     </header>
 
     <main class="container">
-        <section class="featured-section">
-            <h2 class="section-title">Equipos Destacados</h2>
-            <div class="team-grid">
-                <div class="team-card" data-team-id="equipo1">
-                    <div class="team-header">
-                        <div class="team-title">Campeones de la Liga</div>
-                        <div class="team-format">VGC 2025</div>
-                    </div>
-                    <div class="team-pokemon">
-                        <div class="pokemon-icon">
-                            <img src="https://placehold.co/70x70/E9544E/white?text=Pika&font=roboto" alt="Pikachu">
-                            <div class="pokemon-name">Pikachu</div>
-                        </div>
-                        <div class="pokemon-icon">
-                            <img src="https://placehold.co/70x70/F7A04A/white?text=Char&font=roboto" alt="Charizard">
-                            <div class="pokemon-name">Charizard</div>
-                        </div>
-                        <div class="pokemon-icon">
-                            <img src="https://placehold.co/70x70/6A93D8/white?text=Blas&font=roboto" alt="Blastoise">
-                            <div class="pokemon-name">Blastoise</div>
-                        </div>
-                        <div class="pokemon-icon">
-                            <img src="https://placehold.co/70x70/7AC74C/white?text=Venu&font=roboto" alt="Venusaur">
-                            <div class="pokemon-name">Venusaur</div>
-                        </div>
-                        <div class="pokemon-icon">
-                            <img src="https://placehold.co/70x70/A8A77A/white?text=Snor&font=roboto" alt="Snorlax">
-                            <div class="pokemon-name">Snorlax</div>
-                        </div>
-                        <div class="pokemon-icon">
-                            <img src="https://placehold.co/70x70/FFC107/white?text=Drag&font=roboto" alt="Dragonite">
-                            <div class="pokemon-name">Dragonite</div>
-                        </div>
-                    </div>
-                    <div class="team-footer">
-                        <div class="team-info-actions">
-                            <div class="team-stats">
-                                <div class="stat">👍 245</div>
-                                <div class="stat">💬 32</div>
-                                <div class="stat">💾 189</div> </div>
-                            <div class="team-creator">Por: MaestroPoké</div>
-                        </div>
-                        <button class="pokepaste-button">Copiar a Pokepaste</button>
-                    </div>
+        <section id="login-section" class="auth-section">
+            <h2>Iniciar Sesión</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" name="email" required>
                 </div>
-
-                <div class="team-card" data-team-id="equipo2">
-                    <div class="team-header">
-                        <div class="team-title">Defensa Metálica</div>
-                        <div class="team-format">OU Singles</div>
-                    </div>
-                    <div class="team-pokemon">
-                        <div class="pokemon-icon">
-                            <img src="https://placehold.co/70x70/B7B7CE/white?text=Meta&font=roboto" alt="Metagross">
-                            <div class="pokemon-name">Metagross</div>
-                        </div>
-                        <div class="pokemon-icon">
-                            <img src="https://placehold.co/70x70/B8B8D0/white?text=Sciz&font=roboto" alt="Scizor">
-                            <div class="pokemon-name">Scizor</div>
-                        </div>
-                        <div class="pokemon-icon">
-                            <img src="https://placehold.co/70x70/A890F0/white?text=Skar&font=roboto" alt="Skarmory">
-                            <div class="pokemon-name">Skarmory</div>
-                        </div>
-                        <div class="pokemon-icon">
-                            <img src="https://placehold.co/70x70/F7D02C/white?text=Magn&font=roboto" alt="Magnezone">
-                            <div class="pokemon-name">Magnezone</div>
-                        </div>
-                        <div class="pokemon-icon">
-                            <img src="https://placehold.co/70x70/7AC74C/white?text=Ferr&font=roboto" alt="Ferrothorn">
-                            <div class="pokemon-name">Ferrothorn</div>
-                        </div>
-                        <div class="pokemon-icon">
-                            <img src="https://placehold.co/70x70/B6A136/white?text=Aggr&font=roboto" alt="Aggron">
-                            <div class="pokemon-name">Aggron</div>
-                        </div>
-                    </div>
-                    <div class="team-footer">
-                         <div class="team-info-actions">
-                            <div class="team-stats">
-                                <div class="stat">👍 183</div>
-                                <div class="stat">💬 27</div>
-                                <div class="stat">💾 142</div>
-                            </div>
-                            <div class="team-creator">Por: SteelMaster</div>
-                        </div>
-                        <button class="pokepaste-button">Copiar a Pokepaste</button>
-                    </div>
+                <div class="form-group">
+                    <label for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" name="password" required>
                 </div>
-                
-                <div class="team-card" data-team-id="equipo3">
-                    <div class="team-header">
-                        <div class="team-title">Tormenta Eléctrica</div>
-                        <div class="team-format">UU Doubles</div>
-                    </div>
-                    <div class="team-pokemon">
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/F7D02C/white?text=Rai&font=roboto" alt="Raichu"><div class="pokemon-name">Raichu</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/F7D02C/white?text=Elec&font=roboto" alt="Electivire"><div class="pokemon-name">Electivire</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/6390F0/white?text=Lant&font=roboto" alt="Lanturn"><div class="pokemon-name">Lanturn</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/F7D02C/white?text=Amph&font=roboto" alt="Ampharos"><div class="pokemon-name">Ampharos</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/A33EA1/white?text=Toxt&font=roboto" alt="Toxtricity"><div class="pokemon-name">Toxtricity</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/F7D02C/white?text=Mane&font=roboto" alt="Manectric"><div class="pokemon-name">Manectric</div></div>
-                    </div>
-                    <div class="team-footer">
-                        <div class="team-info-actions">
-                            <div class="team-stats">
-                                <div class="stat">👍 164</div>
-                                <div class="stat">💬 19</div>
-                                <div class="stat">💾 95</div>
-                            </div>
-                            <div class="team-creator">Por: ElectroEntrenador</div>
-                        </div>
-                        <button class="pokepaste-button">Copiar a Pokepaste</button>
-                    </div>
-                </div>
-
-                <div class="team-card" data-team-id="equipo4">
-                    <div class="team-header">
-                        <div class="team-title">Psíquicos Supremos</div>
-                        <div class="team-format">AG Monotype</div>
-                    </div>
-                    <div class="team-pokemon">
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/F95587/white?text=Mew2&font=roboto" alt="Mewtwo"><div class="pokemon-name">Mewtwo</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/F95587/white?text=Alak&font=roboto" alt="Alakazam"><div class="pokemon-name">Alakazam</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/F95587/white?text=Esp&font=roboto" alt="Espeon"><div class="pokemon-name">Espeon</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/F95587/white?text=Gard&font=roboto" alt="Gardevoir"><div class="pokemon-name">Gardevoir</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/F95587/white?text=Mew&font=roboto" alt="Mew"><div class="pokemon-name">Mew</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/F95587/white?text=Deox&font=roboto" alt="Deoxys"><div class="pokemon-name">Deoxys</div></div>
-                    </div>
-                    <div class="team-footer">
-                        <div class="team-info-actions">
-                            <div class="team-stats">
-                                <div class="stat">👍 207</div>
-                                <div class="stat">💬 42</div>
-                                <div class="stat">💾 178</div>
-                            </div>
-                            <div class="team-creator">Por: PsychicTrainer99</div>
-                        </div>
-                        <button class="pokepaste-button">Copiar a Pokepaste</button>
-                    </div>
-                </div>
-
-            </div>
+                <button type="submit" class="auth-button">Entrar</button>
+            </form>
+            <div id="login-feedback" class="feedback-message" style="display:none;"></div>
+            <a href="#" id="show-register-link" class="auth-toggle-link">¿No tienes cuenta? Regístrate</a>
         </section>
 
-        <section class="cta-section">
-            <h2 class="cta-title">Crea y Comparte Tu Propio Equipo</h2>
-            <p class="cta-description">¿Tienes una combinación ganadora? Compártela con la comunidad, recibe comentarios y ayuda a otros entrenadores a mejorar.</p>
-            <a href="#" class="cta-button">Crear Equipo</a>
+        <section id="register-section" class="auth-section">
+            <h2>Crear Cuenta</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-username">Nombre de Usuario</label>
+                    <input type="text" id="register-username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Contraseña (mín. 6 caracteres)</label>
+                    <input type="password" id="register-password" name="password" required minlength="6">
+                </div>
+                <button type="submit" class="auth-button">Registrarse</button>
+            </form>
+            <div id="register-feedback" class="feedback-message" style="display:none;"></div>
+            <a href="#" id="show-login-link" class="auth-toggle-link">¿Ya tienes cuenta? Inicia Sesión</a>
         </section>
 
-        <section class="categories-section">
-            <h2 class="section-title">Explorar por Formato</h2>
-            <div class="category-list">
-                <div class="category-item active">Todos</div>
-                <div class="category-item">VGC 2025</div>
-                <div class="category-item">OU Singles</div>
-                <div class="category-item">UU Singles</div>
-                <div class="category-item">Doubles</div>
-                <div class="category-item">Monotype</div>
-                <div class="category-item">Battle Stadium</div>
-                <div class="category-item">Little Cup</div>
-            </div>
-        </section>
+        <div id="main-content">
+            <section class="featured-section">
+                <h2 class="section-title">Equipos Destacados</h2>
+                <div class="team-grid">
+                    <div class="team-card" data-team-id="equipo1">
+                        <div class="team-header">
+                            <div class="team-title">Campeones de la Liga</div>
+                            <div class="team-format">VGC 2025</div>
+                        </div>
+                        <div class="team-pokemon">
+                            <div class="pokemon-icon">
+                                <img src="https://placehold.co/70x70/E9544E/white?text=Pika&font=roboto" alt="Pikachu">
+                                <div class="pokemon-name">Pikachu</div>
+                            </div>
+                             <div class="pokemon-icon">
+                                <img src="https://placehold.co/70x70/F7A04A/white?text=Char&font=roboto" alt="Charizard">
+                                <div class="pokemon-name">Charizard</div>
+                            </div>
+                            <div class="pokemon-icon">
+                                <img src="https://placehold.co/70x70/6A93D8/white?text=Blas&font=roboto" alt="Blastoise">
+                                <div class="pokemon-name">Blastoise</div>
+                            </div>
+                            <div class="pokemon-icon">
+                                <img src="https://placehold.co/70x70/7AC74C/white?text=Venu&font=roboto" alt="Venusaur">
+                                <div class="pokemon-name">Venusaur</div>
+                            </div>
+                            <div class="pokemon-icon">
+                                <img src="https://placehold.co/70x70/A8A77A/white?text=Snor&font=roboto" alt="Snorlax">
+                                <div class="pokemon-name">Snorlax</div>
+                            </div>
+                            <div class="pokemon-icon">
+                                <img src="https://placehold.co/70x70/FFC107/white?text=Drag&font=roboto" alt="Dragonite">
+                                <div class="pokemon-name">Dragonite</div>
+                            </div>
+                        </div>
+                        <div class="team-footer">
+                            <div class="team-info-actions">
+                                <div class="team-stats">
+                                    <div class="stat">👍 245</div> <div class="stat">💬 32</div> <div class="stat">💾 189</div>
+                                </div>
+                                <div class="team-creator">Por: MaestroPoké</div>
+                            </div>
+                            <button class="pokepaste-button">Copiar a Pokepaste</button>
+                        </div>
+                    </div>
+                    </div>
+            </section>
+            <section class="cta-section">
+                <h2 class="cta-title">Crea y Comparte Tu Propio Equipo</h2>
+                <p class="cta-description">¿Tienes una combinación ganadora? Compártela con la comunidad, recibe comentarios y ayuda a otros entrenadores a mejorar.</p>
+                <a href="#" class="cta-button">Crear Equipo</a>
+            </section>
+            <section class="categories-section">
+                <h2 class="section-title">Explorar por Formato</h2>
+                <div class="category-list">
+                    <div class="category-item active">Todos</div>
+                    <div class="category-item">VGC 2025</div>
+                    <div class="category-item">OU Singles</div>
+                    <div class="category-item">UU Singles</div>
+                    <div class="category-item">Doubles</div>
+                    <div class="category-item">Monotype</div>
+                    <div class="category-item">Battle Stadium</div>
+                    <div class="category-item">Little Cup</div>
+                </div>
+            </section>
+             <section class="featured-section">
+                <h2 class="section-title">Equipos Populares</h2>
+                <div class="team-grid">
+                    </div>
+            </section>
+        </div>
 
-        <section class="featured-section">
-            <h2 class="section-title">Equipos Populares</h2>
-            <div class="team-grid">
-                <div class="team-card" data-team-id="equipo5">
-                    <div class="team-header">
-                        <div class="team-title">Dragones Destructivos</div>
-                        <div class="team-format">OU Singles</div>
-                    </div>
-                    <div class="team-pokemon">
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/6F35FC/white?text=Garc&font=roboto" alt="Garchomp"><div class="pokemon-name">Garchomp</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/6F35FC/white?text=Sala&font=roboto" alt="Salamence"><div class="pokemon-name">Salamence</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/FFC107/white?text=Drag&font=roboto" alt="Dragonite"><div class="pokemon-name">Dragonite</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/705746/white?text=Hydr&font=roboto" alt="Hydreigon"><div class="pokemon-name">Hydreigon</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/C22E28/white?text=Komm&font=roboto" alt="Kommo-o"><div class="pokemon-name">Kommo-o</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/705898/white?text=Drap&font=roboto" alt="Dragapult"><div class="pokemon-name">Dragapult</div></div>
-                    </div>
-                    <div class="team-footer">
-                        <div class="team-info-actions">
-                            <div class="team-stats">
-                                <div class="stat">👍 302</div>
-                                <div class="stat">💬 51</div>
-                                <div class="stat">💾 267</div>
-                            </div>
-                            <div class="team-creator">Por: DragonMaster</div>
-                        </div>
-                        <button class="pokepaste-button">Copiar a Pokepaste</button>
-                    </div>
-                </div>
-                 <div class="team-card" data-team-id="equipo6">
-                    <div class="team-header">
-                        <div class="team-title">Lluvia Perpetua</div>
-                        <div class="team-format">OU Weather</div>
-                    </div>
-                    <div class="team-pokemon">
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/A890F0/white?text=Peli&font=roboto" alt="Pelipper"><div class="pokemon-name">Pelipper</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/6390F0/white?text=Swam&font=roboto" alt="Swampert"><div class="pokemon-name">Swampert</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/6390F0/white?text=King&font=roboto" alt="Kingdra"><div class="pokemon-name">Kingdra</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/7AC74C/white?text=Ferr&font=roboto" alt="Ferrothorn"><div class="pokemon-name">Ferrothorn</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/7AC74C/white?text=Ludi&font=roboto" alt="Ludicolo"><div class="pokemon-name">Ludicolo</div></div>
-                        <div class="pokemon-icon"><img src="https://placehold.co/70x70/6390F0/white?text=Barr&font=roboto" alt="Barraskewda"><div class="pokemon-name">Barraskewda</div></div>
-                    </div>
-                    <div class="team-footer">
-                        <div class="team-info-actions">
-                            <div class="team-stats">
-                                <div class="stat">👍 275</div>
-                                <div class="stat">💬 38</div>
-                                <div class="stat">💾 231</div>
-                            </div>
-                            <div class="team-creator">Por: RainDancer</div>
-                        </div>
-                        <button class="pokepaste-button">Copiar a Pokepaste</button>
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
 
     <footer>
@@ -744,195 +674,204 @@
         </div>
     </footer>
 
-    <div id="copyMessage" class="copy-message">¡Equipo copiado al portapapeles!</div>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Datos de ejemplo para los equipos ---
-            // IMPORTANTE: En una aplicación real, estos datos vendrían de una base de datos
-            // o de un formulario de creación de equipos.
-            // Para la función de Pokepaste, necesitas TODOS los detalles:
-            // nombre, objeto, habilidad, EVs, naturaleza, movimientos y Teratipo (opcional).
-            const teamsData = {
-                "equipo1": {
-                    title: "Campeones de la Liga",
-                    format: "VGC 2025",
-                    creator: "MaestroPoké",
-                    pokemons: [
-                        { name: "Pikachu", item: "Light Ball", ability: "Lightning Rod", evs: "4 HP / 252 SpA / 252 Spe", nature: "Timid", moves: ["Thunderbolt", "Fake Out", "Grass Knot", "Protect"], teraType: "Water" },
-                        { name: "Charizard", item: "Choice Specs", ability: "Solar Power", evs: "252 SpA / 4 SpD / 252 Spe", nature: "Timid", moves: ["Heat Wave", "Solar Beam", "Air Slash", "Protect"], teraType: "Grass" },
-                        { name: "Blastoise", item: "White Herb", ability: "Torrent", evs: "252 HP / 252 SpA / 4 SpD", nature: "Modest", moves: ["Shell Smash", "Hydro Pump", "Ice Beam", "Protect"], teraType: "Steel" },
-                        { name: "Venusaur", item: "Focus Sash", ability: "Chlorophyll", evs: "4 HP / 252 SpA / 252 Spe", nature: "Modest", moves: ["Sleep Powder", "Leaf Storm", "Sludge Bomb", "Protect"], teraType: "Fire" },
-                        { name: "Snorlax", item: "Sitrus Berry", ability: "Gluttony", evs: "252 HP / 252 Def / 4 SpD", nature: "Impish", moves: ["Belly Drum", "Body Slam", "Darkest Lariat", "Recycle"], teraType: "Normal" },
-                        { name: "Dragonite", item: "Lum Berry", ability: "Multiscale", evs: "252 Atk / 4 Def / 252 Spe", nature: "Adamant", moves: ["Dragon Dance", "Dragon Claw", "Extreme Speed", "Iron Head"], teraType: "Flying" }
-                    ]
-                },
-                "equipo2": {
-                    title: "Defensa Metálica",
-                    format: "OU Singles",
-                    creator: "SteelMaster",
-                    pokemons: [
-                        { name: "Metagross", item: "Metagrossite", ability: "Clear Body", evs: "252 Atk / 4 Def / 252 Spe", nature: "Jolly", moves: ["Meteor Mash", "Zen Headbutt", "Bullet Punch", "Hammer Arm"] },
-                        { name: "Scizor", item: "Choice Band", ability: "Technician", evs: "248 HP / 252 Atk / 8 SpD", nature: "Adamant", moves: ["Bullet Punch", "U-turn", "Superpower", "Pursuit"] },
-                        { name: "Skarmory", item: "Leftovers", ability: "Sturdy", evs: "252 HP / 252 Def / 4 SpD", nature: "Impish", moves: ["Spikes", "Roost", "Brave Bird", "Whirlwind"] },
-                        { name: "Magnezone", item: "Choice Specs", ability: "Magnet Pull", evs: "4 Def / 252 SpA / 252 Spe", nature: "Timid", moves: ["Thunderbolt", "Flash Cannon", "Volt Switch", "Hidden Power Fire"] },
-                        { name: "Ferrothorn", item: "Leftovers", ability: "Iron Barbs", evs: "252 HP / 88 Def / 168 SpD", nature: "Relaxed", moves: ["Stealth Rock", "Leech Seed", "Power Whip", "Gyro Ball"], teraType: "Water" },
-                        { name: "Aggron", item: "Aggronite", ability: "Sturdy", evs: "252 HP / 16 Def / 240 SpD", nature: "Impish", moves: ["Stealth Rock", "Heavy Slam", "Earthquake", "Toxic"] }
-                    ]
-                },
-                "equipo3": {
-                    title: "Tormenta Eléctrica",
-                    format: "UU Doubles",
-                    creator: "ElectroEntrenador",
-                    pokemons: [
-                        { name: "Raichu", item: "Focus Sash", ability: "Lightning Rod", evs: "252 SpA / 4 SpD / 252 Spe", nature: "Timid", moves: ["Thunderbolt", "Nuzzle", "Fake Out", "Protect"], teraType: "Grass" },
-                        { name: "Electivire", item: "Life Orb", ability: "Motor Drive", evs: "252 Atk / 4 Def / 252 Spe", nature: "Jolly", moves: ["Wild Charge", "Ice Punch", "Cross Chop", "Protect"] },
-                        { name: "Lanturn", item: "Leftovers", ability: "Volt Absorb", evs: "252 HP / 100 Def / 156 SpD", nature: "Calm", moves: ["Scald", "Volt Switch", "Heal Bell", "Protect"] },
-                        { name: "Ampharos", item: "Ampharosite", ability: "Static", evs: "252 HP / 252 SpA / 4 SpD", nature: "Modest", moves: ["Thunderbolt", "Dragon Pulse", "Focus Blast", "Protect"], teraType: "Dragon" },
-                        { name: "Toxtricity", item: "Throat Spray", ability: "Punk Rock", evs: "4 Atk / 252 SpA / 252 Spe", nature: "Rash", moves: ["Overdrive", "Sludge Wave", "Boomburst", "Shift Gear"], teraType: "Poison" },
-                        { name: "Manectric", item: "Choice Scarf", ability: "Lightning Rod", evs: "252 SpA / 4 SpD / 252 Spe", nature: "Timid", moves: ["Volt Switch", "Thunderbolt", "Overheat", "Switcheroo"] }
-                    ]
-                },
-                 "equipo4": {
-                    title: "Psíquicos Supremos",
-                    format: "AG Monotype",
-                    creator: "PsychicTrainer99",
-                    pokemons: [
-                        { name: "Mewtwo", item: "Life Orb", ability: "Pressure", evs: "4 Atk / 252 SpA / 252 Spe", nature: "Timid", moves: ["Psystrike", "Aura Sphere", "Shadow Ball", "Ice Beam"], teraType: "Psychic" },
-                        { name: "Alakazam", item: "Focus Sash", ability: "Magic Guard", evs: "252 SpA / 4 SpD / 252 Spe", nature: "Timid", moves: ["Psychic", "Focus Blast", "Shadow Ball", "Nasty Plot"] },
-                        { name: "Espeon", item: "Choice Specs", ability: "Magic Bounce", evs: "252 SpA / 4 SpD / 252 Spe", nature: "Timid", moves: ["Psychic", "Shadow Ball", "Dazzling Gleam", "Trick"] },
-                        { name: "Gardevoir", item: "Gardevoirite", ability: "Trace", evs: "252 SpA / 4 SpD / 252 Spe", nature: "Timid", moves: ["Hyper Voice", "Psyshock", "Focus Blast", "Will-O-Wisp"] },
-                        { name: "Mew", item: "Leftovers", ability: "Synchronize", evs: "252 HP / 100 Def / 156 Spe", nature: "Timid", moves: ["Transform", "Soft-Boiled", "Defog", "Stealth Rock"] },
-                        { name: "Deoxys-Attack", item: "Life Orb", ability: "Pressure", evs: "252 Atk / 4 SpA / 252 Spe", nature: "Naive", moves: ["Psycho Boost", "Superpower", "Ice Beam", "Extreme Speed"], teraType: "Fighting" }
-                    ]
-                },
-                "equipo5": {
-                    title: "Dragones Destructivos",
-                    format: "OU Singles",
-                    creator: "DragonMaster",
-                    pokemons: [
-                        { name: "Garchomp", item: "Choice Scarf", ability: "Rough Skin", evs: "252 Atk / 4 Def / 252 Spe", nature: "Jolly", moves: ["Outrage", "Earthquake", "Stone Edge", "Dragon Claw"], teraType: "Ground" },
-                        { name: "Salamence", item: "Salamencite", ability: "Intimidate", evs: "252 Atk / 4 Def / 252 Spe", nature: "Adamant", moves: ["Dragon Dance", "Return", "Earthquake", "Roost"] },
-                        { name: "Dragonite", item: "Weakness Policy", ability: "Multiscale", evs: "252 Atk / 4 SpD / 252 Spe", nature: "Adamant", moves: ["Dragon Dance", "Outrage", "Extreme Speed", "Fire Punch"], teraType: "Normal" },
-                        { name: "Hydreigon", item: "Life Orb", ability: "Levitate", evs: "252 SpA / 4 SpD / 252 Spe", nature: "Timid", moves: ["Draco Meteor", "Dark Pulse", "Flash Cannon", "Roost"], teraType: "Steel" },
-                        { name: "Kommo-o", item: "Kommonium Z", ability: "Bulletproof", evs: "4 HP / 252 SpA / 252 Spe", nature: "Modest", moves: ["Clangorous Soulblaze", "Clanging Scales", "Focus Blast", "Flamethrower"] },
-                        { name: "Dragapult", item: "Choice Specs", ability: "Infiltrator", evs: "252 SpA / 4 SpD / 252 Spe", nature: "Timid", moves: ["Draco Meteor", "Shadow Ball", "Flamethrower", "U-turn"], teraType: "Ghost" }
-                    ]
-                },
-                "equipo6": {
-                    title: "Lluvia Perpetua",
-                    format: "OU Weather",
-                    creator: "RainDancer",
-                    pokemons: [
-                        { name: "Pelipper", item: "Damp Rock", ability: "Drizzle", evs: "248 HP / 252 Def / 8 SpD", nature: "Bold", moves: ["Scald", "U-turn", "Roost", "Defog"], teraType: "Flying" },
-                        { name: "Swampert", item: "Swampertite", ability: "Torrent", evs: "252 Atk / 4 Def / 252 Spe", nature: "Adamant", moves: ["Waterfall", "Earthquake", "Ice Punch", "Rain Dance"] },
-                        { name: "Kingdra", item: "Choice Specs", ability: "Swift Swim", evs: "252 SpA / 4 SpD / 252 Spe", nature: "Modest", moves: ["Hydro Pump", "Draco Meteor", "Ice Beam", "Surf"], teraType: "Water" },
-                        { name: "Ferrothorn", item: "Leftovers", ability: "Iron Barbs", evs: "252 HP / 88 Def / 168 SpD", nature: "Relaxed", moves: ["Stealth Rock", "Leech Seed", "Power Whip", "Gyro Ball"], teraType: "Grass" },
-                        { name: "Ludicolo", item: "Life Orb", ability: "Swift Swim", evs: "252 SpA / 4 SpD / 252 Spe", nature: "Modest", moves: ["Hydro Pump", "Giga Drain", "Ice Beam", "Focus Blast"] },
-                        { name: "Barraskewda", item: "Choice Band", ability: "Swift Swim", evs: "252 Atk / 4 Def / 252 Spe", nature: "Adamant", moves: ["Liquidation", "Close Combat", "Crunch", "Flip Turn"], teraType: "Fighting" }
-                    ]
-                }
-                // Añade aquí los datos para equipo7 y equipo8 si los tienes
-            };
+            // ----- URLs y Selectores -----
+            const WORKER_BASE_URL = 'https://poke-teams-auth.srcookriss.workers.dev'; // URL de tu Worker actualizada
+            const REGISTER_URL = `${WORKER_BASE_URL}/api/register`;
+            const LOGIN_URL = `${WORKER_BASE_URL}/api/login`;
 
-            // Función para generar el string de Pokepaste
-            function generatePokepasteString(teamDetails) {
-                if (!teamDetails || !teamDetails.pokemons) {
-                    console.error("Detalles del equipo o Pokémon no proporcionados.");
-                    return ""; // Devuelve string vacío si no hay datos
-                }
+            // Secciones y Formularios
+            const loginSection = document.getElementById('login-section');
+            const registerSection = document.getElementById('register-section');
+            const mainContent = document.getElementById('main-content');
 
-                let pasteString = "";
-                teamDetails.pokemons.forEach(p => {
-                    pasteString += `${p.name} @ ${p.item || 'Ninguno'}\n`;
-                    pasteString += `Ability: ${p.ability}\n`;
-                    if (p.level) { // Solo añadir nivel si está especificado
-                        pasteString += `Level: ${p.level}\n`;
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+
+            // Mensajes de feedback
+            const loginFeedback = document.getElementById('login-feedback');
+            const registerFeedback = document.getElementById('register-feedback');
+
+            // Enlaces de navegación
+            const loginNav = document.getElementById('login-nav-link');
+            const registerNav = document.getElementById('register-nav-link');
+            const logoutNav = document.getElementById('logout-nav-link');
+            const userGreeting = document.getElementById('user-greeting');
+            
+            // Enlaces para cambiar entre formularios
+            const showRegisterLink = document.getElementById('show-register-link');
+            const showLoginLink = document.getElementById('show-login-link');
+            const homeLink = document.getElementById('home-link');
+
+
+            // ----- Funciones de UI -----
+            function showFeedback(element, message, isError = false) {
+                if (!element) return;
+                element.textContent = message;
+                element.className = 'feedback-message ' + (isError ? 'error' : 'success');
+                element.style.display = 'block';
+                setTimeout(() => { element.style.display = 'none'; }, 5000); // Ocultar después de 5 segundos
+            }
+
+            function showLoginForm() {
+                if (loginSection) loginSection.style.display = 'block';
+                if (registerSection) registerSection.style.display = 'none';
+                if (mainContent) mainContent.style.display = 'none'; // Ocultar contenido principal
+            }
+
+            function showRegisterForm() {
+                if (loginSection) loginSection.style.display = 'none';
+                if (registerSection) registerSection.style.display = 'block';
+                if (mainContent) mainContent.style.display = 'none'; // Ocultar contenido principal
+            }
+            
+            function showMainContent() {
+                if (loginSection) loginSection.style.display = 'none';
+                if (registerSection) registerSection.style.display = 'none';
+                if (mainContent) mainContent.style.display = 'block';
+            }
+
+            function updateNavForLoggedInUser(username) {
+                if (loginNav) loginNav.style.display = 'none';
+                if (registerNav) registerNav.style.display = 'none';
+                if (logoutNav) logoutNav.style.display = 'block'; // Mostrar enlace de logout
+                if (userGreeting) {
+                    userGreeting.textContent = `Hola, ${username}`;
+                    userGreeting.style.display = 'block'; // Mostrar saludo
+                }
+                showMainContent(); // Mostrar contenido principal después del login
+            }
+
+            function updateNavForLoggedOutUser() {
+                if (loginNav) loginNav.style.display = 'block'; // Mostrar enlace de login
+                if (registerNav) registerNav.style.display = 'block'; // Mostrar enlace de registro
+                if (logoutNav) logoutNav.style.display = 'none'; // Ocultar enlace de logout
+                if (userGreeting) userGreeting.style.display = 'none'; // Ocultar saludo
+                showMainContent(); // Por defecto mostrar contenido principal
+            }
+
+
+            // ----- Lógica de Autenticación -----
+
+            // Registro
+            if (registerForm) {
+                registerForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    // Validación simple para la URL del worker (ya está configurada arriba)
+                    if (!WORKER_BASE_URL || WORKER_BASE_URL === 'URL_DE_TU_WORKER_AQUI') {
+                         showFeedback(registerFeedback, 'Error: La URL del Worker no está configurada correctamente.', true);
+                         console.error("WORKER_BASE_URL no está configurada.");
+                         return;
                     }
-                    if (p.teraType) { // Añadir Teratipo si existe
-                        pasteString += `Tera Type: ${p.teraType}\n`;
-                    }
-                    pasteString += `EVs: ${p.evs}\n`; // Asume que p.evs ya es un string formateado como "X Stat / Y Stat / Z Stat"
-                    pasteString += `${p.nature} Nature\n`;
-                    if (p.moves && p.moves.length > 0) {
-                        p.moves.forEach(move => {
-                            pasteString += `- ${move}\n`;
+
+                    const formData = new FormData(registerForm);
+                    const data = Object.fromEntries(formData.entries());
+
+                    try {
+                        const response = await fetch(REGISTER_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data),
                         });
-                    } else {
-                        // Pokepaste requiere al menos un movimiento, aunque sea un placeholder
-                        pasteString += `- Tackle\n`; 
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            showFeedback(registerFeedback, `¡Registro exitoso! ${result.message}. Ahora puedes iniciar sesión.`, false);
+                            registerForm.reset();
+                            setTimeout(showLoginForm, 2000); 
+                        } else {
+                            showFeedback(registerFeedback, `Error en registro: ${result.error || response.statusText}`, true);
+                        }
+                    } catch (error) {
+                        console.error('Error de red en registro:', error);
+                        showFeedback(registerFeedback, 'Error de conexión al intentar registrar. Intenta de nuevo.', true);
                     }
-                    pasteString += `\n`; // Línea en blanco entre Pokémon
                 });
-                return pasteString.trim(); // Elimina espacios extra al final
             }
 
-            // Función para mostrar el mensaje de copiado
-            function showCopyMessage() {
-                const messageElement = document.getElementById('copyMessage');
-                if (messageElement) {
-                    messageElement.classList.add('show');
-                    setTimeout(() => {
-                        messageElement.classList.remove('show');
-                    }, 2000); // El mensaje desaparece después de 2 segundos
+            // Login
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                     if (!WORKER_BASE_URL || WORKER_BASE_URL === 'URL_DE_TU_WORKER_AQUI') {
+                        showFeedback(loginFeedback, 'Error: La URL del Worker no está configurada correctamente.', true);
+                        console.error("WORKER_BASE_URL no está configurada.");
+                        return;
+                    }
+
+                    const formData = new FormData(loginForm);
+                    const data = Object.fromEntries(formData.entries());
+
+                    try {
+                        const response = await fetch(LOGIN_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data),
+                        });
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            showFeedback(loginFeedback, `¡Inicio de sesión exitoso! Bienvenido, ${result.user.username}.`, false);
+                            loginForm.reset();
+                            localStorage.setItem('userData', JSON.stringify(result.user)); 
+                            updateNavForLoggedInUser(result.user.username);
+                        } else {
+                            showFeedback(loginFeedback, `Error en login: ${result.error || response.statusText}`, true);
+                        }
+                    } catch (error) {
+                        console.error('Error de red en login:', error);
+                        showFeedback(loginFeedback, 'Error de conexión al intentar iniciar sesión. Intenta de nuevo.', true);
+                    }
+                });
+            }
+            
+            // Logout
+            if (logoutNav) {
+                logoutNav.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('userData'); 
+                    updateNavForLoggedOutUser();
+                    showMainContent(); 
+                });
+            }
+
+            // ----- Manejo de Navegación y Estado Inicial -----
+            if (loginNav) loginNav.addEventListener('click', (e) => { e.preventDefault(); showLoginForm(); });
+            if (registerNav) registerNav.addEventListener('click', (e) => { e.preventDefault(); showRegisterForm(); });
+            if (showLoginLink) showLoginLink.addEventListener('click', (e) => { e.preventDefault(); showLoginForm(); });
+            if (showRegisterLink) showRegisterLink.addEventListener('click', (e) => { e.preventDefault(); showRegisterForm(); });
+            if (homeLink) homeLink.addEventListener('click', (e) => { e.preventDefault(); showMainContent(); });
+
+            // Comprobar si hay un usuario logueado al cargar la página
+            const storedUser = localStorage.getItem('userData');
+            if (storedUser) {
+                try {
+                    const userData = JSON.parse(storedUser);
+                    updateNavForLoggedInUser(userData.username);
+                } catch (e) {
+                    console.error("Error al parsear userData de localStorage", e);
+                    localStorage.removeItem('userData'); 
+                    updateNavForLoggedOutUser();
                 }
+            } else {
+                updateNavForLoggedOutUser();
             }
-
-            // Añadir event listeners a los botones de "Copiar a Pokepaste"
+            
+            // Lógica para tus botones de Pokepaste (integración básica)
             const pokepasteButtons = document.querySelectorAll('.pokepaste-button');
             pokepasteButtons.forEach(button => {
                 button.addEventListener('click', (event) => {
+                    // Aquí iría tu lógica específica para obtener los datos del equipo de la tarjeta
+                    // y generar el string de Pokepaste.
+                    // Por ahora, solo un console.log y un alert de ejemplo.
                     const teamCard = event.target.closest('.team-card');
-                    const teamId = teamCard.dataset.teamId;
-                    const teamDetails = teamsData[teamId];
-
-                    if (teamDetails) {
-                        const pokepasteText = generatePokepasteString(teamDetails);
-                        if (pokepasteText) {
-                            navigator.clipboard.writeText(pokepasteText).then(() => {
-                                console.log('Equipo copiado al portapapeles:', pokepasteText);
-                                showCopyMessage(); // Muestra el mensaje de éxito
-                            }).catch(err => {
-                                console.error('Error al copiar al portapapeles: ', err);
-                                // Fallback por si navigator.clipboard no funciona (navegadores antiguos o sin https)
-                                const textArea = document.createElement("textarea");
-                                textArea.value = pokepasteText;
-                                textArea.style.position = "fixed"; // Evita que se vea en pantalla
-                                textArea.style.left = "-9999px";
-                                document.body.appendChild(textArea);
-                                textArea.focus();
-                                textArea.select();
-                                try {
-                                    document.execCommand('copy');
-                                    console.log('Equipo copiado (fallback):', pokepasteText);
-                                    showCopyMessage();
-                                } catch (execErr) {
-                                    console.error('Error al copiar (fallback): ', execErr);
-                                    alert('Error al copiar. Por favor, copia el texto manualmente desde la consola (presiona F12).');
-                                    console.log("--- INICIO TEXTO POKEPASTE ---");
-                                    console.log(pokepasteText);
-                                    console.log("--- FIN TEXTO POKEPASTE ---");
-                                }
-                                document.body.removeChild(textArea);
-                            });
-                        } else {
-                             alert('No se pudieron generar los datos para Pokepaste. Revisa la consola (F12).');
-                        }
-                    } else {
-                        alert(`Datos no encontrados para el equipo con ID: ${teamId}. Asegúrate de que los datos están definidos en 'teamsData'.`);
-                        console.warn(`No se encontraron datos para el equipo ID: ${teamId} en el objeto teamsData.`);
-                    }
-                });
-            });
-
-            // Activar categoría (ejemplo)
-            const categoryItems = document.querySelectorAll('.category-item');
-            categoryItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    categoryItems.forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
-                    // Aquí iría la lógica para filtrar equipos por categoría
-                    console.log(`Categoría seleccionada: ${item.textContent}`);
+                    const teamTitle = teamCard ? teamCard.querySelector('.team-title').textContent : "Equipo Desconocido";
+                    console.log(`Botón Pokepaste clickeado para: ${teamTitle}`);
+                    alert(`Funcionalidad "Copiar a Pokepaste" para "${teamTitle}" aún por implementar completamente con datos dinámicos del equipo.`);
+                    // Ejemplo: const teamId = teamCard.dataset.teamId;
+                    // const teamDetails = teamsData[teamId]; // Necesitarías `teamsData` definido
+                    // if (teamDetails) { const pokepasteText = generatePokepasteString(teamDetails); /* ... copiar ... */ }
                 });
             });
 
