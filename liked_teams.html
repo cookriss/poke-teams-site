@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Equipos Gustados - PokéTeams</title>
     <style>
-        /* Reutilizar estilos de index.html y team_detail.html para consistencia */
+        /* Reutilizar estilos de index.html para consistencia */
         :root {
             --primary: #ff5350; --primary-dark: #d13330; --secondary: #3b4cca; --light: #f8f9fa;
             --dark: #343a40; --success: #30c58b; --danger: #dc3545;
@@ -22,8 +22,8 @@
         .nav-links a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s, background-color 0.3s; padding: 0.3rem 0.5rem; border-radius: 5px; cursor:pointer; }
         .nav-links a:hover, .nav-links a.active { color: var(--primary); background-color: white; }
         .user-menu-container { position: relative; }
-        #user-greeting-liked { cursor: pointer; padding: 0.3rem 0.5rem; border-radius: 5px; transition: background-color 0.3s; color:white; font-weight:500; display: inline-block; }
-        #user-greeting-liked:hover { background-color: rgba(255,255,255,0.1); }
+        #user-greeting-likedpage { cursor: pointer; padding: 0.3rem 0.5rem; border-radius: 5px; transition: background-color 0.3s; color:white; font-weight:500; display: inline-block; }
+        #user-greeting-likedpage:hover { background-color: rgba(255,255,255,0.1); }
         .user-dropdown { display: none; position: absolute; top: 100%; right: 0; background-color: white; color: var(--dark); border: 1px solid #ddd; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); min-width: 200px; z-index: 1001; margin-top: 0.5rem; }
         .user-dropdown a { display: block; padding: 0.75rem 1rem; text-decoration: none; color: var(--dark); font-size: 0.9rem;}
         .user-dropdown a:hover { background-color: #f0f0f0; }
@@ -52,23 +52,24 @@
         .team-action-button:hover { filter: brightness(110%); }
 
         footer { /* ... (estilos del footer de index.html) ... */ }
+        #loading-indicator-liked { text-align: center; font-size: 1.2rem; color: var(--secondary); padding: 2rem; }
     </style>
 </head>
 <body>
     <header>
         <div class="container">
             <div class="navbar">
-                <a href="index.html" id="nav-logo-link-liked" class="logo">Poké<span>Teams</span></a>
+                <a href="index.html" id="nav-logo-link-likedpage" class="logo">Poké<span>Teams</span></a>
                 <ul class="nav-links">
-                    <li><a href="index.html" id="home-link-liked">Inicio</a></li>
-                    <li id="create-team-nav-link-liked" style="display:none;"><a href="index.html#create-team">Crear Equipo</a></li>
-                    <li id="login-nav-link-liked" style="display:list-item;"><a href="index.html#login">Iniciar Sesión</a></li>
-                    <li id="register-nav-link-liked" style="display:list-item;"><a href="index.html#register">Registrarse</a></li>
-                    <li id="user-menu-container-liked" class="user-menu-container" style="display:none;">
-                        <a href="#" id="user-greeting-liked"></a>
-                        <div class="user-dropdown" id="user-dropdown-menu-liked">
-                            <a href="liked_teams.html" id="liked-teams-link-liked" class="active">Mis Equipos Gustados</a>
-                            <a href="#" id="logout-nav-link-liked-dropdown">Cerrar Sesión</a>
+                    <li><a href="index.html" id="home-link-likedpage">Inicio</a></li>
+                    <li id="create-team-nav-link-likedpage" style="display:none;"><a href="index.html#create-team">Crear Equipo</a></li>
+                    <li id="login-nav-link-likedpage" style="display:list-item;"><a href="index.html#login">Iniciar Sesión</a></li>
+                    <li id="register-nav-link-likedpage" style="display:list-item;"><a href="index.html#register">Registrarse</a></li>
+                    <li id="user-menu-container-likedpage" class="user-menu-container" style="display:none;">
+                        <a href="#" id="user-greeting-likedpage"></a>
+                        <div class="user-dropdown" id="user-dropdown-menu-likedpage">
+                            <a href="liked_teams.html" id="liked-teams-link-likedpage" class="active">Mis Equipos Gustados</a>
+                            <a href="#" id="logout-nav-link-likedpage-dropdown">Cerrar Sesión</a>
                         </div>
                     </li>
                 </ul>
@@ -91,28 +92,28 @@
             const likedTeamsGrid = document.getElementById('liked-teams-grid');
             const loadingIndicator = document.getElementById('loading-indicator-liked');
 
-            // --- Lógica de UI para Header (similar a index.html) ---
-            const userGreetingLiked = document.getElementById('user-greeting-liked');
-            const userDropdownMenuLiked = document.getElementById('user-dropdown-menu-liked');
-            const logoutNavLikedDropdown = document.getElementById('logout-nav-link-liked-dropdown');
-            const loginNavLiked = document.getElementById('login-nav-link-liked');
-            const registerNavLiked = document.getElementById('register-nav-link-liked');
-            const createTeamNavLinkLiked = document.getElementById('create-team-nav-link-liked');
-            const userMenuContainerLiked = document.getElementById('user-menu-container-liked');
+            // --- Lógica de UI para Header ---
+            const userGreetingLikedPage = document.getElementById('user-greeting-likedpage');
+            const userDropdownMenuLikedPage = document.getElementById('user-dropdown-menu-likedpage');
+            const logoutNavLikedPageDropdown = document.getElementById('logout-nav-link-likedpage-dropdown');
+            const loginNavLikedPage = document.getElementById('login-nav-link-likedpage');
+            const registerNavLikedPage = document.getElementById('register-nav-link-likedpage');
+            const createTeamNavLinkLikedPage = document.getElementById('create-team-nav-link-likedpage');
+            const userMenuContainerLikedPage = document.getElementById('user-menu-container-likedpage');
 
             function updateLikedPageNavForLoggedInUser(username) {
-                if(loginNavLiked) loginNavLiked.style.display = 'none';
-                if(registerNavLiked) registerNavLiked.style.display = 'none';
-                if(createTeamNavLinkLiked) createTeamNavLinkLiked.style.display = 'list-item';
-                if(userMenuContainerLiked) userMenuContainerLiked.style.display = 'list-item';
-                if(userGreetingLiked) userGreetingLiked.textContent = `Hola, ${username}`;
+                if(loginNavLikedPage) loginNavLikedPage.style.display = 'none';
+                if(registerNavLikedPage) registerNavLikedPage.style.display = 'none';
+                if(createTeamNavLinkLikedPage) createTeamNavLinkLikedPage.style.display = 'list-item';
+                if(userMenuContainerLikedPage) userMenuContainerLikedPage.style.display = 'list-item';
+                if(userGreetingLikedPage) userGreetingLikedPage.textContent = `Hola, ${username}`;
             }
             function updateLikedPageNavForLoggedOutUser() {
-                if(loginNavLiked) loginNavLiked.style.display = 'list-item';
-                if(registerNavLiked) registerNavLiked.style.display = 'list-item';
-                if(createTeamNavLinkLiked) createTeamNavLinkLiked.style.display = 'none';
-                if(userMenuContainerLiked) userMenuContainerLiked.style.display = 'none';
-                if(userGreetingLiked) userGreetingLiked.textContent = '';
+                if(loginNavLikedPage) loginNavLikedPage.style.display = 'list-item';
+                if(registerNavLikedPage) registerNavLikedPage.style.display = 'list-item';
+                if(createTeamNavLinkLikedPage) createTeamNavLinkLikedPage.style.display = 'none';
+                if(userMenuContainerLikedPage) userMenuContainerLikedPage.style.display = 'none';
+                if(userGreetingLikedPage) userGreetingLikedPage.textContent = '';
             }
 
             const storedUser = JSON.parse(localStorage.getItem('userData'));
@@ -124,23 +125,24 @@
                 if (likedTeamsGrid) likedTeamsGrid.innerHTML = "<p>Debes iniciar sesión para ver tus equipos gustados.</p>";
                 if (loadingIndicator) loadingIndicator.style.display = 'none';
             }
-             if (userGreetingLiked && userDropdownMenuLiked) {
-                userGreetingLiked.addEventListener('click', (e) => {
+             if (userGreetingLikedPage && userDropdownMenuLikedPage) {
+                userGreetingLikedPage.addEventListener('click', (e) => {
                     e.preventDefault();
-                    userDropdownMenuLiked.style.display = userDropdownMenuLiked.style.display === 'block' ? 'none' : 'block';
+                    userDropdownMenuLikedPage.style.display = userDropdownMenuLikedPage.style.display === 'block' ? 'none' : 'block';
                 });
                 document.addEventListener('click', (e) => {
-                    if (userMenuContainerLiked && !userMenuContainerLiked.contains(e.target)) {
-                        userDropdownMenuLiked.style.display = 'none';
+                    if (userMenuContainerLikedPage && !userMenuContainerLikedPage.contains(e.target) && userDropdownMenuLikedPage) {
+                        userDropdownMenuLikedPage.style.display = 'none';
                     }
                 });
             }
-            if (logoutNavLikedDropdown) logoutNavLikedDropdown.addEventListener('click', (e) => { 
+            if (logoutNavLikedPageDropdown) logoutNavLikedPageDropdown.addEventListener('click', (e) => { 
                 e.preventDefault(); localStorage.removeItem('userData'); 
-                if(userDropdownMenuLiked) userDropdownMenuLiked.style.display = 'none';
+                if(userDropdownMenuLikedPage) userDropdownMenuLikedPage.style.display = 'none';
                 updateLikedPageNavForLoggedOutUser(); 
                 window.location.href = 'index.html';
             });
+            if(createTeamNavLinkLikedPage) createTeamNavLinkLikedPage.onclick = (e) => { e.preventDefault(); window.location.href = 'index.html#create-team';};
 
 
             async function loadLikedTeams(userId) {
@@ -151,22 +153,27 @@
                 try {
                     const response = await fetch(`${WORKER_BASE_URL}/api/users/${userId}/liked-teams`);
                     if (!response.ok) {
-                        throw new Error(`Error al cargar equipos gustados: ${response.statusText}`);
+                        const errData = await response.json().catch(() => ({error: `Error al cargar equipos gustados: ${response.statusText}`}));
+                        throw new Error(errData.error);
                     }
                     const data = await response.json();
                     if (data.teams && data.teams.length > 0) {
+                        // Guardar estos equipos en allTeamsData de localStorage para que team_detail pueda accederlos
+                        let allTeams = JSON.parse(localStorage.getItem('allTeamsData')) || {};
+                        data.teams.forEach(team => {
+                            allTeams[team.id] = team; // Sobrescribir o añadir
+                        });
+                        localStorage.setItem('allTeamsData', JSON.stringify(allTeams));
+
                         data.teams.forEach(team => {
                             likedTeamsGrid.innerHTML += renderTeamCardForLikedPage(team);
                         });
-                        // Re-asignar event listeners para los botones de las nuevas tarjetas
+                        
                         likedTeamsGrid.querySelectorAll('.view-details-button').forEach(button => {
                             button.addEventListener('click', (event) => {
                                 const teamCard = event.target.closest('.team-card');
                                 if (teamCard) {
                                     const teamId = teamCard.dataset.teamId;
-                                    // Necesitamos los datos completos del equipo para pasarlos
-                                    // Si 'data.teams' ya los tiene, perfecto. Sino, necesitaríamos otra llamada o
-                                    // obtenerlos de 'allTeamsData' de localStorage si está sincronizado.
                                     const teamDataForDetail = data.teams.find(t => t.id === teamId);
                                     if (teamDataForDetail) {
                                         localStorage.setItem('currentTeamDetails', JSON.stringify(teamDataForDetail));
@@ -180,14 +187,13 @@
                     }
                 } catch (error) {
                     console.error("Error cargando equipos gustados:", error);
-                    likedTeamsGrid.innerHTML = "<p>Hubo un error al cargar tus equipos gustados. Inténtalo de nuevo más tarde.</p>";
+                    likedTeamsGrid.innerHTML = `<p>Hubo un error al cargar tus equipos gustados: ${error.message}. Inténtalo de nuevo más tarde.</p>`;
                 } finally {
                     loadingIndicator.style.display = 'none';
                 }
             }
 
             function renderTeamCardForLikedPage(team) {
-                // Similar a renderTeamCard en index.html, pero sin acciones de like/edit/delete si se desea
                 let pokemonIconsHtml = '';
                 (team.pokemons || []).slice(0, 6).forEach(p => {
                     const pokemonNameForSprite = p.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/gi, '');

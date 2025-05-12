@@ -56,13 +56,11 @@
         #login-section, #register-section, #create-team-section, #advanced-search-section, #search-results-section { display: none; } 
         
         .user-menu-container { position: relative; }
-        #user-greeting-placeholder { /* Ocultar el li si no hay saludo */
-            display:none;
-        }
+        #user-greeting-placeholder { display:none; }
         #user-greeting { 
             cursor: pointer; padding: 0.3rem 0.5rem; border-radius: 5px; 
             transition: background-color 0.3s; color:white; font-weight:500;
-            display: inline-block; /* Para que el contenedor se ajuste al texto */
+            display: inline-block; 
         }
         #user-greeting:hover { background-color: rgba(255,255,255,0.1); }
         .user-dropdown {
@@ -229,7 +227,8 @@
                 </div>
                 <h3 style="color: var(--secondary); margin-top: 2rem; margin-bottom: 1rem;">Pokémon del Equipo (6)</h3>
                 <p style="font-size:0.85em; margin-bottom:1rem; color: #555;">Usa las listas desplegables. Los campos "Movimiento/Habilidad deseada" son para referencia y se guardarán.</p>
-                <div id="pokemon-forms-container"></div>
+                <div id="pokemon-forms-container">
+                    </div>
                 <button type="submit" class="submit-team-button">Guardar Equipo</button>
             </form>
             <div id="create-team-feedback" class="feedback-message" style="display:none;"></div>
@@ -404,6 +403,8 @@
             function showRegisterForm() { hideAllPageSections(); if (registerSection) registerSection.style.display = 'block'; }
             function showCreateTeamForm(teamToEdit = null) {
                 const user = localStorage.getItem('userData');
+                // Permitir ver el formulario si se está editando, incluso si el usuario se deslogueó (aunque no podrá guardar)
+                // La lógica de guardar/actualizar verificará la autenticación de nuevo.
                 if (user || teamToEdit) { 
                     hideAllPageSections();
                     if (createTeamSection) createTeamSection.style.display = 'block';
@@ -413,6 +414,13 @@
                     if (editingTeamIdInput) editingTeamIdInput.value = ''; 
                     const createEditTitle = document.getElementById('create-edit-team-title');
                     const submitButton = createTeamForm.querySelector('.submit-team-button');
+
+                    // Generar campos de Pokémon si no existen (importante para la primera vez que se muestra)
+                    if (pokemonFormsContainer && pokemonFormsContainer.children.length === 0) {
+                        for (let i = 0; i < 6; i++) { pokemonFormsContainer.innerHTML += generatePokemonFormFields(i); }
+                        document.querySelectorAll('.ev-input').forEach(input => input.addEventListener('input', handleEvInputChange));
+                    }
+
 
                     if (teamToEdit) { 
                         if(editingTeamIdInput) editingTeamIdInput.value = teamToEdit.id;
@@ -452,7 +460,6 @@
                     } else {
                         if(createEditTitle) createEditTitle.textContent = "Crear Nuevo Equipo Pokémon";
                         if(submitButton) submitButton.textContent = "Guardar Equipo";
-                         // Limpiar el campo de texto de importación de Pokepaste al mostrar el formulario para crear nuevo
                         const pokepasteImportText = document.getElementById('pokepaste-import-text');
                         if (pokepasteImportText) pokepasteImportText.value = '';
                     }
@@ -497,11 +504,14 @@
                 const data = Object.fromEntries(formData.entries());
                 try {
                     const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-                    console.log("Auth Response Status:", response.status);
-                    const responseText = await response.text();
-                    console.log("Auth Response Text:", responseText);
+                    console.log("Auth Response Status:", response.status); // DEBUG
                     let result;
-                    try { result = JSON.parse(responseText); } catch (e) {
+                    try {
+                        result = await response.json();
+                        console.log("Auth Response JSON:", result); // DEBUG
+                    } catch (e) {
+                        const textResponse = await response.text(); // Leer como texto si JSON falla
+                        console.error("Auth Response no es JSON:", textResponse); // DEBUG
                         showFeedback(feedbackElement, `Error: Respuesta inesperada del servidor. (${response.status})`, true);
                         return;
                     }
@@ -517,7 +527,7 @@
                         }
                     } else { showFeedback(feedbackElement, `Error: ${result.error || response.statusText || 'Error desconocido del servidor.'}`, true); }
                 } catch (error) { 
-                    console.error("Network/CORS error in auth:", error);
+                    console.error("Error de red/conexión en autenticación:", error);
                     showFeedback(feedbackElement, `Error de conexión: ${error.message}. Revisa la consola.`, true); 
                 }
             }
@@ -531,7 +541,7 @@
                     userDropdownMenu.style.display = userDropdownMenu.style.display === 'block' ? 'none' : 'block';
                 });
                 document.addEventListener('click', (e) => { 
-                    if (userMenuContainer && !userMenuContainer.contains(e.target)) {
+                    if (userMenuContainer && !userMenuContainer.contains(e.target) && userDropdownMenu.style.display === 'block') {
                         userDropdownMenu.style.display = 'none';
                     }
                 });
@@ -544,7 +554,13 @@
             });
             if (likedTeamsLink) likedTeamsLink.addEventListener('click', (e) => {
                 e.preventDefault();
-                window.open('liked_teams.html', '_self'); 
+                const user = JSON.parse(localStorage.getItem('userData'));
+                if (user && user.id) {
+                    window.open(`liked_teams.html?userId=${user.id}`, '_self'); 
+                } else {
+                    alert("Debes iniciar sesión para ver tus equipos gustados.");
+                    showLoginForm();
+                }
             });
 
             // --- Manejo de Navegación ---
@@ -565,6 +581,8 @@
             });
             
             // --- Carga y Renderizado de Equipos ---
+            async function fetchFromPokeAPI(endpoint) { /* ... */ return null; } 
+
             async function fetchTeamsFromBackend(queryParams = {}) {
                 const url = new URL(TEAMS_URL);
                 Object.keys(queryParams).forEach(key => {
@@ -727,6 +745,7 @@
             }
 
             if (pokemonFormsContainer) { 
+                pokemonFormsContainer.innerHTML = ''; // Limpiar antes de generar
                 for (let i = 0; i < 6; i++) { pokemonFormsContainer.innerHTML += generatePokemonFormFields(i); }
                 document.querySelectorAll('.ev-input').forEach(input => input.addEventListener('input', handleEvInputChange));
             }
@@ -834,8 +853,11 @@
                     const lines = section.trim().split('\n');
                     const pokemon = { name: '', item: '', ability: '', evs: '', nature: '', teraType: '', moves: [] };
                     const firstLineMatch = lines[0].match(/^(.+?)(?:\s@\s(.+))?$/);
-                    if (firstLineMatch) { pokemon.name = firstLineMatch[1].trim(); if (firstLineMatch[2]) pokemon.item = firstLineMatch[2].trim(); }
-                    else { pokemon.name = lines[0].trim(); }
+                    if (firstLineMatch) { 
+                        pokemon.name = firstLineMatch[1].trim(); 
+                        if (firstLineMatch[2]) pokemon.item = firstLineMatch[2].trim(); 
+                    } else { pokemon.name = lines[0].trim(); }
+                    
                     lines.slice(1).forEach(line => {
                         line = line.trim();
                         if (line.startsWith('Ability: ')) pokemon.ability = line.substring('Ability: '.length).trim();
@@ -893,7 +915,7 @@
             // --- Búsqueda ---
             async function performSearch(filters, queryDescription) {
                 const queryParams = new URLSearchParams();
-                if (filters.title) queryParams.append('title', filters.title); 
+                if (filters.title) queryParams.append('title', filters.title);
                 if (filters.pokemon) queryParams.append('pokemon', filters.pokemon);
                 if (filters.item) queryParams.append('item', filters.item);
                 if (filters.move) queryParams.append('move', filters.move);
@@ -949,19 +971,18 @@
                 try {
                     const response = await fetch(`${TEAMS_URL}/${teamId}/like`, { 
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 'Content-Type': 'application/json', 'X-User-Id': user.id /* Simulación Auth */ },
                         body: JSON.stringify({ userId: user.id }) 
                     });
                     const result = await response.json();
                     if (response.ok) {
                         if(allTeamsData[teamId]) {
                             allTeamsData[teamId].likes = result.likes;
-                            // Actualizar visualmente el botón si es necesario
                             const likeButton = event.target;
-                            likeButton.classList.toggle('liked', result.liked); // Asume que 'liked' es una clase CSS
+                            likeButton.classList.toggle('liked', result.liked); 
                             likeButton.closest('.team-card').querySelector('.like-stat').textContent = `👍 ${result.likes}`;
                         }
-                        localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
+                        localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData)); // Actualizar caché local
                     } else { alert(`Error al dar Me Gusta: ${result.error}`); }
                 } catch (error) { alert("Error de conexión al dar Me Gusta."); }
             }
@@ -982,7 +1003,7 @@
                     try {
                         const response = await fetch(`${TEAMS_URL}/${teamId}`, { 
                             method: 'DELETE',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: { 'Content-Type': 'application/json', 'X-User-Id': user.id /* Simulación Auth */ },
                             body: JSON.stringify({ userId: user.id }) 
                         });
                         const result = await response.json();
