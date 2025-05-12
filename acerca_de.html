@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acerca de PokéTeams</title>
+    <style>
+        :root {
+            --primary: #ff5350; --primary-dark: #d13330; --secondary: #3b4cca; --light: #f8f9fa;
+            --dark: #343a40; --success: #30c58b; --danger: #dc3545;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #f4f4f4; color: var(--dark); line-height: 1.6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+        header { background-color: var(--primary); color: white; padding: 1rem 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo { font-size: 1.8rem; font-weight: bold; margin-bottom: 0.5rem; text-decoration: none; color: white;}
+        .logo span { color: var(--secondary); }
+        .nav-links { display: flex; list-style: none; flex-wrap: wrap; padding-left: 0;}
+        .nav-links li { margin-left: 1rem; margin-bottom: 0.5rem; }
+        .nav-links a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s, background-color 0.3s; padding: 0.3rem 0.5rem; border-radius: 5px; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); background-color: white; }
+        
+        main.container { padding-top: 2rem; padding-bottom: 2rem; background-color: white; margin-top: 2rem; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); }
+        .page-title { color: var(--primary); text-align: center; margin-bottom: 2rem; font-size: 2.2rem; }
+        .content-section { margin-bottom: 1.5rem; }
+        .content-section h2 { color: var(--secondary); margin-bottom: 0.75rem; font-size: 1.5rem; border-bottom: 2px solid var(--primary-light, #ffcccb); padding-bottom: 0.3rem;}
+        .content-section p { margin-bottom: 1rem; line-height: 1.7; color: #555; }
+        .content-section ul { list-style: disc; margin-left: 20px; margin-bottom: 1rem; color: #555;}
+        .content-section ul li { margin-bottom: 0.5rem; }
+
+        footer { background-color: var(--dark); color: white; padding: 3rem 0 2rem; margin-top: 3rem; }
+        .footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; margin-bottom: 2rem; }
+        .footer-column { flex: 1; min-width: 220px; }
+        .footer-column h3 { margin-bottom: 1.2rem; font-size: 1.3rem; color: var(--primary); }
+        .footer-column p { color: #ccc; line-height: 1.7; }
+        .footer-links { list-style: none; padding-left: 0; }
+        .footer-links li { margin-bottom: 0.8rem; }
+        .footer-links a { color: #aaa; text-decoration: none; transition: color 0.3s, padding-left 0.3s; }
+        .footer-links a:hover { color: white; padding-left: 5px; }
+        .footer-bottom { margin-top: 2rem; text-align: center; padding-top: 2rem; border-top: 1px solid #555; color: #aaa; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="navbar">
+                <a href="index.html" class="logo">Poké<span>Teams</span></a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="page-title">Acerca de PokéTeams</h1>
+
+        <section class="content-section">
+            <h2>Nuestra Misión</h2>
+            <p>PokéTeams nace de la pasión por el universo Pokémon y su vibrante escena competitiva. Nuestra misión es proporcionar a entrenadores de todos los niveles una plataforma intuitiva y completa para crear, compartir, descubrir y analizar equipos Pokémon.</p>
+            <p>Creemos que compartir conocimiento es clave para el crecimiento de la comunidad. Ya seas un veterano de VGC o estés dando tus primeros pasos en combates individuales, aquí encontrarás herramientas y una comunidad dispuesta a ayudarte a mejorar.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>¿Qué puedes hacer en PokéTeams?</h2>
+            <ul>
+                <li><strong>Crear Equipos Detallados:</strong> Especifica cada aspecto de tus Pokémon, desde sus movimientos y objetos hasta la distribución de EVs y naturalezas.</li>
+                <li><strong>Compartir con la Comunidad:</strong> Publica tus equipos para que otros los vean, los comenten y los valoren.</li>
+                <li><strong>Descubrir Nuevas Estrategias:</strong> Explora equipos creados por otros entrenadores, filtrados por formato, Pokémon específicos y más.</li>
+                <li><strong>Analizar Equipos:</strong> Utiliza nuestras herramientas (próximamente) para ver las fortalezas, debilidades y sinergias de tus equipos.</li>
+                <li><strong>Importar y Exportar:</strong> Facilidad para mover tus equipos desde y hacia formatos populares como Pokepaste.es.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2>El Equipo Detrás de PokéTeams</h2>
+            <p>Somos un pequeño grupo de desarrolladores y entusiastas de Pokémon dedicados a construir la mejor herramienta para la comunidad competitiva. ¡Siempre estamos buscando mejorar y añadir nuevas funcionalidades!</p>
+            <p>Si tienes alguna sugerencia, feedback o quieres colaborar, no dudes en ponerte en contacto con nosotros (próximamente habilitaremos una sección de contacto).</p>
+        </section>
+         <section class="content-section">
+            <h2>Agradecimientos</h2>
+            <p>Este proyecto no sería posible sin la increíble comunidad de Pokémon y los recursos abiertos como:</p>
+            <ul>
+                <li><a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokéAPI</a>: Por proporcionar una base de datos exhaustiva de Pokémon.</li>
+                <li><a href="https://play.pokemonshowdown.com/" target="_blank" rel="noopener noreferrer">Pokémon Showdown</a>: Por sus sprites y ser una inspiración constante para el juego competitivo.</li>
+                <li>A todos los creadores de contenido y jugadores que comparten su pasión y conocimiento.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column"><h3>Poké<span>Teams</span></h3><p>La comunidad para compartir equipos Pokémon.</p></div>
+                <div class="footer-column"><h3>Enlaces</h3><ul class="footer-links"><li><a href="index.html">Inicio</a></li><li><a href="privacidad.html">Política de Privacidad</a></li></ul></div>
+                <div class="footer-column"><h3>Recursos</h3><ul class="footer-links"><li><a href="#">Base de Datos Pokémon (Próximamente)</a></li></ul></div>
+                <div class="footer-column"><h3>Contacto</h3><ul class="footer-links"><li><a href="#">info@poketeams.example</a></li></ul></div>
+            </div>
+            <div class="footer-bottom"><p>© 2025 PokéTeams. Pokémon y sus personajes son marcas de Nintendo.</p></div>
+        </div>
+    </footer>
+</body>
+</html>

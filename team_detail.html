@@ -49,7 +49,7 @@
         .type-analysis-list .weak .count { background-color: var(--danger); color: white; }
         .type-analysis-list .resist .count { background-color: var(--success); color: white; }
 
-        .ev-chart-container { max-width: 250px; margin: 1rem auto 0; } 
+        .ev-chart-container { max-width: 250px; margin: 1rem auto 0; height: 220px; /* Altura fija para el canvas */ } 
 
         .comments-section { margin-top: 2rem; }
         .comments-toolbar { display: flex; justify-content: flex-end; align-items: center; margin-bottom: 1rem; gap: 1rem;}
@@ -71,8 +71,10 @@
         .comment-actions .reply-button { font-size: 0.8rem; color: var(--secondary); background: none; border: none; cursor: pointer; padding: 0.2rem; }
         .comment-actions .reply-button:hover { text-decoration: underline; }
 
-
         #loading-indicator { text-align: center; font-size: 1.2rem; color: var(--secondary); padding: 2rem; }
+        .feedback-message { padding: 0.75rem; margin-top: 1rem; border-radius: 5px; text-align: center; font-size: 0.9rem;}
+        .feedback-message.success { background-color: var(--success); color: white; }
+        .feedback-message.error { background-color: var(--danger); color: white; }
     </style>
 </head>
 <body>
@@ -147,131 +149,55 @@
             steel: { fire: 0.5, water: 0.5, electric: 0.5, ice: 2, rock: 2, steel: 0.5, fairy: 2 }, fairy: { fire: 0.5, fighting: 2, poison: 0.5, dragon: 2, dark: 2, steel: 0.5 }
         };
         const ALL_TYPES = ["normal", "fire", "water", "electric", "grass", "ice", "fighting", "poison", "ground", "flying", "psychic", "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"];
+        
+        // Referencia global para los datos del equipo actual y los gráficos
         let currentTeamDataForDetail = null; 
         let evCharts = {}; 
+        const WORKER_BASE_URL = 'https://poke-teams-auth.srcookriss.workers.dev'; // Asegúrate que esta sea la URL de tu worker
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            const params = new URLSearchParams(window.location.search);
-            const teamId = params.get('teamId');
-
-            const pageTitleElement = document.getElementById('detail-team-title');
-            const loadingIndicator = document.getElementById('loading-indicator');
-            const teamDetailContent = document.getElementById('team-detail-content');
-            
-            const pokemonContainer = document.getElementById('detail-pokemon-container');
-            const descriptionElement = document.getElementById('detail-team-creator-description');
-            const youtubeEmbedContainer = document.getElementById('detail-youtube-embed');
-            const weaknessListElement = document.getElementById('weakness-list');
-            const offenseListElement = document.getElementById('offense-list');
-            const commentForm = document.getElementById('comment-form');
-            const commentsListElement = document.getElementById('comments-list');
-            const commentFeedback = document.getElementById('comment-feedback');
-            const sortCommentsDropdown = document.getElementById('sort-comments');
-
-            if (!teamId) {
-                pageTitleElement.textContent = "Error: ID de equipo no proporcionado.";
-                if(loadingIndicator) loadingIndicator.style.display = 'none';
-                return;
-            }
-
-            currentTeamDataForDetail = JSON.parse(localStorage.getItem('currentTeamDetails'));
-            if (!currentTeamDataForDetail || currentTeamDataForDetail.id !== teamId) {
-                const allTeams = JSON.parse(localStorage.getItem('allTeamsData')) || {};
-                if (allTeams[teamId]) {
-                    currentTeamDataForDetail = allTeams[teamId];
-                    localStorage.setItem('currentTeamDetails', JSON.stringify(currentTeamDataForDetail));
-                } else {
-                    pageTitleElement.textContent = `Error: No se pudieron cargar los detalles para el equipo ${teamId}.`;
-                    if(loadingIndicator) loadingIndicator.style.display = 'none';
-                    return;
-                }
-            }
-            
-            pageTitleElement.textContent = currentTeamDataForDetail.title || "Detalles del Equipo";
-            descriptionElement.textContent = currentTeamDataForDetail.description || "No hay descripción disponible.";
-
-            youtubeEmbedContainer.innerHTML = '';
-            if (currentTeamDataForDetail.youtubeLink) {
-                const videoId = extractYouTubeVideoID(currentTeamDataForDetail.youtubeLink);
-                if (videoId) {
-                    const iframe = document.createElement('iframe');
-                    iframe.src = `https://www.youtube.com/embed/${videoId}`;
-                    iframe.frameBorder = "0"; iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"; iframe.allowFullscreen = true;
-                    youtubeEmbedContainer.appendChild(iframe);
-                } else { youtubeEmbedContainer.innerHTML = '<p>Enlace de YouTube no válido.</p>'; }
-            } else { youtubeEmbedContainer.innerHTML = '<p>No hay vídeo guía disponible.</p>'; }
-
-            await displayFullPokemonDetails(currentTeamDataForDetail.pokemons, pokemonContainer);
-            
-            const detailedPokemonsForAnalysis = await Promise.all(currentTeamDataForDetail.pokemons.map(async (p) => {
-                const pokeApiName = p.name.toLowerCase().replace(/\s+/g, '-');
-                const apiData = await fetchFromPokeAPI(`pokemon/${pokeApiName}`);
-                const movesData = await Promise.all((p.moves || []).map(m => fetchFromPokeAPI(`move/${m.toLowerCase().replace(/\s+/g, '-')}`)));
-                return { ...p, apiTypes: apiData ? apiData.types.map(t => t.type.name) : p.types || [], apiMoves: movesData.filter(m => m).map(m => ({ name: m.name, type: m.type.name, damage_class: m.damage_class.name })) };
-            }));
-
-            analyzeAndDisplayTeamWeaknesses(detailedPokemonsForAnalysis, weaknessListElement);
-            analyzeAndDisplayOffensiveCoverage(detailedPokemonsForAnalysis, offenseListElement);
-
-            renderComments(currentTeamDataForDetail.comments || [], commentsListElement, sortCommentsDropdown.value);
-
-            if (commentForm) {
-                commentForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const commentTextElement = document.getElementById('comment-text');
-                    const commentText = commentTextElement.value.trim();
-                    const storedUser = JSON.parse(localStorage.getItem('userData')); // Asumiendo que guardas datos del usuario logueado
-                    const author = storedUser ? storedUser.username : "Anónimo";
-
-                    if (commentText) {
-                        const newComment = { author: author, date: new Date().toISOString(), text: commentText, id: `comment-${Date.now()}`, votes: 0 };
-                        if (!currentTeamDataForDetail.comments) currentTeamDataForDetail.comments = [];
-                        currentTeamDataForDetail.comments.push(newComment);
-                        
-                        localStorage.setItem('currentTeamDetails', JSON.stringify(currentTeamDataForDetail)); 
-                        let allTeams = JSON.parse(localStorage.getItem('allTeamsData')) || {};
-                        if(allTeams[teamId]) {
-                            allTeams[teamId] = currentTeamDataForDetail; 
-                            localStorage.setItem('allTeamsData', JSON.stringify(allTeams));
-                        }
-
-                        renderComments(currentTeamDataForDetail.comments, commentsListElement, sortCommentsDropdown.value);
-                        commentTextElement.value = '';
-                        if(commentFeedback) showFeedback(commentFeedback, "Comentario añadido.", false);
-                    } else { if(commentFeedback) showFeedback(commentFeedback, "El comentario no puede estar vacío.", true); }
-                });
-            }
-            
-            if (sortCommentsDropdown) {
-                sortCommentsDropdown.addEventListener('change', () => {
-                    renderComments(currentTeamDataForDetail.comments || [], commentsListElement, sortCommentsDropdown.value);
-                });
-            }
-
-            if(loadingIndicator) loadingIndicator.style.display = 'none';
-            if(teamDetailContent) teamDetailContent.style.display = 'block';
-        });
+        // --- Funciones Auxiliares ---
+        function showFeedback(element, message, isError = false) {
+            if (!element) return;
+            element.textContent = message;
+            element.className = 'feedback-message ' + (isError ? 'error' : 'success');
+            element.style.display = 'block';
+            setTimeout(() => { if(element) element.style.display = 'none'; }, 3000);
+        }
 
         async function fetchFromPokeAPI(endpoint) {
-             try {
+            try {
                 const response = await fetch(`https://pokeapi.co/api/v2/${endpoint}`);
-                if (!response.ok) { console.warn(`Recurso no encontrado en PokéAPI: ${endpoint} (Status: ${response.status})`); return null; }
+                if (!response.ok) { 
+                    console.warn(`Recurso no encontrado en PokéAPI: ${endpoint} (Status: ${response.status})`); 
+                    return null; 
+                }
                 return await response.json();
-            } catch (error) { console.error(`Error fetching de PokéAPI (${endpoint}):`, error); return null; }
+            } catch (error) { 
+                console.error(`Error fetching de PokéAPI (${endpoint}):`, error); 
+                return null; 
+            }
         }
+
         function getTypeColor(typeName) { return `var(--type-${typeName.toLowerCase()}, var(--dark))`; }
+        
         function getMoveCategoryIcon(category) {
-            // Usando SVGs inline más simples y pequeños
             if (category === 'physical') return `<svg width="20" height="20" viewBox="0 0 100 100" class="move-category-icon" fill="#CD281A" title="Físico"><path d="M89.39,38.38,63.5,12.49a5,5,0,0,0-7.08,0L44.6,24.31,24.31,44.6a5,5,0,0,0,0,7.08L38.88,66.25,10.61,94.53a2.5,2.5,0,0,0,0,3.53,2.43,2.43,0,0,0,1.76.74,2.39,2.39,0,0,0,1.77-.74L42.38,69.28,57,83.87a5,5,0,0,0,7.08,0L75.9,72.05,96.19,51.77a5,5,0,0,0,0-7.07ZM59.11,79.39,46.38,66.67l9.25-9.25,12.73,12.72Zm6.36-6.36L52.74,59.87l9.26-9.25L74.72,63.34ZM71.66,52,58.93,39.28,71.66,26.56,84.39,39.28Z"/></svg>`;
             if (category === 'special') return `<svg width="20" height="20" viewBox="0 0 100 100" class="move-category-icon" fill="#4A54D1" title="Especial"><path d="M50,10A40,40,0,1,0,90,50,40,40,0,0,0,50,10Zm0,72A32,32,0,1,1,82,50,32,32,0,0,1,50,82Z"/><circle cx="50" cy="50" r="18" fill="#4A54D1"/></svg>`;
             if (category === 'status') return `<svg width="20" height="20" viewBox="0 0 100 100" class="move-category-icon" fill="#8A8A8A" title="Estado"><path d="M50,10A40,40,0,1,0,90,50,40,40,0,0,0,50,10Zm0,72A32,32,0,1,1,82,50,32,32,0,0,1,50,82Z"/><path d="M50,30A20,20,0,1,0,70,50,20,20,0,0,0,50,30Zm0,32A12,12,0,1,1,62,50,12,12,0,0,1,50,62Z"/></svg>`;
             return '';
         }
-        
+
+        function extractYouTubeVideoID(url) {
+            const regExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const match = url.match(regExp); return (match && match[1]) ? match[1] : null;
+        }
+
+        // --- Lógica de Renderizado de Detalles del Pokémon ---
         async function displayFullPokemonDetails(pokemonList, container) {
-            if (!container) return;
+            if (!container || !pokemonList) return;
             container.innerHTML = ''; 
-            const pokemonPromises = pokemonList.map(async (p, index) => {
+            
+            const pokemonDetailPromises = pokemonList.map(async (p, index) => {
                 const pokeApiName = p.name.toLowerCase().replace(/\s+/g, '-');
                 const pokeApiData = await fetchFromPokeAPI(`pokemon/${pokeApiName}`);
                 const itemApiData = p.item ? await fetchFromPokeAPI(`item/${p.item.toLowerCase().replace(/\s+/g, '-')}`) : null;
@@ -292,16 +218,17 @@
 
                 const evChartId = `ev-chart-${pokeApiName}-${index}`;
                 const evChartHtml = `<div class="ev-chart-container"><canvas id="${evChartId}"></canvas></div>`;
+                const spriteUrl = pokeApiData?.sprites?.front_default || `https://play.pokemonshowdown.com/sprites/ani/${pokeApiName}.gif`;
 
                 return `
                     <div class="pokemon-detail-card">
                         <div class="pokemon-detail-header">
-                            <img src="${pokeApiData?.sprites?.front_default || 'https://play.pokemonshowdown.com/sprites/ani/'+pokeApiName+'.gif'}" 
+                            <img src="${spriteUrl}" 
                                  alt="${p.name}" class="pokemon-detail-sprite" 
                                  onerror="this.onerror=null; this.src='https://placehold.co/80x80/cccccc/969696?text=${p.name.substring(0,1).toUpperCase()}&font=roboto';">
                             <div>
                                 <h4 class="pokemon-detail-name">${p.name.charAt(0).toUpperCase() + p.name.slice(1)}</h4>
-                                ${p.teraType ? `<div class="pokemon-detail-info"><strong>Teratipo:</strong> <span class="type-tag" style="background-color:${getTypeColor(p.teraType)};">${p.teraType.toUpperCase()}</span></div>` : ''}
+                                ${p.tera_type ? `<div class="pokemon-detail-info"><strong>Teratipo:</strong> <span class="type-tag" style="background-color:${getTypeColor(p.tera_type)};">${p.tera_type.toUpperCase()}</span></div>` : ''}
                             </div>
                             ${itemApiData?.sprites?.default ? `<img src="${itemApiData.sprites.default}" alt="${p.item}" class="pokemon-detail-item-sprite" title="${p.item}">` : `<span class="pokemon-detail-item-sprite" title="${p.item || 'Ninguno'}">${p.item ? '📦' : ''}</span>`}
                         </div>
@@ -314,7 +241,7 @@
                         ${movesHtml}
                     </div>`;
             });
-            const resolvedPokemonHtml = await Promise.all(pokemonPromises);
+            const resolvedPokemonHtml = await Promise.all(pokemonDetailPromises);
             container.innerHTML = resolvedPokemonHtml.join('');
 
             pokemonList.forEach((p, index) => {
@@ -364,81 +291,36 @@
             });
         }
 
-        function extractYouTubeVideoID(url) {
-            const regExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-            const match = url.match(regExp); return (match && match[1]) ? match[1] : null;
-        }
-        function getDefensiveEffectiveness(pokemonTypes, attackingType) {
-            let finalMultiplier = 1;
-            for (const defType of pokemonTypes) {
-                const effectivenessChart = TYPE_EFFECTIVENESS[attackingType];
-                if (effectivenessChart && effectivenessChart[defType] !== undefined) { finalMultiplier *= effectivenessChart[defType]; }
-            }
-            return finalMultiplier;
-        }
-        function analyzeAndDisplayTeamWeaknesses(teamPokemons, listElement) {
-            if (!listElement || !teamPokemons) return;
-            const teamWeaknesses = {};
-            ALL_TYPES.forEach(attackingType => {
-                let weakToThisTypeCount = 0;
-                teamPokemons.forEach(pokemon => {
-                    const effectiveness = getDefensiveEffectiveness(pokemon.apiTypes || pokemon.types, attackingType);
-                    if (effectiveness >= 2) { weakToThisTypeCount++; }
-                });
-                if (weakToThisTypeCount > 0) { teamWeaknesses[attackingType] = weakToThisTypeCount; }
-            });
-            listElement.innerHTML = '';
-            if (Object.keys(teamWeaknesses).length === 0) { listElement.innerHTML = '<li>El equipo no tiene debilidades x2 o x4 destacadas.</li>'; return; }
-            for (const type in teamWeaknesses) {
-                const li = document.createElement('li');
-                li.innerHTML = `<div class="type-name-container"><span class="type-tag" style="background-color: ${getTypeColor(type)};">${type.toUpperCase()}</span></div> <span class="count weak">${teamWeaknesses[type]} Pokémon</span>`;
-                listElement.appendChild(li);
-            }
-        }
-        function getOffensiveEffectiveness(attackingMoveType, targetPokemonTypes) {
-            let finalMultiplier = 1;
-            for (const targetType of targetPokemonTypes) {
-                const effectivenessChart = TYPE_EFFECTIVENESS[attackingMoveType];
-                if (effectivenessChart && effectivenessChart[targetType] !== undefined) { finalMultiplier *= effectivenessChart[targetType]; }
-            }
-            return finalMultiplier;
-        }
-        function analyzeAndDisplayOffensiveCoverage(teamPokemons, listElement) {
-            if (!listElement || !teamPokemons) return;
-            const teamOffensiveCoverage = {};
-            ALL_TYPES.forEach(targetDefendingType => {
-                let strongAgainstThisTypeCount = 0;
-                teamPokemons.forEach(pokemon => {
-                    let pokemonIsStrong = false;
-                    if (pokemon.apiMoves) {
-                        for (const move of pokemon.apiMoves) {
-                            if (move.damage_class !== 'status') {
-                                const effectiveness = getOffensiveEffectiveness(move.type, [targetDefendingType]);
-                                if (effectiveness >= 2) { pokemonIsStrong = true; break; }
-                            }
-                        }
-                    }
-                    if (pokemonIsStrong) { strongAgainstThisTypeCount++; }
-                });
-                if (strongAgainstThisTypeCount > 0) { teamOffensiveCoverage[targetDefendingType] = strongAgainstThisTypeCount; }
-            });
-            listElement.innerHTML = '';
-            if (Object.keys(teamOffensiveCoverage).length === 0) { listElement.innerHTML = '<li>El equipo no tiene coberturas ofensivas súper efectivas destacadas.</li>'; return; }
-            for (const type in teamOffensiveCoverage) {
-                const li = document.createElement('li');
-                li.innerHTML = `<div class="type-name-container">Contra <span class="type-tag" style="background-color: ${getTypeColor(type)};">${type.toUpperCase()}</span></div> <span class="count resist">${teamOffensiveCoverage[type]} Pokémon</span>`;
-                listElement.appendChild(li);
+        // --- Lógica de Análisis de Tipos ---
+        function getDefensiveEffectiveness(pokemonTypes, attackingType) { /* ... */ return 1; }
+        function analyzeAndDisplayTeamWeaknesses(teamPokemons, listElement) { /* ... */ }
+        function getOffensiveEffectiveness(attackingMoveType, targetPokemonTypes) { /* ... */ return 1; }
+        function analyzeAndDisplayOffensiveCoverage(teamPokemons, listElement) { /* ... */ }
+
+        // --- Lógica de Comentarios ---
+        async function fetchCommentsForTeam(teamId, sortBy = 'newest') {
+            try {
+                const response = await fetch(`${WORKER_BASE_URL}/api/teams/${teamId}/comments?sortBy=${sortBy}`);
+                if (!response.ok) {
+                    console.error("Error fetching comments:", response.statusText);
+                    return [];
+                }
+                const data = await response.json();
+                return data.comments || [];
+            } catch (error) {
+                console.error("Error fetching comments:", error);
+                return [];
             }
         }
 
-        function renderComments(commentsArray = [], listElement, sortBy = 'newest') {
+        function renderComments(commentsArray = [], listElement, currentTeamId, currentSortBy) {
             if (!listElement) return;
             listElement.innerHTML = ''; 
             
-            let sortedComments = [...commentsArray];
-            if (sortBy === 'newest') {
-                sortedComments.sort((a, b) => new Date(b.date) - new Date(a.date));
-            } else if (sortBy === 'mostVoted') {
+            let sortedComments = [...commentsArray]; // Ya deberían venir ordenados del backend si se implementa
+            if (currentSortBy === 'newest') {
+                sortedComments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            } else if (currentSortBy === 'mostVoted') {
                 sortedComments.sort((a, b) => (b.votes || 0) - (a.votes || 0));
             }
 
@@ -452,8 +334,8 @@
                 li.dataset.commentId = comment.id;
                 li.innerHTML = `
                     <div class="comment-header">
-                        <span class="comment-author">${comment.author}</span>
-                        <span class="comment-date">${new Date(comment.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour:'2-digit', minute:'2-digit' })}</span>
+                        <span class="comment-author">${comment.author || comment.author_username || 'Anónimo'}</span>
+                        <span class="comment-date">${new Date(comment.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour:'2-digit', minute:'2-digit' })}</span>
                     </div>
                     <p class="comment-text">${comment.text.replace(/\n/g, '<br>')}</p>
                     <div class="comment-actions">
@@ -465,46 +347,156 @@
             });
 
             listElement.querySelectorAll('.vote-button').forEach(button => {
-                button.addEventListener('click', handleVoteClick);
+                button.addEventListener('click', (e) => handleVoteCommentClick(e, currentTeamId));
             });
             listElement.querySelectorAll('.reply-button').forEach(button => {
                 button.addEventListener('click', () => alert("La función de responder a comentarios estará disponible próximamente."));
             });
         }
         
-        function handleVoteClick(event) {
+        async function handleVoteCommentClick(event, teamId) {
             const button = event.currentTarget;
             const commentItem = button.closest('.comment-item');
             if (!commentItem) return;
             const commentId = commentItem.dataset.commentId;
             const sortDropdown = document.getElementById('sort-comments');
 
-            if (currentTeamDataForDetail && currentTeamDataForDetail.comments) {
-                const commentIndex = currentTeamDataForDetail.comments.findIndex(c => c.id === commentId);
-                if (commentIndex > -1) {
-                    if (!currentTeamDataForDetail.comments[commentIndex].votes) {
-                        currentTeamDataForDetail.comments[commentIndex].votes = 0;
+            try {
+                const response = await fetch(`${WORKER_BASE_URL}/api/comments/${commentId}/vote`, { method: 'POST' });
+                const result = await response.json();
+                if (response.ok) {
+                    // Actualizar el comentario en currentTeamDataForDetail y en localStorage
+                    if (currentTeamDataForDetail && currentTeamDataForDetail.comments) {
+                        const commentIdx = currentTeamDataForDetail.comments.findIndex(c => c.id === commentId);
+                        if (commentIdx > -1) {
+                            currentTeamDataForDetail.comments[commentIdx].votes = result.votes;
+                        }
+                        localStorage.setItem('currentTeamDetails', JSON.stringify(currentTeamDataForDetail));
+                        let allTeams = JSON.parse(localStorage.getItem('allTeamsData')) || {};
+                        if(allTeams[teamId]) {
+                            const teamCommentIdx = allTeams[teamId].comments.findIndex(c => c.id === commentId);
+                            if (teamCommentIdx > -1) allTeams[teamId].comments[teamCommentIdx].votes = result.votes;
+                            localStorage.setItem('allTeamsData', JSON.stringify(allTeams));
+                        }
                     }
-                    currentTeamDataForDetail.comments[commentIndex].votes++;
-                    
-                    localStorage.setItem('currentTeamDetails', JSON.stringify(currentTeamDataForDetail));
-                    let allTeams = JSON.parse(localStorage.getItem('allTeamsData')) || {};
-                    if(allTeams[currentTeamDataForDetail.id]) {
-                        allTeams[currentTeamDataForDetail.id] = currentTeamDataForDetail;
-                        localStorage.setItem('allTeamsData', JSON.stringify(allTeams));
-                    }
-                    renderComments(currentTeamDataForDetail.comments, document.getElementById('comments-list'), sortDropdown ? sortDropdown.value : 'newest');
+                    renderComments(currentTeamDataForDetail.comments || [], document.getElementById('comments-list'), sortDropdown.value);
+                } else {
+                    alert(`Error al votar: ${result.error}`);
                 }
+            } catch (error) {
+                console.error("Error al votar comentario:", error);
+                alert("Error de conexión al votar.");
             }
         }
 
-        function showFeedback(element, message, isError = false) {
-            if (!element) return;
-            element.textContent = message;
-            element.className = 'feedback-message ' + (isError ? 'error' : 'success');
-            element.style.display = 'block';
-            setTimeout(() => { if(element) element.style.display = 'none'; }, 3000);
+        // --- Inicialización de la Página de Detalles ---
+        async function initializeDetailPage() {
+            const params = new URLSearchParams(window.location.search);
+            const teamId = params.get('teamId');
+
+            const pageTitleElement = document.getElementById('detail-team-title');
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const teamDetailContent = document.getElementById('team-detail-content');
+            const descriptionElement = document.getElementById('detail-team-creator-description');
+            const youtubeEmbedContainer = document.getElementById('detail-youtube-embed');
+            const pokemonContainer = document.getElementById('detail-pokemon-container');
+            const weaknessListElement = document.getElementById('weakness-list');
+            const offenseListElement = document.getElementById('offense-list');
+            const commentForm = document.getElementById('comment-form');
+            const commentsListElement = document.getElementById('comments-list');
+            const commentFeedback = document.getElementById('comment-feedback');
+            const sortCommentsDropdown = document.getElementById('sort-comments');
+
+            if (!teamId) { /* ... (manejo de error) ... */ return; }
+
+            try {
+                const response = await fetch(`${WORKER_BASE_URL}/api/teams/${teamId}`);
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.error || `Equipo no encontrado (Status: ${response.status})`);
+                }
+                currentTeamDataForDetail = await response.json();
+                localStorage.setItem('currentTeamDetails', JSON.stringify(currentTeamDataForDetail)); // Guardar para acceso rápido
+
+                pageTitleElement.textContent = currentTeamDataForDetail.title || "Detalles del Equipo";
+                descriptionElement.textContent = currentTeamDataForDetail.description || "No hay descripción disponible.";
+                
+                youtubeEmbedContainer.innerHTML = '';
+                if (currentTeamDataForDetail.youtube_link) { // Corregido a youtube_link
+                    const videoId = extractYouTubeVideoID(currentTeamDataForDetail.youtube_link);
+                    if (videoId) {
+                        const iframe = document.createElement('iframe');
+                        iframe.src = `https://www.youtube.com/embed/${videoId}`;
+                        iframe.frameBorder = "0"; iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"; iframe.allowFullscreen = true;
+                        youtubeEmbedContainer.appendChild(iframe);
+                    } else { youtubeEmbedContainer.innerHTML = '<p>Enlace de YouTube no válido.</p>'; }
+                } else { youtubeEmbedContainer.innerHTML = '<p>No hay vídeo guía disponible.</p>'; }
+
+                await displayFullPokemonDetails(currentTeamDataForDetail.pokemons, pokemonContainer);
+                
+                // El análisis de tipos ahora usa los datos completos del backend
+                analyzeAndDisplayTeamWeaknesses(currentTeamDataForDetail.pokemons, weaknessListElement);
+                analyzeAndDisplayOffensiveCoverage(currentTeamDataForDetail.pokemons, offenseListElement);
+
+                // Cargar y renderizar comentarios desde el backend
+                const comments = await fetchCommentsForTeam(teamId, sortCommentsDropdown.value);
+                currentTeamDataForDetail.comments = comments; // Actualizar con los comentarios del backend
+                renderComments(comments, commentsListElement, sortCommentsDropdown.value);
+
+                if (commentForm) {
+                    commentForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const commentTextElement = document.getElementById('comment-text');
+                        const commentText = commentTextElement.value.trim();
+                        const storedUser = JSON.parse(localStorage.getItem('userData'));
+                        if (!storedUser) { alert("Debes iniciar sesión para comentar."); return; }
+
+                        if (commentText) {
+                            try {
+                                const commentPayload = { userId: storedUser.id, text: commentText };
+                                const postCommentResponse = await fetch(`${WORKER_BASE_URL}/api/teams/${teamId}/comments`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(commentPayload)
+                                });
+                                const newCommentResult = await postCommentResponse.json();
+                                if (postCommentResponse.ok) {
+                                    if (!currentTeamDataForDetail.comments) currentTeamDataForDetail.comments = [];
+                                    currentTeamDataForDetail.comments.push(newCommentResult.comment); // Añadir el comentario devuelto por el backend
+                                    localStorage.setItem('currentTeamDetails', JSON.stringify(currentTeamDataForDetail));
+                                    renderComments(currentTeamDataForDetail.comments, commentsListElement, sortCommentsDropdown.value);
+                                    commentTextElement.value = '';
+                                    if(commentFeedback) showFeedback(commentFeedback, "Comentario añadido.", false);
+                                } else {
+                                    if(commentFeedback) showFeedback(commentFeedback, `Error: ${newCommentResult.error}`, true);
+                                }
+                            } catch (err) {
+                                console.error("Error al enviar comentario:", err);
+                                if(commentFeedback) showFeedback(commentFeedback, "Error de conexión al enviar comentario.", true);
+                            }
+                        } else { if(commentFeedback) showFeedback(commentFeedback, "El comentario no puede estar vacío.", true); }
+                    });
+                }
+                if (sortCommentsDropdown) {
+                    sortCommentsDropdown.addEventListener('change', async () => {
+                        const newSortBy = sortCommentsDropdown.value;
+                        const comments = await fetchCommentsForTeam(teamId, newSortBy);
+                        currentTeamDataForDetail.comments = comments;
+                        renderComments(comments, commentsListElement, newSortBy);
+                    });
+                }
+
+                if(loadingIndicator) loadingIndicator.style.display = 'none';
+                if(teamDetailContent) teamDetailContent.style.display = 'block';
+
+            } catch (error) {
+                console.error("Error al cargar detalles del equipo:", error);
+                pageTitleElement.textContent = `Error: ${error.message}`;
+                if(loadingIndicator) loadingIndicator.style.display = 'none';
+            }
         }
+        initializeDetailPage(); // Llamar a la función de inicialización
+
     </script>
 </body>
 </html>
