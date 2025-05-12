@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Equipo Pokémon</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <style>
+        :root {
+            --primary: #ff5350; --primary-dark: #d13330; --secondary: #3b4cca; --light: #f8f9fa;
+            --dark: #343a40; --success: #30c58b; --danger: #dc3545;
+            --type-normal: #A8A77A; --type-fire: #EE8130; --type-water: #6390F0; --type-electric: #F7D02C;
+            --type-grass: #7AC74C; --type-ice: #96D9D6; --type-fighting: #C22E28; --type-poison: #A33EA1;
+            --type-ground: #E2BF65; --type-flying: #A98FF3; --type-psychic: #F95587; --type-bug: #A6B91A;
+            --type-rock: #B6A136; --type-ghost: #735797; --type-dragon: #6F35FC; --type-dark: #705746;
+            --type-steel: #B7B7CE; --type-fairy: #D685AD;
+        }
+        body { background-color: #f4f4f4; color: var(--dark); line-height: 1.6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; }
+        .container { width: 90%; max-width: 900px; margin: 20px auto; background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .detail-page-title { color: var(--primary); margin-bottom: 1.5rem; border-bottom: 2px solid var(--primary); padding-bottom: 0.75rem; text-align: center;}
+        .detail-section { margin-bottom: 2rem; }
+        .detail-section h3 { color: var(--secondary); margin-bottom: 0.75rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;}
+        
+        .pokemon-details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
+        .pokemon-detail-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; background-color: #f9f9f9; }
+        .pokemon-detail-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .pokemon-detail-sprite { width: 80px; height: 80px; object-fit: contain; background-color: #e9e9e9; border-radius: 50%; image-rendering: pixelated; border: 1px solid #ccc;}
+        .pokemon-detail-item-sprite { width: 36px; height: 36px; object-fit: contain; margin-left: auto; background-color: #e9e9e9; border-radius: 5px; padding: 3px; border: 1px solid #ccc;}
+        .pokemon-detail-name { font-size: 1.3rem; font-weight: bold; color: var(--secondary); flex-grow: 1; }
+        .pokemon-detail-info { font-size: 0.9rem; margin-bottom: 0.4rem; }
+        .pokemon-detail-info strong { color: var(--dark); }
+        .pokemon-moves-title { font-weight: bold; margin-top: 1rem; margin-bottom: 0.5rem; font-size: 1rem;}
+        .pokemon-moves-list { list-style: none; padding-left: 0; }
+        .pokemon-moves-list li { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; border-radius: 5px; margin-bottom: 0.4rem; font-size: 0.9rem; color: white; }
+        .move-name { flex-grow: 1; }
+        .move-category-icon { width: 20px; height: 20px; margin-left: 0.75rem; }
+        
+        .youtube-embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 8px;}
+        .youtube-embed-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .type-tag { padding: 0.2em 0.6em; border-radius: 4px; color: white; font-size: 0.85em; text-transform: uppercase; margin-left: 5px;}
+
+        .type-analysis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 1.5rem; }
+        .type-analysis-section h4 { color: var(--primary-dark); margin-bottom: 0.5rem; }
+        .type-analysis-list { list-style: none; padding-left: 0; font-size: 0.9rem; }
+        .type-analysis-list li { padding: 0.2rem 0; display: flex; justify-content: space-between; align-items: center; }
+        .type-analysis-list .type-name-container { display: flex; align-items: center;}
+        .type-analysis-list .count { font-weight: bold; margin-left: 0.5rem; padding: 0.1rem 0.4rem; border-radius: 3px; background-color: #eee; }
+        .type-analysis-list .weak { color: var(--danger); }
+        .type-analysis-list .resist { color: var(--success); }
+        .type-analysis-list .neutral { color: #777; }
+
+        .ev-chart-container { max-width: 300px; margin: 1rem auto 0; } /* Contenedor para el gráfico de EVs */
+
+        .comments-section { margin-top: 2rem; }
+        .comment-form textarea { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; min-height: 80px; margin-bottom: 0.5rem; font-size: 0.95rem; }
+        .comment-form button { background-color: var(--primary); color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        .comment-form button:hover { background-color: var(--primary-dark); }
+        .comments-list { margin-top: 1.5rem; list-style: none; padding-left: 0; }
+        .comment-item { background-color: #f9f9f9; border: 1px solid #eee; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+        .comment-author { font-weight: bold; color: var(--secondary); margin-bottom: 0.3rem; }
+        .comment-date { font-size: 0.8rem; color: #777; margin-bottom: 0.5rem; }
+        .comment-text { font-size: 0.95rem; white-space: pre-wrap; } /* Para respetar saltos de línea */
+
+        #loading-indicator { text-align: center; font-size: 1.2rem; color: var(--secondary); padding: 2rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="detail-team-title" class="detail-page-title">Cargando detalles del equipo...</h1>
+        <div id="loading-indicator">Cargando...</div>
+
+        <div id="team-detail-content" style="display: none;">
+            <section class="detail-section">
+                <h3>Pokémon del Equipo</h3>
+                <div id="detail-pokemon-container" class="pokemon-details-grid">
+                    </div>
+            </section>
+
+            <section class="detail-section">
+                <h3>Análisis de Tipos del Equipo</h3>
+                <div class="type-analysis-grid">
+                    <div class="type-analysis-section" id="team-weaknesses">
+                        <h4>Debilidades Defensivas</h4>
+                        <ul class="type-analysis-list" id="weakness-list"></ul>
+                    </div>
+                    <div class="type-analysis-section" id="team-offense">
+                        <h4>Cobertura Ofensiva</h4>
+                        <ul class="type-analysis-list" id="offense-list"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="detail-section">
+                <h3>Descripción del Creador</h3>
+                <p id="detail-team-creator-description">No hay descripción disponible.</p>
+            </section>
+
+            <section class="detail-section">
+                <h3>Vídeo Guía</h3>
+                <div id="detail-youtube-embed" class="youtube-embed-container">
+                    <p>No hay vídeo guía disponible.</p>
+                </div>
+            </section>
+
+            <section class="detail-section comments-section">
+                <h3>Comentarios</h3>
+                <form id="comment-form" class="comment-form">
+                    <div class="form-group">
+                        <label for="comment-text">Escribe un comentario:</label>
+                        <textarea id="comment-text" name="commentText" required></textarea>
+                    </div>
+                    <button type="submit">Enviar Comentario</button>
+                </form>
+                <div id="comment-feedback" class="feedback-message" style="display:none;"></div>
+                <ul id="comments-list" class="comments-list">
+                    </ul>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const TYPE_EFFECTIVENESS = {
+            normal: { rock: 0.5, steel: 0.5, ghost: 0 }, fire: { fire: 0.5, water: 0.5, grass: 2, ice: 2, bug: 2, rock: 0.5, dragon: 0.5, steel: 2 },
+            water: { fire: 2, water: 0.5, grass: 0.5, ground: 2, rock: 2, dragon: 0.5 }, electric: { water: 2, grass: 0.5, electric: 0.5, ground: 0, flying: 2, dragon: 0.5 },
+            grass: { fire: 0.5, water: 2, grass: 0.5, poison: 0.5, ground: 2, flying: 0.5, bug: 0.5, rock: 2, dragon: 0.5, steel: 0.5 }, ice: { fire: 0.5, water: 0.5, grass: 2, ice: 0.5, ground: 2, flying: 2, dragon: 2, steel: 0.5 },
+            fighting: { normal: 2, ice: 2, poison: 0.5, flying: 0.5, psychic: 0.5, bug: 0.5, rock: 2, ghost: 0, dark: 2, steel: 2, fairy: 0.5 }, poison: { grass: 2, poison: 0.5, ground: 0.5, rock: 0.5, ghost: 0.5, steel: 0, fairy: 2 },
+            ground: { fire: 2, grass: 0.5, electric: 2, poison: 2, flying: 0, bug: 0.5, rock: 2, steel: 2 }, flying: { grass: 2, electric: 0.5, fighting: 2, bug: 2, rock: 0.5, steel: 0.5 },
+            psychic: { fighting: 2, poison: 2, psychic: 0.5, dark: 0, steel: 0.5 }, bug: { fire: 0.5, grass: 2, fighting: 0.5, poison: 0.5, flying: 0.5, psychic: 2, ghost: 0.5, dark: 2, steel: 0.5, fairy: 0.5 },
+            rock: { fire: 2, ice: 2, fighting: 0.5, ground: 0.5, flying: 2, bug: 2, steel: 0.5 }, ghost: { normal: 0, psychic: 2, ghost: 2, dark: 0.5 },
+            dragon: { dragon: 2, steel: 0.5, fairy: 0 }, dark: { fighting: 0.5, psychic: 2, ghost: 2, dark: 0.5, fairy: 0.5 },
+            steel: { fire: 0.5, water: 0.5, electric: 0.5, ice: 2, rock: 2, steel: 0.5, fairy: 2 }, fairy: { fire: 0.5, fighting: 2, poison: 0.5, dragon: 2, dark: 2, steel: 0.5 }
+        };
+        const ALL_TYPES = ["normal", "fire", "water", "electric", "grass", "ice", "fighting", "poison", "ground", "flying", "psychic", "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const teamId = params.get('teamId');
+
+            const pageTitleElement = document.getElementById('detail-team-title');
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const teamDetailContent = document.getElementById('team-detail-content');
+            
+            const pokemonContainer = document.getElementById('detail-pokemon-container');
+            const descriptionElement = document.getElementById('detail-team-creator-description');
+            const youtubeEmbedContainer = document.getElementById('detail-youtube-embed');
+            const weaknessListElement = document.getElementById('weakness-list');
+            const offenseListElement = document.getElementById('offense-list');
+            const commentForm = document.getElementById('comment-form');
+            const commentsListElement = document.getElementById('comments-list');
+            const commentFeedback = document.getElementById('comment-feedback');
+
+            if (!teamId) {
+                pageTitleElement.textContent = "Error: ID de equipo no proporcionado.";
+                if(loadingIndicator) loadingIndicator.style.display = 'none';
+                return;
+            }
+
+            let teamData = JSON.parse(localStorage.getItem('currentTeamDetails'));
+            if (!teamData || teamData.id !== teamId) {
+                // Fallback: si no está en localStorage, intenta obtenerlo de una variable global (si index.html la expuso)
+                // O, en un futuro, hacer un fetch a una API.
+                // Por ahora, si no está, mostramos error.
+                try {
+                    const allTeams = JSON.parse(localStorage.getItem('allTeamsData')) || {}; // Asume que index.html guarda todos los equipos aquí
+                    if (allTeams[teamId]) {
+                        teamData = allTeams[teamId];
+                        localStorage.setItem('currentTeamDetails', JSON.stringify(teamData)); // Guardar para esta sesión
+                    } else {
+                        throw new Error("Equipo no encontrado en el fallback de todos los equipos.");
+                    }
+                } catch (e) {
+                    pageTitleElement.textContent = `Error: No se pudieron cargar los detalles para el equipo ${teamId}.`;
+                    if(loadingIndicator) loadingIndicator.style.display = 'none';
+                    return;
+                }
+            }
+            
+            pageTitleElement.textContent = teamData.title || "Detalles del Equipo";
+            descriptionElement.textContent = teamData.description || "No hay descripción disponible.";
+
+            youtubeEmbedContainer.innerHTML = '';
+            if (teamData.youtubeLink) {
+                const videoId = extractYouTubeVideoID(teamData.youtubeLink);
+                if (videoId) {
+                    const iframe = document.createElement('iframe');
+                    iframe.src = `https://www.youtube.com/embed/${videoId}`;
+                    iframe.frameBorder = "0"; iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"; iframe.allowFullscreen = true;
+                    youtubeEmbedContainer.appendChild(iframe);
+                } else { youtubeEmbedContainer.innerHTML = '<p>Enlace de YouTube no válido.</p>'; }
+            } else { youtubeEmbedContainer.innerHTML = '<p>No hay vídeo guía disponible.</p>'; }
+
+            await displayFullPokemonDetails(teamData.pokemons, pokemonContainer);
+            
+            const detailedPokemonsForAnalysis = await Promise.all(teamData.pokemons.map(async (p) => {
+                const apiData = await fetchFromPokeAPI(`pokemon/${p.name.toLowerCase().replace(/\s+/g, '-')}`);
+                const movesData = await Promise.all((p.moves || []).map(m => fetchFromPokeAPI(`move/${m.toLowerCase().replace(/\s+/g, '-')}`)));
+                return { ...p, apiTypes: apiData ? apiData.types.map(t => t.type.name) : p.types || [], apiMoves: movesData.filter(m => m).map(m => ({ name: m.name, type: m.type.name, damage_class: m.damage_class.name })) };
+            }));
+
+            analyzeAndDisplayTeamWeaknesses(detailedPokemonsForAnalysis, weaknessListElement);
+            analyzeAndDisplayOffensiveCoverage(detailedPokemonsForAnalysis, offenseListElement);
+
+            renderComments(teamData.comments || [], commentsListElement);
+
+            if (commentForm) {
+                commentForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const commentTextElement = document.getElementById('comment-text');
+                    const commentText = commentTextElement.value.trim();
+                    const storedUser = JSON.parse(localStorage.getItem('userData'));
+                    const author = storedUser ? storedUser.username : "Anónimo";
+
+                    if (commentText) {
+                        const newComment = { author: author, date: new Date().toLocaleDateString('es-ES'), text: commentText, id: `comment-${Date.now()}` };
+                        if (!teamData.comments) teamData.comments = [];
+                        teamData.comments.push(newComment);
+                        localStorage.setItem('currentTeamDetails', JSON.stringify(teamData)); 
+                        // Actualizar también en el 'allTeamsData' si existe, para persistencia simulada entre vistas de detalle
+                        let allTeams = JSON.parse(localStorage.getItem('allTeamsData')) || {};
+                        if(allTeams[teamId]) {
+                            allTeams[teamId].comments = teamData.comments;
+                            localStorage.setItem('allTeamsData', JSON.stringify(allTeams));
+                        }
+                        renderComments(teamData.comments, commentsListElement);
+                        commentTextElement.value = '';
+                        if(commentFeedback) showFeedback(commentFeedback, "Comentario añadido (temporalmente).", false);
+                    } else { if(commentFeedback) showFeedback(commentFeedback, "El comentario no puede estar vacío.", true); }
+                });
+            }
+
+            if(loadingIndicator) loadingIndicator.style.display = 'none';
+            if(teamDetailContent) teamDetailContent.style.display = 'block';
+        });
+
+        async function fetchFromPokeAPI(endpoint) { /* ... (igual que antes) ... */ return null; }
+        function getTypeColor(typeName) { return `var(--type-${typeName.toLowerCase()}, var(--dark))`; }
+        function getMoveCategoryIcon(category) { /* ... (igual que antes) ... */ return ''; }
+        
+        async function displayFullPokemonDetails(pokemonList, container) {
+            if (!container) return;
+            container.innerHTML = ''; 
+            const pokemonPromises = pokemonList.map(async (p) => {
+                const pokeApiData = await fetchFromPokeAPI(`pokemon/${p.name.toLowerCase().replace(/\s+/g, '-')}`);
+                const itemApiData = p.item ? await fetchFromPokeAPI(`item/${p.item.toLowerCase().replace(/\s+/g, '-')}`) : null;
+                let movesHtml = '<ul class="pokemon-moves-list">';
+                const movePromises = (p.moves || []).map(async (moveName) => {
+                    const moveData = await fetchFromPokeAPI(`move/${moveName.toLowerCase().replace(/\s+/g, '-')}`);
+                    if (moveData) {
+                        const typeName = moveData.type.name; const category = moveData.damage_class.name;
+                        const moveDisplayName = moveData.names.find(n => n.language.name === 'es')?.name || moveName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                        return `<li style="background-color: ${getTypeColor(typeName)};"><span class="move-name">${moveDisplayName}</span>${getMoveCategoryIcon(category)}</li>`;
+                    }
+                    return `<li>${moveName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} (datos no disp.)</li>`;
+                });
+                const resolvedMoves = await Promise.all(movePromises);
+                movesHtml += resolvedMoves.join('') + '</ul>';
+
+                // Crear canvas para el gráfico de EVs
+                const evChartId = `ev-chart-${p.name.toLowerCase().replace(/[^a-z0-9]/gi, '')}-${Date.now()}`; // ID único
+                const evChartHtml = `<div class="ev-chart-container"><canvas id="${evChartId}"></canvas></div>`;
+
+                return `
+                    <div class="pokemon-detail-card">
+                        <div class="pokemon-detail-header">
+                            <img src="${pokeApiData?.sprites?.front_default || 'https://placehold.co/80x80/cccccc/969696?text=?'}" alt="${p.name}" class="pokemon-detail-sprite">
+                            <div>
+                                <h4 class="pokemon-detail-name">${p.name.charAt(0).toUpperCase() + p.name.slice(1)}</h4>
+                                ${p.teraType ? `<div class="pokemon-detail-info"><strong>Teratipo:</strong> <span class="type-tag" style="background-color:${getTypeColor(p.teraType)};">${p.teraType.toUpperCase()}</span></div>` : ''}
+                            </div>
+                            ${itemApiData?.sprites?.default ? `<img src="${itemApiData.sprites.default}" alt="${p.item}" class="pokemon-detail-item-sprite" title="${p.item}">` : `<span class="pokemon-detail-item-sprite" title="${p.item || 'Ninguno'}">${p.item ? '📦' : ''}</span>`}
+                        </div>
+                        <div class="pokemon-detail-info"><strong>Objeto:</strong> ${p.item ? p.item.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Ninguno'}</div>
+                        <div class="pokemon-detail-info"><strong>Habilidad:</strong> ${p.ability ? p.ability.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'N/A'}</div>
+                        <div class="pokemon-detail-info"><strong>EVs:</strong> ${p.evs || 'N/A'}</div>
+                        ${evChartHtml}
+                        <div class="pokemon-detail-info"><strong>Naturaleza:</strong> ${p.nature || 'N/A'}</div>
+                        <h5 class="pokemon-moves-title">Movimientos:</h5>
+                        ${movesHtml}
+                    </div>`;
+            });
+            const resolvedPokemonHtml = await Promise.all(pokemonPromises);
+            container.innerHTML = resolvedPokemonHtml.join('');
+
+            // Después de añadir el HTML al DOM, renderizar los gráficos de EVs
+            pokemonList.forEach(p => {
+                const evChartId = `ev-chart-${p.name.toLowerCase().replace(/[^a-z0-9]/gi, '')}-${Date.now()}`; // Reconstruir el ID (o pasarlo de otra forma)
+                // Para evitar IDs duplicados si se llama varias veces, buscamos el último canvas añadido para este pkm
+                const canvasElements = Array.from(container.querySelectorAll(`canvas[id^="ev-chart-${p.name.toLowerCase().replace(/[^a-z0-9]/gi, '')}"]`));
+                if (canvasElements.length > 0) {
+                     const latestCanvasId = canvasElements[canvasElements.length - 1].id;
+                     renderEVChart(p.evs, latestCanvasId);
+                }
+            });
+        }
+
+        function parseEVs(evString) {
+            const evs = { HP: 0, Atk: 0, Def: 0, SpA: 0, SpD: 0, Spe: 0 };
+            if (!evString) return Object.values(evs);
+            const parts = evString.split('/');
+            parts.forEach(part => {
+                const match = part.trim().match(/(\d+)\s+(HP|Atk|Def|SpA|SpD|Spe)/i);
+                if (match) {
+                    evs[match[2]] = parseInt(match[1]);
+                }
+            });
+            return [evs.HP, evs.Atk, evs.Def, evs.SpA, evs.SpD, evs.Spe];
+        }
+
+        let evCharts = {}; // Para mantener referencias a los gráficos y destruirlos si es necesario
+        function renderEVChart(evString, canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) { console.warn("Canvas no encontrado para EV chart:", canvasId); return; }
+            const ctx = canvas.getContext('2d');
+            const evValues = parseEVs(evString);
+
+            if (evCharts[canvasId]) { // Destruir gráfico anterior si existe para este canvas
+                evCharts[canvasId].destroy();
+            }
+
+            evCharts[canvasId] = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['HP', 'Atk', 'Def', 'SpA', 'SpD', 'Spe'],
+                    datasets: [{
+                        label: 'EVs',
+                        data: evValues,
+                        backgroundColor: 'rgba(59, 76, 202, 0.2)',
+                        borderColor: 'rgba(59, 76, 202, 1)',
+                        borderWidth: 1,
+                        pointBackgroundColor: 'rgba(59, 76, 202, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true, // Puede ser false si quieres controlar el aspect ratio con CSS
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 252,
+                            pointLabels: { font: { size: 10 } },
+                            ticks: { stepSize: 50 }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+
+        function extractYouTubeVideoID(url) { /* ... (igual que antes) ... */ return null; }
+        function getDefensiveEffectiveness(pokemonTypes, attackingType) { /* ... (igual que antes) ... */ return 1; }
+        function analyzeAndDisplayTeamWeaknesses(teamPokemons, listElement) { /* ... (igual que antes, pero usa pokemon.apiTypes) ... */ }
+        function getOffensiveEffectiveness(attackingMoveType, targetPokemonTypes) { /* ... (igual que antes) ... */ return 1; }
+        function analyzeAndDisplayOffensiveCoverage(teamPokemons, listElement) { /* ... (igual que antes, pero usa pokemon.apiMoves y pokemon.apiTypes) ... */ }
+        function renderComments(commentsArray, listElement) { /* ... (igual que antes) ... */ }
+        function showFeedback(element, message, isError = false) { /* ... (igual que antes) ... */ }
+
+    </script>
+</body>
+</html>

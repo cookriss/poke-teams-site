@@ -1,81 +1,45 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PokéTeams - Comparte y Descubre Equipos Pokémon</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #ff5350;
-            --primary-dark: #d13330;
-            --secondary: #3b4cca;
-            --light: #f8f9fa;
-            --dark: #343a40;
-            --success: #30c58b;
-            --danger: #dc3545;
-            /* Colores de tipos Pokémon */
+            --primary: #ff5350; --primary-dark: #d13330; --secondary: #3b4cca; --light: #f8f9fa;
+            --dark: #343a40; --success: #30c58b; --danger: #dc3545;
             --type-normal: #A8A77A; --type-fire: #EE8130; --type-water: #6390F0; --type-electric: #F7D02C;
             --type-grass: #7AC74C; --type-ice: #96D9D6; --type-fighting: #C22E28; --type-poison: #A33EA1;
             --type-ground: #E2BF65; --type-flying: #A98FF3; --type-psychic: #F95587; --type-bug: #A6B91A;
             --type-rock: #B6A136; --type-ghost: #735797; --type-dragon: #6F35FC; --type-dark: #705746;
             --type-steel: #B7B7CE; --type-fairy: #D685AD;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #f4f4f4; color: var(--dark); line-height: 1.6;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #f4f4f4; color: var(--dark); line-height: 1.6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
-        header {
-            background-color: var(--primary); color: white; padding: 1rem 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 1000;
-        }
+        header { background-color: var(--primary); color: white; padding: 1rem 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
         .navbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         .logo { font-size: 1.8rem; font-weight: bold; margin-bottom: 0.5rem; text-decoration: none; color: white;}
         .logo span { color: var(--secondary); }
         .nav-links { display: flex; list-style: none; flex-wrap: wrap; padding-left: 0;}
         .nav-links li { margin-left: 1rem; margin-bottom: 0.5rem; }
-        .nav-links a {
-            color: white; text-decoration: none; font-weight: 500;
-            transition: color 0.3s, background-color 0.3s; padding: 0.3rem 0.5rem; border-radius: 5px;
-        }
+        .nav-links a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s, background-color 0.3s; padding: 0.3rem 0.5rem; border-radius: 5px; }
         .nav-links a:hover, .nav-links a.active { color: var(--primary); background-color: white; }
-
-        /* Estilos para secciones de formulario (Login, Registro, Crear Equipo) */
-        .auth-section, #create-team-section {
-            background-color: white; padding: 2rem; margin: 2rem auto; border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 750px; 
-        }
+        
+        .auth-section, #create-team-section { background-color: white; padding: 2rem; margin: 2rem auto; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); max-width: 750px; }
         .auth-section h2, #create-team-section h2 { text-align: center; color: var(--primary); margin-bottom: 1.5rem; }
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--dark); }
-        .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="password"], 
-        .form-group input[type="url"], .form-group input[type="number"],
-        .form-group textarea, .form-group select {
-            width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;
-            font-size: 1rem; transition: border-color 0.3s; box-sizing: border-box;
-        }
+        .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="password"], .form-group input[type="url"], .form-group input[type="number"], .form-group textarea, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; transition: border-color 0.3s; box-sizing: border-box; }
         .form-group textarea { min-height: 100px; resize: vertical; }
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--secondary); outline: none; }
         
-        .auth-button, .submit-team-button {
-            background-color: var(--secondary); color: white; padding: 0.75rem 1.5rem; border: none;
-            border-radius: 25px; font-weight: bold; font-size: 1rem; cursor: pointer;
-            transition: background-color 0.3s; display: block; width: 100%; margin-top: 1.5rem;
-        }
-        .auth-button:hover, .submit-team-button:hover { background-color: #2a3ba9; }
-        
-        .auth-toggle-link {
-            display: block; text-align: center; margin-top: 1.5rem; color: var(--primary);
-            text-decoration: none; font-weight: 500;
-        }
+        .auth-button, .submit-team-button, .action-button { background-color: var(--secondary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 25px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: background-color 0.3s; display: block; width: 100%; margin-top: 1.5rem; }
+        .auth-button:hover, .submit-team-button:hover, .action-button:hover { background-color: #2a3ba9; }
+        .action-button { background-color: var(--success); margin-top:0.5rem; font-size:0.9rem; padding: 0.5rem 1rem;}
+
+        .auth-toggle-link { display: block; text-align: center; margin-top: 1.5rem; color: var(--primary); text-decoration: none; font-weight: 500; }
         .auth-toggle-link:hover { text-decoration: underline; }
         .feedback-message { padding: 0.75rem; margin-top: 1rem; border-radius: 5px; text-align: center; font-size: 0.9rem;}
         .feedback-message.success { background-color: var(--success); color: white; }
@@ -84,7 +48,6 @@
         #login-section, #register-section, #create-team-section { display: none; } 
         #user-greeting { display: none; color: white; font-weight: 500; margin-left: 1rem; align-self: center;}
 
-        /* Estilos para el formulario de Crear Equipo */
         .pokemon-form-block { border: 1px solid #eee; background-color:#f9f9f9; padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 8px; }
         .pokemon-form-block h4 { color: var(--secondary); margin-bottom: 1rem; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem; }
         .evs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 0.75rem; align-items: center; margin-bottom: 0.5rem;}
@@ -93,107 +56,43 @@
         .ev-total { font-weight: bold; margin-top: 0.5rem; text-align: right; font-size: 0.9rem;}
         .moves-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 
-        /* Estilos Generales de la Página (Header, Main, Footer, Tarjetas, etc.) */
-        .search-bar {
-            background-color: white; border-radius: 25px; padding: 0.6rem 1rem; margin: 1rem auto;
-            display: flex; align-items: center; width: 100%; max-width: 600px;
-        }
+        .search-bar { background-color: white; border-radius: 25px; padding: 0.6rem 1rem; margin: 1rem auto; display: flex; align-items: center; width: 100%; max-width: 600px; }
         .search-bar input { flex: 1; border: none; outline: none; font-size: 0.9rem; padding-right: 1rem; }
-        .search-bar button {
-            background-color: var(--secondary); color: white; border: none; border-radius: 20px;
-            padding: 0.4rem 1rem; cursor: pointer; font-weight: bold; transition: background-color 0.3s;
-        }
+        .search-bar button { background-color: var(--secondary); color: white; border: none; border-radius: 20px; padding: 0.4rem 1rem; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }
         .search-bar button:hover { background-color: #2a3ba9; }
         main.container { padding-top: 1rem; padding-bottom: 2rem; }
         .featured-section { margin: 2rem 0; }
-        .section-title {
-            font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 3px solid var(--primary);
-            padding-bottom: 0.5rem; display: inline-block;
-        }
+        .section-title { font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 3px solid var(--primary); padding-bottom: 0.5rem; display: inline-block; }
         .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-        .team-card {
-            background-color: white; border-radius: 10px; overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column;
-        }
-        .team-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
-        .team-header {
-            background-color: var(--primary); color: white; padding: 1rem;
-            display: flex; justify-content: space-between; align-items: center;
-        }
+        .team-card { background-color: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; }
+        .team-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .team-header { background-color: var(--primary); color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
         .team-title { font-size: 1.2rem; font-weight: bold; }
-        .team-format {
-            background-color: var(--secondary); padding: 0.3rem 0.6rem;
-            border-radius: 10px; font-size: 0.8rem; font-weight: bold;
-        }
-        .team-pokemon-preview {
-            display: flex; justify-content: space-around; padding: 1rem; flex-wrap: wrap;
-        }
-        .pokemon-icon-preview {
-            text-align: center; margin: 0.25rem;
-            width: calc(100%/3 - 1rem); 
-            max-width: 80px;
-        }
-        .pokemon-icon-preview img {
-            width: 60px; height: 60px; object-fit: contain;
-            border-radius: 50%; background-color: #e9e9e9; border: 1px solid #ccc;
-            margin-bottom: 0.2rem; image-rendering: pixelated; 
-        }
-        .pokemon-name-preview {
-            font-size: 0.75rem; margin-top: 0.1rem; overflow: hidden;
-            text-overflow: ellipsis; white-space: nowrap; font-weight: 500;
-        }
-        .team-footer {
-            padding: 1rem; background-color: #f8f8f8;
-            border-top: 1px solid #eee; font-size: 0.9rem; margin-top: auto;
-        }
+        .team-format { background-color: var(--secondary); padding: 0.3rem 0.6rem; border-radius: 10px; font-size: 0.8rem; font-weight: bold; }
+        .team-pokemon-preview { display: flex; justify-content: space-around; padding: 1rem; flex-wrap: wrap; }
+        .pokemon-icon-preview { text-align: center; margin: 0.25rem; width: calc(100%/3 - 1rem); max-width: 80px; }
+        .pokemon-icon-preview img { width: 60px; height: 60px; object-fit: contain; border-radius: 50%; background-color: #e9e9e9; border: 1px solid #ccc; margin-bottom: 0.2rem; image-rendering: pixelated; }
+        .pokemon-name-preview { font-size: 0.75rem; margin-top: 0.1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+        .team-footer { padding: 1rem; background-color: #f8f8f8; border-top: 1px solid #eee; font-size: 0.9rem; margin-top: auto; }
         .team-footer-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;}
         .team-stats { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
         .stat { display: flex; align-items: center; gap: 0.3rem; }
         .team-creator { font-weight: 500; color: var(--secondary); white-space: nowrap; }
         .team-actions { display: flex; gap: 0.5rem; justify-content: center; margin-top: 0.5rem; }
-        .team-action-button {
-            background-color: var(--secondary); color: white; border: none; border-radius: 20px;
-            padding: 0.5rem 1rem; cursor: pointer; font-weight: bold; transition: background-color 0.3s;
-            font-size: 0.8rem; flex-grow: 1; text-align: center;
-        }
+        .team-action-button { background-color: var(--secondary); color: white; border: none; border-radius: 20px; padding: 0.5rem 1rem; cursor: pointer; font-weight: bold; transition: background-color 0.3s; font-size: 0.8rem; flex-grow: 1; text-align: center; }
         .team-action-button.view-details { background-color: var(--success); }
         .team-action-button:hover { filter: brightness(110%); }
-
-        .cta-section {
-            text-align: center; margin: 3rem 0; padding: 2.5rem 1rem;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
+        .cta-section { text-align: center; margin: 3rem 0; padding: 2.5rem 1rem; background: linear-gradient(45deg, var(--primary), var(--secondary)); color: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .cta-title { font-size: 2.2rem; margin-bottom: 1rem; }
         .cta-description { max-width: 600px; margin: 0 auto 1.5rem; line-height: 1.7; font-size: 1.1rem; }
-        .cta-button {
-            background-color: white; color: var(--primary); text-decoration: none; padding: 0.9rem 2.2rem;
-            border-radius: 25px; font-weight: bold; display: inline-block; transition: all 0.3s;
-            border: 2px solid transparent;
-        }
+        .cta-button { background-color: white; color: var(--primary); text-decoration: none; padding: 0.9rem 2.2rem; border-radius: 25px; font-weight: bold; display: inline-block; transition: all 0.3s; border: 2px solid transparent; }
         .cta-button:hover { background-color: transparent; color: white; border-color: white; transform: translateY(-3px); }
-
         .categories-section { margin: 2rem 0; }
-        .category-list {
-            display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; justify-content: center;
-        }
-        .category-item {
-            background-color: white; padding: 0.8rem 1.5rem; border-radius: 25px; font-weight: 500;
-            cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            border: 1px solid #ddd;
-        }
-        .category-item:hover, .category-item.active {
-            background-color: var(--secondary); color: white; border-color: var(--secondary);
-            transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        footer {
-            background-color: var(--dark); color: white; padding: 3rem 0 2rem; margin-top: 3rem;
-        }
-        .footer-content {
-            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; margin-bottom: 2rem;
-        }
+        .category-list { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; justify-content: center; }
+        .category-item { background-color: white; padding: 0.8rem 1.5rem; border-radius: 25px; font-weight: 500; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #ddd; }
+        .category-item:hover, .category-item.active { background-color: var(--secondary); color: white; border-color: var(--secondary); transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        footer { background-color: var(--dark); color: white; padding: 3rem 0 2rem; margin-top: 3rem; }
+        .footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; margin-bottom: 2rem; }
         .footer-column { flex: 1; min-width: 220px; }
         .footer-column h3 { margin-bottom: 1.2rem; font-size: 1.3rem; color: var(--primary); }
         .footer-column p { color: #ccc; line-height: 1.7; }
@@ -201,68 +100,9 @@
         .footer-links li { margin-bottom: 0.8rem; }
         .footer-links a { color: #aaa; text-decoration: none; transition: color 0.3s, padding-left 0.3s; }
         .footer-links a:hover { color: white; padding-left: 5px; }
-        .footer-bottom {
-            margin-top: 2rem; text-align: center; padding-top: 2rem;
-            border-top: 1px solid #555; color: #aaa; font-size: 0.9rem;
-        }
-
-        /* Modal para Detalles del Equipo */
-        .modal {
-            display: none; position: fixed; z-index: 1001; left: 0; top: 0;
-            width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6);
-            align-items: center; justify-content: center;
-        }
-        .modal-content {
-            background-color: #fff; margin: auto; padding: 25px; border-radius: 10px;
-            width: 90%; max-width: 800px; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            position: relative; max-height: 90vh; overflow-y: auto;
-        }
-        .modal-close {
-            color: #aaa; float: right; font-size: 28px; font-weight: bold;
-            position: absolute; top: 10px; right: 20px;
-        }
-        .modal-close:hover, .modal-close:focus { color: var(--dark); text-decoration: none; cursor: pointer; }
-        .modal-title { color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid var(--primary); padding-bottom: 0.5rem;}
-
-        .modal-team-pokemon-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
-            gap: 1rem; margin-bottom: 1.5rem;
-        }
-        .modal-pokemon-card {
-            border: 1px solid #eee; border-radius: 8px; padding: 1rem; background-color: #f9f9f9;
-            display: flex; flex-direction: column;
-        }
-        .modal-pokemon-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
-        .modal-pokemon-sprite {
-            width: 72px; height: 72px; object-fit: contain; background-color: #e0e0e0;
-            border-radius: 50%; image-rendering: pixelated; border: 1px solid #ccc;
-        }
-        .modal-pokemon-item-sprite {
-            width: 32px; height: 32px; object-fit: contain; margin-left: auto;
-            background-color: #e0e0e0; border-radius: 5px; padding: 2px; border: 1px solid #ccc;
-        }
-        .modal-pokemon-name { font-size: 1.1rem; font-weight: bold; color: var(--secondary); flex-grow: 1; }
-        .modal-pokemon-info { font-size: 0.85rem; margin-bottom: 0.3rem; }
-        .modal-pokemon-info strong { color: var(--dark); }
-        .modal-pokemon-moves-title { font-weight: bold; margin-top: 0.75rem; margin-bottom: 0.5rem; font-size: 0.9rem;}
-        .modal-pokemon-moves-list { list-style: none; padding-left: 0; }
-        .modal-pokemon-moves-list li {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0.4rem 0.6rem; border-radius: 5px; margin-bottom: 0.3rem;
-            font-size: 0.85rem; color: white;
-        }
-        .move-name { flex-grow: 1; }
-        .move-category-icon { width: 18px; height: 18px; margin-left: 0.5rem; }
-        .modal-team-description, .modal-team-video, .modal-team-analysis { margin-bottom: 1.5rem; }
-        .modal-team-description h3, .modal-team-video h3, .modal-team-analysis h3 { color: var(--secondary); margin-bottom: 0.5rem; }
-        .youtube-embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 8px;}
-        .youtube-embed-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        
-        .type-tag { padding: 0.2em 0.5em; border-radius: 4px; color: white; font-size: 0.8em; text-transform: uppercase; margin-left: 5px;}
-
+        .footer-bottom { margin-top: 2rem; text-align: center; padding-top: 2rem; border-top: 1px solid #555; color: #aaa; font-size: 0.9rem; }
     </style>
 </head>
-
 <body>
     <header>
         <div class="container">
@@ -281,7 +121,7 @@
             <div class="search-bar">
                 <input type="text" id="search-input" placeholder="Buscar equipos, Pokémon o usuarios...">
                 <button id="search-button">Buscar</button>
-            </div>
+                </div>
         </div>
     </header>
 
@@ -317,8 +157,30 @@
                     <input type="text" id="team-title-input" name="teamTitle" required>
                 </div>
                 <div class="form-group">
-                    <label for="team-format-input">Formato (ej. VGC 2025, OU Singles)</label>
-                    <input type="text" id="team-format-input" name="teamFormat" required>
+                    <label for="team-format-input">Formato de Competición</label>
+                    <select id="team-format-input" name="teamFormat" required>
+                        <option value="">Selecciona un formato...</option>
+                        <option value="VGC 2025 Series 1">VGC 2025 Series 1</option>
+                        <option value="VGC 2024 Regulation G">VGC 2024 Regulation G</option>
+                        <option value="OU (OverUsed) Singles">OU (OverUsed) Singles</option>
+                        <option value="UU (UnderUsed) Singles">UU (UnderUsed) Singles</option>
+                        <option value="RU (RarelyUsed) Singles">RU (RarelyUsed) Singles</option>
+                        <option value="NU (NeverUsed) Singles">NU (NeverUsed) Singles</option>
+                        <option value="PU (PartiallyUsed) Singles">PU (PartiallyUsed) Singles</option>
+                        <option value="LC (Little Cup)">LC (Little Cup)</option>
+                        <option value="Doubles OU">Doubles OU</option>
+                        <option value="Monotype">Monotype</option>
+                        <option value="Battle Stadium Singles (BSS)">Battle Stadium Singles (BSS)</option>
+                        <option value="Battle Stadium Doubles (BSD)">Battle Stadium Doubles (BSD)</option>
+                        <option value="Anything Goes (AG)">Anything Goes (AG)</option>
+                        <option value="Custom Game">Custom Game</option>
+                        <option value="Other">Otro</option>
+                    </select>
+                </div>
+                 <div class="form-group">
+                    <label for="pokepaste-import-input">Importar desde Pokepaste.es (Opcional)</label>
+                    <input type="url" id="pokepaste-import-input" name="pokepasteImportLink" placeholder="Pega aquí el enlace de Pokepaste.es">
+                    <button type="button" id="import-pokepaste-button" class="action-button">Importar Datos</button>
                 </div>
                 <div class="form-group">
                     <label for="team-description-input">Descripción / Guía del Equipo</label>
@@ -328,11 +190,8 @@
                     <label for="team-youtube-input">Enlace de YouTube (Opcional)</label>
                     <input type="url" id="team-youtube-input" name="teamYoutubeLink" placeholder="https://www.youtube.com/watch?v=...">
                 </div>
-
                 <h3 style="color: var(--secondary); margin-top: 2rem; margin-bottom: 1rem;">Pokémon del Equipo (6)</h3>
-                <div id="pokemon-forms-container">
-                    </div>
-
+                <div id="pokemon-forms-container"></div>
                 <button type="submit" class="submit-team-button">Guardar Equipo</button>
             </form>
             <div id="create-team-feedback" class="feedback-message" style="display:none;"></div>
@@ -341,8 +200,7 @@
         <div id="main-content">
             <section class="featured-section">
                 <h2 class="section-title">Equipos Destacados</h2>
-                <div class="team-grid" id="team-grid-destacados">
-                </div>
+                <div class="team-grid" id="team-grid-destacados"></div>
             </section>
             <section class="cta-section">
                 <h2 class="cta-title">Crea y Comparte Tu Propio Equipo</h2>
@@ -375,28 +233,6 @@
         </div>
     </footer>
 
-    <div id="team-details-modal" class="modal">
-         <div class="modal-content">
-            <span class="modal-close" id="modal-close-button">&times;</span>
-            <h2 id="modal-team-title" class="modal-title">Detalles del Equipo</h2>
-            <div class="modal-team-description">
-                <h3>Descripción del Creador</h3>
-                <p id="modal-team-creator-description">Cargando descripción...</p>
-            </div>
-            <div class="modal-team-video">
-                <h3>Vídeo Guía</h3>
-                <div id="modal-youtube-embed" class="youtube-embed-container"></div>
-            </div>
-            <h3 style="color: var(--secondary); margin-top: 1.5rem;">Pokémon del Equipo</h3>
-            <div id="modal-pokemon-container" class="modal-team-pokemon-grid"></div>
-            <div class="modal-team-analysis">
-                <h3>Análisis de Tipos del Equipo</h3>
-                <div id="modal-type-weakness-chart">Gráfico de Debilidades (placeholder)</div>
-                <div id="modal-type-offense-chart">Gráfico de Cobertura Ofensiva (placeholder)</div>
-            </div>
-        </div>
-    </div>
-
     <datalist id="pokemon-list"></datalist>
     <datalist id="item-list"></datalist>
     <datalist id="ability-list"></datalist>
@@ -419,7 +255,6 @@
         <option value="Rock"></option><option value="Ghost"></option><option value="Dragon"></option><option value="Dark"></option>
         <option value="Steel"></option><option value="Fairy"></option>
     </datalist>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -453,6 +288,7 @@
             const homeLink = document.getElementById('home-link'); 
             const createTeamCtaButton = document.getElementById('create-team-cta-button');
             const footerCreateTeamLink = document.getElementById('footer-create-team-link');
+            const importPokepasteButton = document.getElementById('import-pokepaste-button');
 
 
             const pokemonDatalist = document.getElementById('pokemon-list');
@@ -460,36 +296,34 @@
             const abilityDatalist = document.getElementById('ability-list');
             const moveDatalist = document.getElementById('move-list');
             
-            // ----- Carga de Datos para Datalists (PokéAPI) -----
             async function populateDatalist(url, datalistElement, nameKey = 'name', processFn = (name) => name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())) {
                 if (!datalistElement) return;
                 try {
-                    let allResults = [];
-                    let nextUrl = url;
-                    while (nextUrl) {
+                    let allResults = []; let nextUrl = url;
+                    // PokéAPI a veces tiene muchos resultados, iterar si es necesario
+                    let count = 0; // Para evitar bucles infinitos en caso de error de API
+                    while (nextUrl && count < 10) { // Limitar a 10 páginas por seguridad
                         const response = await fetch(nextUrl);
-                        if (!response.ok) { console.warn(`API error for ${url}: ${response.status}`); break; }
+                        if (!response.ok) { console.warn(`API error for ${url} (page ${count+1}): ${response.status}`); break; }
                         const data = await response.json();
                         allResults = allResults.concat(data.results);
                         nextUrl = data.next;
+                        count++;
                     }
-                    allResults.sort((a, b) => a[nameKey].localeCompare(b[nameKey])); // Ordenar alfabéticamente
+                    allResults.sort((a, b) => a[nameKey].localeCompare(b[nameKey]));
                     allResults.forEach(item => {
                         const option = document.createElement('option');
                         option.value = processFn(item[nameKey]);
                         datalistElement.appendChild(option);
                     });
-                } catch (error) {
-                    console.error(`Error populando datalist desde ${url}:`, error);
-                }
+                } catch (error) { console.error(`Error populando datalist desde ${url}:`, error); }
             }
 
-            populateDatalist('https://pokeapi.co/api/v2/pokemon?limit=10000', pokemonDatalist, 'name', name => name.charAt(0).toUpperCase() + name.slice(1));
+            populateDatalist('https://pokeapi.co/api/v2/pokemon?limit=1500', pokemonDatalist, 'name', name => name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' '));
             populateDatalist('https://pokeapi.co/api/v2/item?limit=2000', itemDatalist);
             populateDatalist('https://pokeapi.co/api/v2/ability?limit=500', abilityDatalist);
             populateDatalist('https://pokeapi.co/api/v2/move?limit=1000', moveDatalist);
 
-            // ----- Funciones de UI -----
             function showFeedback(element, message, isError = false) {
                 if (!element) return;
                 element.textContent = message;
@@ -509,13 +343,8 @@
             function showRegisterForm() { hideAllSections(); if (registerSection) registerSection.style.display = 'block'; }
             function showCreateTeamForm() {
                 const user = localStorage.getItem('userData');
-                if (user) {
-                    hideAllSections();
-                    if (createTeamSection) createTeamSection.style.display = 'block';
-                } else {
-                    alert("Debes iniciar sesión para crear un equipo.");
-                    showLoginForm();
-                }
+                if (user) { hideAllSections(); if (createTeamSection) createTeamSection.style.display = 'block'; }
+                else { alert("Debes iniciar sesión para crear un equipo."); showLoginForm(); }
             }
             function showMainContent() { hideAllSections(); if (mainContent) mainContent.style.display = 'block'; }
 
@@ -537,49 +366,30 @@
                 showMainContent();
             }
             
-            // ----- Lógica de Autenticación -----
             async function handleAuthSubmit(event, url, formElement, feedbackElement, isRegister = false) {
                 event.preventDefault();
                 const formData = new FormData(formElement);
                 const data = Object.fromEntries(formData.entries());
                 try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data),
-                    });
+                    const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
                     const result = await response.json();
                     if (response.ok) {
                         if (isRegister) {
                             showFeedback(feedbackElement, `¡Registro exitoso! ${result.message}. Ahora puedes iniciar sesión.`, false);
-                            formElement.reset();
-                            setTimeout(showLoginForm, 2000);
-                        } else { // Login
+                            formElement.reset(); setTimeout(showLoginForm, 2000);
+                        } else {
                             showFeedback(feedbackElement, `¡Inicio de sesión exitoso! Bienvenido, ${result.user.username}.`, false);
-                            formElement.reset();
-                            localStorage.setItem('userData', JSON.stringify(result.user)); 
+                            formElement.reset(); localStorage.setItem('userData', JSON.stringify(result.user)); 
                             updateNavForLoggedInUser(result.user.username);
                         }
-                    } else {
-                        showFeedback(feedbackElement, `Error: ${result.error || response.statusText}`, true);
-                    }
-                } catch (error) {
-                    showFeedback(feedbackElement, 'Error de conexión. Intenta de nuevo.', true);
-                }
+                    } else { showFeedback(feedbackElement, `Error: ${result.error || response.statusText}`, true); }
+                } catch (error) { showFeedback(feedbackElement, 'Error de conexión. Intenta de nuevo.', true); }
             }
 
             if (registerForm) registerForm.addEventListener('submit', (e) => handleAuthSubmit(e, REGISTER_URL, registerForm, registerFeedback, true));
             if (loginForm) loginForm.addEventListener('submit', (e) => handleAuthSubmit(e, LOGIN_URL, loginForm, loginFeedback));
-            
-            if (logoutNav) {
-                logoutNav.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    localStorage.removeItem('userData'); 
-                    updateNavForLoggedOutUser();
-                });
-            }
+            if (logoutNav) logoutNav.addEventListener('click', (e) => { e.preventDefault(); localStorage.removeItem('userData'); updateNavForLoggedOutUser(); });
 
-            // ----- Manejo de Navegación y Estado Inicial -----
             if (navLogoLink) navLogoLink.addEventListener('click', (e) => { e.preventDefault(); showMainContent(); });
             if (loginNav) loginNav.addEventListener('click', (e) => { e.preventDefault(); showLoginForm(); });
             if (registerNav) registerNav.addEventListener('click', (e) => { e.preventDefault(); showRegisterForm(); });
@@ -590,7 +400,6 @@
             if (createTeamCtaButton) createTeamCtaButton.addEventListener('click', (e) => { e.preventDefault(); showCreateTeamForm(); });
             if (footerCreateTeamLink) footerCreateTeamLink.addEventListener('click', (e) => { e.preventDefault(); showCreateTeamForm(); });
 
-
             const storedUser = localStorage.getItem('userData');
             if (storedUser) {
                 try { const userData = JSON.parse(storedUser); updateNavForLoggedInUser(userData.username); }
@@ -599,146 +408,28 @@
                 updateNavForLoggedOutUser();
             }
             
-            // ----- Datos de Equipos (Ejemplo Expandido) -----
-            let teamsData = { // Usar let para poder añadir equipos
+            let teamsData = {
                 "equipo1": {
-                    id: "equipo1", title: "Campeones de la Liga", format: "VGC 2025", creator: "MaestroPoké",
+                    id: "equipo1", title: "Campeones de la Liga", format: "VGC 2025 Series 1", creator: "MaestroPoké",
                     description: "Este equipo se centra en un control de velocidad agresivo con Tailwind y ataques potentes.",
-                    youtubeLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", likes: 245, comments: 32, saves: 189,
+                    youtubeLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", likes: 245, comments: [], saves: 189,
                     pokemons: [
-                        { name: "pikachu", item: "light-ball", ability: "lightning-rod", evs: "4 HP / 252 SpA / 252 Spe", nature: "Timid", teraType: "water", moves: ["thunderbolt", "fake-out", "grass-knot", "protect"] },
-                        { name: "charizard", item: "choice-specs", ability: "solar-power", evs: "252 SpA / 4 SpD / 252 Spe", nature: "Timid", teraType: "grass", moves: ["heat-wave", "solar-beam", "air-slash", "protect"] },
-                        { name: "blastoise", item: "white-herb", ability: "torrent", evs: "252 HP / 252 SpA / 4 SpD", nature: "Modest", teraType: "steel", moves: ["shell-smash", "hydro-pump", "ice-beam", "protect"] },
-                        { name: "venusaur", item: "focus-sash", ability: "chlorophyll", evs: "4 HP / 252 SpA / 252 Spe", nature: "Modest", teraType: "fire", moves: ["sleep-powder", "leaf-storm", "sludge-bomb", "protect"] },
-                        { name: "snorlax", item: "sitrus-berry", ability: "gluttony", evs: "252 HP / 252 Def / 4 SpD", nature: "Impish", teraType: "normal", moves: ["belly-drum", "body-slam", "darkest-lariat", "recycle"] },
-                        { name: "dragonite", item: "lum-berry", ability: "multiscale", evs: "252 Atk / 4 Def / 252 Spe", nature: "Adamant", teraType: "flying", moves: ["dragon-dance", "dragon-claw", "extreme-speed", "iron-head"] }
-                    ]
-                },
-                "equipo2": { 
-                    id: "equipo2", title: "Defensa Metálica", format: "OU Singles", creator: "SteelMaster",
-                    description: "Un equipo robusto basado en Pokémon de tipo Acero.", youtubeLink: "", likes: 183, comments: 27, saves: 142,
-                    pokemons: [
-                        { name: "metagross", item: "metagrossite", ability: "clear-body", evs: "252 Atk / 4 Def / 252 Spe", nature: "Jolly", teraType: "steel", moves: ["meteor-mash", "zen-headbutt", "bullet-punch", "hammer-arm"] },
-                        { name: "scizor", item: "choice-band", ability: "technician", evs: "248 HP / 252 Atk / 8 SpD", nature: "Adamant", teraType: "bug", moves: ["bullet-punch", "u-turn", "superpower", "pursuit"] },
-                        { name: "skarmory", item: "leftovers", ability: "sturdy", evs: "252 HP / 252 Def / 4 SpD", nature: "Impish", teraType: "flying", moves: ["spikes", "roost", "brave-bird", "whirlwind"] },
-                        { name: "magnezone", item: "choice-specs", ability: "magnet-pull", evs: "4 Def / 252 SpA / 252 Spe", nature: "Timid", teraType: "electric", moves: ["thunderbolt", "flash-cannon", "volt-switch", "hidden-power-fire"] },
-                        { name: "ferrothorn", item: "leftovers", ability: "iron-barbs", evs: "252 HP / 88 Def / 168 SpD", nature: "Relaxed", teraType: "water", moves: ["stealth-rock", "leech-seed", "power-whip", "gyro-ball"] },
-                        { name: "jirachi", item: "leftovers", ability: "serene-grace", evs: "252 HP / 224 SpD / 32 Spe", nature: "Careful", teraType: "steel", moves: ["iron-head", "body-slam", "wish", "protect"] }
+                        { name: "pikachu", item: "light-ball", ability: "lightning-rod", evs: "4 HP / 252 SpA / 252 Spe", nature: "Timid", teraType: "water", moves: ["thunderbolt", "fake-out", "grass-knot", "protect"], types: ["electric"] },
+                        { name: "charizard", item: "choice-specs", ability: "solar-power", evs: "252 SpA / 4 SpD / 252 Spe", nature: "Timid", teraType: "grass", moves: ["heat-wave", "solar-beam", "air-slash", "protect"], types: ["fire", "flying"] },
+                        { name: "blastoise", item: "white-herb", ability: "torrent", evs: "252 HP / 252 SpA / 4 SpD", nature: "Modest", teraType: "steel", moves: ["shell-smash", "hydro-pump", "ice-beam", "protect"], types: ["water"] },
+                        { name: "venusaur", item: "focus-sash", ability: "chlorophyll", evs: "4 HP / 252 SpA / 252 Spe", nature: "Modest", teraType: "fire", moves: ["sleep-powder", "leaf-storm", "sludge-bomb", "protect"], types: ["grass", "poison"] },
+                        { name: "snorlax", item: "sitrus-berry", ability: "gluttony", evs: "252 HP / 252 Def / 4 SpD", nature: "Impish", teraType: "normal", moves: ["belly-drum", "body-slam", "darkest-lariat", "recycle"], types: ["normal"] },
+                        { name: "dragonite", item: "lum-berry", ability: "multiscale", evs: "252 Atk / 4 Def / 252 Spe", nature: "Adamant", teraType: "flying", moves: ["dragon-dance", "dragon-claw", "extreme-speed", "iron-head"], types: ["dragon", "flying"] }
                     ]
                 }
             };
-
-            // ----- Modal de Detalles del Equipo -----
-            const modal = document.getElementById('team-details-modal');
-            const modalCloseButton = document.getElementById('modal-close-button');
-            const modalTeamTitle = document.getElementById('modal-team-title');
-            const modalPokemonContainer = document.getElementById('modal-pokemon-container');
-            const modalDescription = document.getElementById('modal-team-creator-description');
-            const modalYoutubeEmbed = document.getElementById('modal-youtube-embed');
-
-            if (modalCloseButton && modal) {
-                modalCloseButton.onclick = () => { modal.style.display = "none"; };
-            }
-            window.onclick = (event) => {
-                if (event.target == modal && modal) {
-                    modal.style.display = "none";
-                }
-            }
-
-            async function fetchFromPokeAPI(endpoint) { 
-                try {
-                    const response = await fetch(`https://pokeapi.co/api/v2/${endpoint}`);
-                    if (!response.ok) { console.warn(`Recurso no encontrado en PokéAPI: ${endpoint} (Status: ${response.status})`); return null; }
-                    return await response.json();
-                } catch (error) { console.error(`Error fetching de PokéAPI (${endpoint}):`, error); return null; }
-            }
             
-            function getMoveCategoryIcon(category) {
-                if (category === 'physical') return `<svg viewBox="0 0 100 100" class="move-category-icon" fill="#E9544E" title="Físico"><path d="M82.5,52.2c-2.4-5.4-5.8-9.3-10.1-11.7l-1.3-0.7L29.4,14.1c-2.9-1.7-6.6-1.7-9.5,0L9.8,20.3c-2.9,1.7-4.7,4.9-4.7,8.3v52.8c0,3.4,1.8,6.6,4.7,8.3l10.1,6.2c1.5,0.8,3.1,1.3,4.7,1.3s3.3-0.4,4.7-1.3l41.7-25.7c2.9-1.7,4.7-4.9,4.7-8.3V44.1C80.5,44.1,82.5,52.2,82.5,52.2z M19.1,81.7V30.1l10.1-5.8l29.7,17.8v39.5L19.1,81.7z M69.2,50.4L39.5,68.2V32.6L69.2,50.4z"></path></svg>`;
-                if (category === 'special') return `<svg viewBox="0 0 100 100" class="move-category-icon" fill="#3B4CCA" title="Especial"><path d="M50,5C25.2,5,5,25.2,5,50s20.2,45,45,45s45-20.2,45-45S74.8,5,50,5z M50,86.4c-20.1,0-36.4-16.3-36.4-36.4S29.9,13.6,50,13.6s36.4,16.3,36.4,36.4S70.1,86.4,50,86.4z"></path><circle cx="50" cy="50" r="20"></circle></svg>`;
-                if (category === 'status') return `<svg viewBox="0 0 100 100" class="move-category-icon" fill="#888888" title="Estado"><path d="M50,10c-22.1,0-40,17.9-40,40s17.9,40,40,40s40-17.9,40-40S72.1,10,50,10z M50,82c-17.7,0-32-14.3-32-32s14.3-32,32-32s32,14.3,32,32S67.7,82,50,82z"></path><path d="M50,30c-11,0-20,9-20,20s9,20,20,20s20-9,20-20S61,30,50,30z M50,62c-6.6,0-12-5.4-12-12s5.4-12,12-12s12,5.4,12,12S56.6,62,50,62z"></path></svg>`;
-                return '';
-            }
-            function getTypeColor(typeName) { return `var(--type-${typeName.toLowerCase()}, var(--dark))`; }
-
-            async function displayTeamDetails(teamId) {
-                const team = teamsData[teamId];
-                if (!team || !modal || !modalTeamTitle || !modalDescription || !modalYoutubeEmbed || !modalPokemonContainer) {
-                     console.error("Equipo no encontrado o elementos del modal faltantes:", teamId); return;
-                }
-                modalTeamTitle.textContent = team.title || "Detalles del Equipo";
-                modalDescription.textContent = team.description || "No hay descripción disponible.";
-                modalYoutubeEmbed.innerHTML = '';
-                if (team.youtubeLink) {
-                    const videoId = extractYouTubeVideoID(team.youtubeLink);
-                    if (videoId) {
-                        const iframe = document.createElement('iframe');
-                        iframe.src = `https://www.youtube.com/embed/${videoId}`;
-                        iframe.frameBorder = "0"; iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"; iframe.allowFullscreen = true;
-                        modalYoutubeEmbed.appendChild(iframe);
-                    } else { modalYoutubeEmbed.innerHTML = '<p>Enlace de YouTube no válido.</p>';}
-                } else { modalYoutubeEmbed.innerHTML = '<p>No hay vídeo guía disponible.</p>';}
-
-                modalPokemonContainer.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">Cargando Pokémon...</p>';
-                let pokemonDetailsHtml = '';
-                for (const p of team.pokemons) {
-                    const pokeApiData = await fetchFromPokeAPI(`pokemon/${p.name.toLowerCase()}`);
-                    const itemApiData = p.item ? await fetchFromPokeAPI(`item/${p.item.toLowerCase().replace(/\s+/g, '-')}`) : null;
-                    let movesHtml = '<ul class="modal-pokemon-moves-list">';
-                    for (const moveName of p.moves) {
-                        const moveData = await fetchFromPokeAPI(`move/${moveName.toLowerCase().replace(/\s+/g, '-')}`);
-                        if (moveData) {
-                            const typeName = moveData.type.name;
-                            const category = moveData.damage_class.name;
-                            const moveDisplayName = moveData.names.find(n => n.language.name === 'es')?.name || moveName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                            movesHtml += `<li style="background-color: ${getTypeColor(typeName)};">
-                                            <span class="move-name">${moveDisplayName}</span>
-                                            ${getMoveCategoryIcon(category)}
-                                          </li>`;
-                        } else { movesHtml += `<li>${moveName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} (datos no disp.)</li>`; }
-                    }
-                    movesHtml += '</ul>';
-                    pokemonDetailsHtml += `
-                        <div class="modal-pokemon-card">
-                            <div class="modal-pokemon-header">
-                                <img src="${pokeApiData?.sprites?.front_default || 'https://placehold.co/72x72/cccccc/969696?text=?'}" alt="${p.name}" class="modal-pokemon-sprite">
-                                <div>
-                                    <h4 class="modal-pokemon-name">${p.name.charAt(0).toUpperCase() + p.name.slice(1)}</h4>
-                                    ${p.teraType ? `<div class="modal-pokemon-info"><strong>Teratipo:</strong> <span class="type-tag" style="background-color:${getTypeColor(p.teraType)};">${p.teraType.toUpperCase()}</span></div>` : ''}
-                                </div>
-                                ${itemApiData?.sprites?.default ? `<img src="${itemApiData.sprites.default}" alt="${p.item}" class="modal-pokemon-item-sprite" title="${p.item}">` : `<span class="modal-pokemon-item-sprite" title="${p.item || 'Ninguno'}">${p.item ? '📦' : ''}</span>`}
-                            </div>
-                            <div class="modal-pokemon-info"><strong>Objeto:</strong> ${p.item ? p.item.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Ninguno'}</div>
-                            <div class="modal-pokemon-info"><strong>Habilidad:</strong> ${p.ability ? p.ability.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'N/A'}</div>
-                            <div class="modal-pokemon-info"><strong>EVs:</strong> ${p.evs || 'N/A'}</div>
-                            <div class="modal-pokemon-info"><strong>Naturaleza:</strong> ${p.nature || 'N/A'}</div>
-                            <h5 class="modal-pokemon-moves-title">Movimientos:</h5>
-                            ${movesHtml}
-                        </div>`;
-                }
-                modalPokemonContainer.innerHTML = pokemonDetailsHtml;
-                if (modal) modal.style.display = "flex";
-            }
-            
-            function extractYouTubeVideoID(url) {
-                const regExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-                const match = url.match(regExp);
-                return (match && match[1]) ? match[1] : null;
-            }
-
-            // ----- Renderizar Tarjetas de Equipo -----
-            const teamGridDestacados = document.getElementById('team-grid-destacados');
             function renderTeamCard(team) {
                 let pokemonIconsHtml = '';
                 team.pokemons.slice(0, 6).forEach(p => {
-                    const pokemonSpriteUrl = `https://play.pokemonshowdown.com/sprites/gen5/${p.name.toLowerCase().replace(/\s+/g, '-')}.png`;
-                    pokemonIconsHtml += `
-                        <div class="pokemon-icon-preview">
-                            <img src="${pokemonSpriteUrl}" 
-                                 alt="${p.name}" 
-                                 onerror="this.src='https://placehold.co/60x60/cccccc/969696?text=${p.name.substring(0,1).toUpperCase()}&font=roboto'; this.alt='Error al cargar ${p.name}'">
-                            <div class="pokemon-name-preview">${p.name.charAt(0).toUpperCase() + p.name.slice(1)}</div>
-                        </div>`;
+                    const pokemonNameForSprite = p.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/gi, '');
+                    const pokemonSpriteUrl = `https://play.pokemonshowdown.com/sprites/gen5/${pokemonNameForSprite}.png`;
+                    pokemonIconsHtml += `<div class="pokemon-icon-preview"><img src="${pokemonSpriteUrl}" alt="${p.name}" onerror="this.src='https://placehold.co/60x60/cccccc/969696?text=${p.name.substring(0,1).toUpperCase()}&font=roboto'; this.alt='${p.name}'"><div class="pokemon-name-preview">${p.name.charAt(0).toUpperCase() + p.name.slice(1)}</div></div>`;
                 });
                 return `
                     <div class="team-card" data-team-id="${team.id}">
@@ -747,7 +438,7 @@
                         <div class="team-footer">
                             <div class="team-footer-top-row">
                                 <div class="team-stats">
-                                    <div class="stat">👍 ${team.likes || 0}</div> <div class="stat">💬 ${team.comments || 0}</div> <div class="stat">💾 ${team.saves || 0}</div>
+                                    <div class="stat">👍 ${team.likes || 0}</div> <div class="stat">💬 ${team.comments?.length || 0}</div> <div class="stat">💾 ${team.saves || 0}</div>
                                 </div>
                                 <div class="team-creator">Por: ${team.creator}</div>
                             </div>
@@ -755,17 +446,21 @@
                                 <button class="team-action-button pokepaste-button">Copiar Pokepaste</button>
                                 <button class="team-action-button view-details-button">Ver Detalles</button>
                             </div>
-                        </div>
-                    </div>`;
+                        </div></div>`;
             }
             
+            const teamGridDestacados = document.getElementById('team-grid-destacados');
             function renderAllTeamCards() {
                 if (teamGridDestacados) {
                     teamGridDestacados.innerHTML = Object.values(teamsData).map(renderTeamCard).join('');
                     document.querySelectorAll('.view-details-button').forEach(button => {
                         button.addEventListener('click', (event) => {
                             const teamCard = event.target.closest('.team-card');
-                            if (teamCard) displayTeamDetails(teamCard.dataset.teamId);
+                            if (teamCard) {
+                                const teamId = teamCard.dataset.teamId;
+                                localStorage.setItem('currentTeamDetails', JSON.stringify(teamsData[teamId]));
+                                window.open(`team_detail.html?teamId=${teamId}`, '_blank');
+                            }
                         });
                     });
                     document.querySelectorAll('.pokepaste-button').forEach(button => {
@@ -796,7 +491,7 @@
                     if (p.teraType) pasteString += `Tera Type: ${p.teraType.charAt(0).toUpperCase() + p.teraType.slice(1)}\n`;
                     pasteString += `EVs: ${p.evs}\n`;
                     pasteString += `${p.nature} Nature\n`;
-                    p.moves.forEach(move => {
+                    (p.moves || []).forEach(move => { // Asegurar que p.moves exista
                         pasteString += `- ${move.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}\n`;
                     });
                     pasteString += `\n`;
@@ -804,73 +499,39 @@
                 return pasteString.trim();
             }
 
-            // ----- Lógica para Crear Equipo -----
             function generatePokemonFormFields(index) {
                 const evStats = ['HP', 'Atk', 'Def', 'SpA', 'SpD', 'Spe'];
                 let evInputsHtml = `<label style="grid-column: 1 / -1; text-align:left; margin-bottom:0.3rem;">EVs:</label><div class="evs-grid">`;
                 evStats.forEach(stat => {
-                    evInputsHtml += `
-                        <div>
-                            <label for="pokemon-${index}-ev-${stat.toLowerCase()}">${stat}</label>
-                            <input type="number" id="pokemon-${index}-ev-${stat.toLowerCase()}" name="pokemon-${index}-ev-${stat.toLowerCase()}" 
-                                   min="0" max="252" value="0" class="ev-input" data-pokemon-idx="${index}">
-                        </div>`;
+                    evInputsHtml += `<div><label for="pokemon-${index}-ev-${stat.toLowerCase()}">${stat}</label><input type="number" id="pokemon-${index}-ev-${stat.toLowerCase()}" name="pokemon-${index}-ev-${stat.toLowerCase()}" min="0" max="252" value="0" class="ev-input" data-pokemon-idx="${index}"></div>`;
                 });
                 evInputsHtml += '</div>';
-
                 return `
                     <div class="pokemon-form-block" data-pokemon-idx="${index}">
                         <h4>Pokémon ${index + 1}</h4>
-                        <div class="form-group">
-                            <label for="pokemon-name-${index}">Nombre del Pokémon</label>
-                            <input type="text" id="pokemon-name-${index}" name="pokemon-${index}-name" list="pokemon-list" required placeholder="Ej: Pikachu">
-                        </div>
-                        <div class="form-group">
-                            <label for="pokemon-item-${index}">Objeto</label>
-                            <input type="text" id="pokemon-item-${index}" name="pokemon-${index}-item" list="item-list" placeholder="Ej: Light Ball">
-                        </div>
-                        <div class="form-group">
-                            <label for="pokemon-ability-${index}">Habilidad</label>
-                            <input type="text" id="pokemon-ability-${index}" name="pokemon-${index}-ability" list="ability-list" placeholder="Ej: Static">
-                        </div>
+                        <div class="form-group"><label for="pokemon-name-${index}">Nombre</label><input type="text" id="pokemon-name-${index}" name="pokemon-${index}-name" list="pokemon-list" required placeholder="Ej: Pikachu"></div>
+                        <div class="form-group"><label for="pokemon-item-${index}">Objeto</label><input type="text" id="pokemon-item-${index}" name="pokemon-${index}-item" list="item-list" placeholder="Ej: Light Ball"></div>
+                        <div class="form-group"><label for="pokemon-ability-${index}">Habilidad</label><input type="text" id="pokemon-ability-${index}" name="pokemon-${index}-ability" list="ability-list" placeholder="Ej: Static"></div>
                         ${evInputsHtml}
                         <div class="ev-total" id="ev-total-display-${index}">Total EVs: 0 / 508</div>
-                        <div class="form-group">
-                            <label for="pokemon-nature-${index}">Naturaleza</label>
-                            <input type="text" id="pokemon-nature-${index}" name="pokemon-${index}-nature" list="nature-list" placeholder="Ej: Timid">
-                        </div>
-                        <div class="form-group">
-                            <label for="pokemon-teratype-${index}">Teratipo</label>
-                            <input type="text" id="pokemon-teratype-${index}" name="pokemon-${index}-teraType" list="type-list" placeholder="Ej: Water">
-                        </div>
-                        <label>Movimientos (4):</label>
-                        <div class="moves-grid">
-                            ${[0,1,2,3].map(moveIdx => `
-                                <div class="form-group">
-                                    <input type="text" id="pokemon-${index}-move-${moveIdx}" name="pokemon-${index}-move${moveIdx+1}" list="move-list" placeholder="Movimiento ${moveIdx+1}" required>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>`;
+                        <div class="form-group"><label for="pokemon-nature-${index}">Naturaleza</label><input type="text" id="pokemon-nature-${index}" name="pokemon-${index}-nature" list="nature-list" placeholder="Ej: Timid"></div>
+                        <div class="form-group"><label for="pokemon-teratype-${index}">Teratipo</label><input type="text" id="pokemon-teratype-${index}" name="pokemon-${index}-teraType" list="type-list" placeholder="Ej: Water"></div>
+                        <label>Movimientos (4):</label><div class="moves-grid">
+                            ${[0,1,2,3].map(moveIdx => `<div class="form-group"><input type="text" id="pokemon-${index}-move-${moveIdx}" name="pokemon-${index}-move${moveIdx+1}" list="move-list" placeholder="Movimiento ${moveIdx+1}" required></div>`).join('')}
+                        </div></div>`;
             }
 
             if (pokemonFormsContainer) {
-                for (let i = 0; i < 6; i++) {
-                    pokemonFormsContainer.innerHTML += generatePokemonFormFields(i);
-                }
-                document.querySelectorAll('.ev-input').forEach(input => {
-                    input.addEventListener('input', handleEvInputChange);
-                });
+                for (let i = 0; i < 6; i++) { pokemonFormsContainer.innerHTML += generatePokemonFormFields(i); }
+                document.querySelectorAll('.ev-input').forEach(input => input.addEventListener('input', handleEvInputChange));
             }
             
             function handleEvInputChange(event) {
-                const targetInput = event.target;
-                const pokemonIdx = targetInput.dataset.pokemonIdx;
+                const targetInput = event.target; const pokemonIdx = targetInput.dataset.pokemonIdx;
                 const allEvInputsForPokemon = document.querySelectorAll(`.ev-input[data-pokemon-idx="${pokemonIdx}"]`);
                 let currentTotalEvs = 0;
                 allEvInputsForPokemon.forEach(input => {
-                    let value = parseInt(input.value) || 0;
-                    if (value < 0) value = 0; if (value > 252) value = 252;
+                    let value = parseInt(input.value) || 0; if (value < 0) value = 0; if (value > 252) value = 252;
                     input.value = value; currentTotalEvs += value;
                 });
                 const totalDisplay = document.getElementById(`ev-total-display-${pokemonIdx}`);
@@ -878,43 +539,21 @@
                     totalDisplay.textContent = `Total EVs: ${currentTotalEvs} / 508`;
                     totalDisplay.style.color = currentTotalEvs > 508 ? 'var(--danger)' : 'var(--dark)';
                 }
-                // Actualizar el feedback global si es necesario
-                if (currentTotalEvs > 508) {
-                     showFeedback(createTeamFeedback, `Total de EVs para Pokémon ${parseInt(pokemonIdx)+1} excede 508. (Actual: ${currentTotalEvs})`, true);
-                } else {
-                    // Si este Pokémon ya no tiene error, y no hay otros con error, limpiar el mensaje global
-                    let anyOtherError = false;
-                    for (let i=0; i<6; i++) {
-                        if (i.toString() === pokemonIdx) continue;
-                        const otherTotalDisplay = document.getElementById(`ev-total-display-${i}`);
-                        if (otherTotalDisplay && otherTotalDisplay.style.color === 'var(--danger)') {
-                            anyOtherError = true;
-                            break;
-                        }
-                    }
-                    if (!anyOtherError && createTeamFeedback.style.display !== 'none' && createTeamFeedback.classList.contains('error')) {
-                         createTeamFeedback.style.display = 'none'; // Limpiar si el error era de este EV
-                    }
-                }
+                if (currentTotalEvs > 508 && createTeamFeedback) showFeedback(createTeamFeedback, `Total de EVs para Pokémon ${parseInt(pokemonIdx)+1} excede 508. (Actual: ${currentTotalEvs})`, true);
+                else if (createTeamFeedback && createTeamFeedback.classList.contains('error') && createTeamFeedback.textContent.includes(`Pokémon ${parseInt(pokemonIdx)+1}`)) { createTeamFeedback.style.display = 'none'; }
             }
 
             if (createTeamForm) {
-                createTeamForm.addEventListener('submit', function(event) {
+                createTeamForm.addEventListener('submit', async function(event) {
                     event.preventDefault();
-                    const formData = new FormData(createTeamForm);
-                    const loggedInUser = JSON.parse(localStorage.getItem('userData'));
-                    if (!loggedInUser) {
-                        showFeedback(createTeamFeedback, 'Debes iniciar sesión para guardar un equipo.', true);
-                        showLoginForm();
-                        return;
-                    }
+                    const formData = new FormData(createTeamForm); const loggedInUser = JSON.parse(localStorage.getItem('userData'));
+                    if (!loggedInUser) { showFeedback(createTeamFeedback, 'Debes iniciar sesión para guardar un equipo.', true); showLoginForm(); return; }
 
                     const newTeam = {
                         id: `equipo${Date.now()}`, title: formData.get('teamTitle'), format: formData.get('teamFormat'),
                         creator: loggedInUser.username, description: formData.get('teamDescription'),
-                        youtubeLink: formData.get('teamYoutubeLink'), likes: 0, comments: 0, saves: 0, pokemons: []
+                        youtubeLink: formData.get('teamYoutubeLink'), likes: 0, comments: [], saves: 0, pokemons: []
                     };
-
                     let globalEvError = false;
                     for (let i = 0; i < 6; i++) {
                         let pokemonEvTotal = 0; const evs = {};
@@ -922,44 +561,154 @@
                             const evValue = parseInt(formData.get(`pokemon-${i}-ev-${stat.toLowerCase()}`)) || 0;
                             evs[stat.toUpperCase()] = evValue; pokemonEvTotal += evValue;
                         });
-                        if (pokemonEvTotal > 508) {
-                            showFeedback(createTeamFeedback, `El Pokémon ${i+1} excede el total de 508 EVs. (Tiene ${pokemonEvTotal})`, true);
-                            globalEvError = true;
-                            const errorBlock = document.querySelector(`.pokemon-form-block[data-pokemon-idx="${i}"]`);
-                            if(errorBlock) errorBlock.scrollIntoView({behavior: "smooth", block: "center"});
-                            break; 
-                        }
-                        const pokemonName = formData.get(`pokemon-${i}-name`);
-                        if (!pokemonName || pokemonName.trim() === "") {
-                            showFeedback(createTeamFeedback, `El nombre para el Pokémon ${i+1} es requerido.`, true);
-                             const errorBlock = document.querySelector(`.pokemon-form-block[data-pokemon-idx="${i}"]`);
-                            if(errorBlock) errorBlock.scrollIntoView({behavior: "smooth", block: "center"});
-                            return; // Detener si un nombre de Pokémon falta
-                        }
+                        if (pokemonEvTotal > 508) { globalEvError = true; break; }
+                        
+                        const pokemonNameInput = formData.get(`pokemon-${i}-name`);
+                        if (!pokemonNameInput || pokemonNameInput.trim() === "") { showFeedback(createTeamFeedback, `El nombre para el Pokémon ${i+1} es requerido.`, true); return; }
+                        
+                        const pokeApiName = pokemonNameInput.toLowerCase().replace(/\s+/g, '-'); // Normalizar para API
+                        const pokeData = await fetchFromPokeAPI(`pokemon/${pokeApiName}`);
+                        const pokemonTypes = pokeData && pokeData.types ? pokeData.types.map(typeInfo => typeInfo.type.name) : [];
+
                         newTeam.pokemons.push({
-                            name: pokemonName.toLowerCase(), // Guardar en minúsculas para consistencia
-                            item: formData.get(`pokemon-${i}-item`),
+                            name: pokemonNameInput, // Guardar el nombre como lo ingresó el usuario para display
+                            item: formData.get(`pokemon-${i}-item`), 
                             ability: formData.get(`pokemon-${i}-ability`),
                             evs: `${evs.HP} HP / ${evs.Atk} Atk / ${evs.Def} Def / ${evs.SpA} SpA / ${evs.SpD} SpD / ${evs.Spe} Spe`,
-                            nature: formData.get(`pokemon-${i}-nature`),
+                            nature: formData.get(`pokemon-${i}-nature`), 
                             teraType: formData.get(`pokemon-${i}-teraType`),
-                            moves: [1,2,3,4].map(mIdx => formData.get(`pokemon-${i}-move${mIdx}`)).filter(move => move && move.trim() !== '')
+                            moves: [1,2,3,4].map(mIdx => formData.get(`pokemon-${i}-move${mIdx}`)).filter(move => move && move.trim() !== ''),
+                            types: pokemonTypes
                         });
                     }
-                    if (globalEvError) return;
-                    if (newTeam.pokemons.length < 6) { // Verificar que se añadieron 6 Pokémon (por si la validación de nombre falló antes)
-                        showFeedback(createTeamFeedback, `Debes completar los 6 Pokémon del equipo.`, true);
-                        return;
-                    }
+                    if (globalEvError) { showFeedback(createTeamFeedback, `Uno o más Pokémon exceden el total de 508 EVs. Revisa los totales.`, true); return; }
+                    if (newTeam.pokemons.length < 6) { showFeedback(createTeamFeedback, `Debes completar los 6 Pokémon del equipo.`, true); return; }
 
-                    teamsData[newTeam.id] = newTeam;
-                    renderAllTeamCards(); 
+                    teamsData[newTeam.id] = newTeam; renderAllTeamCards(); 
                     showFeedback(createTeamFeedback, '¡Equipo creado y añadido a la lista (temporalmente)!', false);
                     createTeamForm.reset();
                     document.querySelectorAll('.ev-total').forEach(el => { el.textContent = 'Total EVs: 0 / 508'; el.style.color = 'var(--dark)';});
                     setTimeout(showMainContent, 2000);
                 });
             }
+            
+            // Lógica para Importar desde Pokepaste
+            if (importPokepasteButton) {
+                importPokepasteButton.addEventListener('click', async () => {
+                    const pokepasteLinkInput = document.getElementById('pokepaste-import-input');
+                    const pasteURL = pokepasteLinkInput.value.trim();
+                    if (!pasteURL) {
+                        showFeedback(createTeamFeedback, "Por favor, introduce un enlace de Pokepaste.", true);
+                        return;
+                    }
+                    // Un proxy CORS es necesario si Pokepaste.es no permite CORS directo desde tu dominio.
+                    // Cloudflare Workers puede actuar como un proxy simple.
+                    // Por ahora, asumimos que podemos hacer fetch directo o que el usuario maneja el CORS.
+                    // Este es un ejemplo muy simplificado de parseo. Pokepaste puede tener formatos complejos.
+                    try {
+                        // Para evitar problemas de CORS, el usuario podría tener que pegar el contenido del paste directamente
+                        // o necesitarías un proxy. Aquí simularemos la obtención del texto.
+                        // En un caso real, si el fetch directo falla por CORS, informa al usuario.
+                        // const response = await fetch(pasteURL); // Esto probablemente falle por CORS
+                        // const pasteText = await response.text();
+                        const pasteText = prompt("Debido a restricciones CORS, por favor, pega el contenido de tu Pokepaste aquí:", "");
+
+                        if (!pasteText) {
+                            showFeedback(createTeamFeedback, "No se proporcionó texto de Pokepaste.", true);
+                            return;
+                        }
+
+                        const parsedPokemons = parsePokepaste(pasteText);
+                        if (parsedPokemons.length > 0) {
+                            fillCreateTeamForm(parsedPokemons);
+                            showFeedback(createTeamFeedback, "Datos de Pokepaste importados al formulario.", false);
+                        } else {
+                            showFeedback(createTeamFeedback, "No se pudieron parsear datos del Pokepaste. Asegúrate de que el formato es correcto.", true);
+                        }
+                    } catch (error) {
+                        console.error("Error importando Pokepaste:", error);
+                        showFeedback(createTeamFeedback, "Error al intentar importar desde Pokepaste. Verifica el enlace o el formato.", true);
+                    }
+                });
+            }
+
+            function parsePokepaste(text) {
+                const pokemons = [];
+                const sections = text.trim().split(/\n\s*\n/); // Separar por bloques de Pokémon (doble salto de línea)
+                
+                sections.forEach(section => {
+                    if (section.trim() === "") return;
+                    const lines = section.trim().split('\n');
+                    const pokemon = { name: '', item: '', ability: '', evs: '', nature: '', teraType: '', moves: [] };
+                    
+                    // Primera línea: Nombre @ Objeto (opcional)
+                    const firstLineMatch = lines[0].match(/^(.+?)(?:\s@\s(.+))?$/);
+                    if (firstLineMatch) {
+                        pokemon.name = firstLineMatch[1].trim();
+                        if (firstLineMatch[2]) pokemon.item = firstLineMatch[2].trim();
+                    } else {
+                        pokemon.name = lines[0].trim(); // Si no hay objeto
+                    }
+
+                    lines.slice(1).forEach(line => {
+                        line = line.trim();
+                        if (line.startsWith('Ability: ')) pokemon.ability = line.substring('Ability: '.length).trim();
+                        else if (line.startsWith('EVs: ')) pokemon.evs = line.substring('EVs: '.length).trim();
+                        else if (line.endsWith(' Nature')) pokemon.nature = line.replace(' Nature', '').trim();
+                        else if (line.startsWith('Tera Type: ')) pokemon.teraType = line.substring('Tera Type: '.length).trim();
+                        else if (line.startsWith('- ')) pokemon.moves.push(line.substring(2).trim());
+                    });
+                    if (pokemon.name) pokemons.push(pokemon);
+                });
+                return pokemons.slice(0, 6); // Tomar hasta 6 Pokémon
+            }
+
+            function fillCreateTeamForm(parsedPokemons) {
+                parsedPokemons.forEach((pokemon, index) => {
+                    if (index >= 6) return; // No rellenar más de 6
+
+                    document.getElementById(`pokemon-name-${index}`).value = pokemon.name || '';
+                    document.getElementById(`pokemon-item-${index}`).value = pokemon.item || '';
+                    document.getElementById(`pokemon-ability-${index}`).value = pokemon.ability || '';
+                    document.getElementById(`pokemon-nature-${index}`).value = pokemon.nature || '';
+                    document.getElementById(`pokemon-teratype-${index}`).value = pokemon.teraType || '';
+
+                    // Rellenar EVs (esto es más complejo de parsear y distribuir)
+                    // Por ahora, lo dejamos como un string, el usuario puede ajustarlo
+                    const evInput = document.querySelector(`.pokemon-form-block[data-pokemon-idx="${index}"] input[name$="-ev-hp"]`); // Un input de EV para encontrar el bloque
+                    if (evInput) {
+                        const evBlock = evInput.closest('.pokemon-form-block');
+                        const evDisplay = evBlock.querySelector('.ev-total');
+                        // No rellenamos los campos individuales de EV, solo mostramos el string
+                        // El usuario tendrá que introducirlos manualmente o mejorar el parseo
+                        if (evDisplay) evDisplay.textContent = `EVs Importados: ${pokemon.evs || 'N/A'}`;
+                        // Limpiar los inputs individuales de EV
+                        ['hp', 'atk', 'def', 'spa', 'spd', 'spe'].forEach(stat => {
+                             document.getElementById(`pokemon-${index}-ev-${stat.toLowerCase()}`).value = 0;
+                        });
+                    }
+
+
+                    (pokemon.moves || []).forEach((move, moveIdx) => {
+                        if (moveIdx < 4) {
+                            document.getElementById(`pokemon-${index}-move-${moveIdx}`).value = move;
+                        }
+                    });
+                });
+                 // Actualizar todos los contadores de EV a 0 después de rellenar
+                document.querySelectorAll('.ev-input').forEach(input => {
+                    if (!parsedPokemons.some((p, idx) => idx.toString() === input.dataset.pokemonIdx && p.evs)) { // Solo si no se importaron EVs para este poke
+                         input.value = 0;
+                    }
+                });
+                document.querySelectorAll('.ev-total').forEach((el, idx) => {
+                     if (!parsedPokemons.some((p, pIdx) => pIdx === idx && p.evs)) {
+                        el.textContent = 'Total EVs: 0 / 508';
+                        el.style.color = 'var(--dark)';
+                    }
+                });
+            }
+
         });
     </script>
 </body>
