@@ -85,13 +85,14 @@
         .team-footer { padding: 1rem; background-color: #f8f8f8; border-top: 1px solid #eee; font-size: 0.9rem; margin-top: auto; }
         .team-footer-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;}
         .team-stats { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-        .stat { display: flex; align-items: center; gap: 0.3rem; }
+        .stat { display: flex; align-items: center; gap: 0.3rem; cursor: default; } /* cursor default para no parecer clickeable */
+        .like-stat.can-like { cursor: pointer; } /* Solo si se puede dar like */
         .team-creator { font-weight: 500; color: var(--secondary); white-space: nowrap; }
-        .team-actions { display: flex; gap: 0.5rem; justify-content: center; margin-top: 0.5rem; flex-wrap: wrap; } /* flex-wrap añadido */
-        .team-action-button { background-color: var(--secondary); color: white; border: none; border-radius: 20px; padding: 0.5rem 1rem; cursor: pointer; font-weight: bold; transition: background-color 0.3s; font-size: 0.8rem; flex-grow: 1; text-align: center; margin-bottom: 0.3rem; } /* margen añadido */
+        .team-actions { display: flex; gap: 0.5rem; justify-content: center; margin-top: 0.5rem; flex-wrap: wrap; } 
+        .team-action-button { background-color: var(--secondary); color: white; border: none; border-radius: 20px; padding: 0.5rem 1rem; cursor: pointer; font-weight: bold; transition: background-color 0.3s; font-size: 0.8rem; flex-grow: 1; text-align: center; margin-bottom: 0.3rem; } 
         .team-action-button.view-details { background-color: var(--success); }
         .team-action-button.like-team-button { background-color: var(--primary-light, #ff8c89); color: var(--primary-dark); }
-        .team-action-button.edit-team-button { background-color: #ffc107; color: var(--dark); } /* Amarillo para editar */
+        .team-action-button.edit-team-button { background-color: #ffc107; color: var(--dark); } 
         .team-action-button.delete-team-button { background-color: var(--danger); }
         .team-action-button:hover { filter: brightness(110%); }
         .cta-section { text-align: center; margin: 3rem 0; padding: 2.5rem 1rem; background: linear-gradient(45deg, var(--primary), var(--secondary)); color: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
@@ -191,9 +192,9 @@
         </section>
 
         <section id="create-team-section">
-            <h2>Crear Nuevo Equipo Pokémon</h2>
+            <h2>Crear o Editar Equipo Pokémon</h2>
             <form id="create-team-form">
-                <div class="form-group">
+                <input type="hidden" id="editing-team-id" name="editingTeamId"> <div class="form-group">
                     <label for="team-title-input">Título del Equipo</label>
                     <input type="text" id="team-title-input" name="teamTitle" required>
                 </div>
@@ -257,8 +258,8 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column"><h3>Poké<span>Teams</span></h3><p>La comunidad para compartir equipos Pokémon.</p></div>
-                <div class="footer-column"><h3>Enlaces</h3><ul class="footer-links"><li><a href="#">Inicio</a></li><li><a href="#" id="footer-create-team-link">Crear Equipo</a></li><li><a href="#">Guías</a></li></ul></div>
-                <div class="footer-column"><h3>Recursos</h3><ul class="footer-links"><li><a href="#">Base de Datos Pokémon</a></li><li><a href="calculadora.html">Calculadora de Daño</a></li></ul></div>
+                <div class="footer-column"><h3>Enlaces</h3><ul class="footer-links"><li><a href="#">Inicio</a></li><li><a href="#" id="footer-create-team-link">Crear Equipo</a></li><li><a href="calculadora.html">Calculadora</a></li></ul></div>
+                <div class="footer-column"><h3>Recursos</h3><ul class="footer-links"><li><a href="#">Base de Datos Pokémon</a></li></ul></div>
                 <div class="footer-column"><h3>Información</h3><ul class="footer-links"><li><a href="acerca_de.html">Acerca de</a></li><li><a href="privacidad.html">Privacidad</a></li></ul></div>
             </div>
             <div class="footer-bottom"><p>© 2025 PokéTeams. Pokémon y sus personajes son marcas de Nintendo.</p></div>
@@ -277,13 +278,14 @@
     </datalist>
 
     <script>
+        // ----- INICIO DEL SCRIPT -----
         document.addEventListener('DOMContentLoaded', () => {
             const WORKER_BASE_URL = 'https://poke-teams-auth.srcookriss.workers.dev';
             const REGISTER_URL = `${WORKER_BASE_URL}/api/register`;
             const LOGIN_URL = `${WORKER_BASE_URL}/api/login`;
-            const TEAMS_URL = `${WORKER_BASE_URL}/api/teams`; // Para POST (crear), GET (todos)
+            const TEAMS_URL = `${WORKER_BASE_URL}/api/teams`;
 
-            // --- Selectores ---
+            // --- Selectores de Elementos del DOM ---
             const loginSection = document.getElementById('login-section');
             const registerSection = document.getElementById('register-section');
             const createTeamSection = document.getElementById('create-team-section');
@@ -303,12 +305,12 @@
             const advancedSearchFeedback = document.getElementById('advanced-search-feedback');
 
             const navLogoLink = document.getElementById('nav-logo-link');
+            const homeLink = document.getElementById('home-link');
             const loginNav = document.getElementById('login-nav-link');
             const registerNav = document.getElementById('register-nav-link');
             const createTeamNavLink = document.getElementById('create-team-nav-link');
             const logoutNav = document.getElementById('logout-nav-link');
             const userGreeting = document.getElementById('user-greeting');
-            const homeLink = document.getElementById('home-link'); 
             
             const showRegisterLink = document.getElementById('show-register-link'); 
             const showLoginLink = document.getElementById('show-login-link'); 
@@ -327,9 +329,9 @@
             const moveDatalist = document.getElementById('move-list');
             const moveDatalistAdv = document.getElementById('move-list-adv-search');
             const advSearchFormatSelect = document.getElementById('adv-search-format');
-            const teamFormatSelect = document.getElementById('team-format-input');
+            const teamFormatSelect = document.getElementById('team-format-input'); // Para el formulario de creación
 
-            let teamsData = {}; // Almacenará los equipos cargados del backend
+            let allTeamsData = {}; // Almacenará todos los equipos cargados del backend
 
             // --- Carga de Datalists ---
             async function populateDatalist(url, datalistElement, nameKey = 'name', processFn = (name) => name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())) {
@@ -344,7 +346,7 @@
                         nextUrl = data.next; count++;
                     }
                     allResults.sort((a, b) => a[nameKey].localeCompare(b[nameKey]));
-                    datalistElement.innerHTML = ''; // Limpiar antes de poblar
+                    datalistElement.innerHTML = ''; 
                     allResults.forEach(item => {
                         const option = document.createElement('option'); option.value = processFn(item[nameKey]);
                         datalistElement.appendChild(option);
@@ -364,7 +366,7 @@
             [advSearchFormatSelect, teamFormatSelect].forEach(selectElement => {
                 if (selectElement) {
                     const firstOptionText = selectElement.options[0]?.textContent || "Selecciona un formato...";
-                    selectElement.innerHTML = `<option value="">${firstOptionText}</option>`; // Mantener o establecer la opción por defecto
+                    selectElement.innerHTML = `<option value="">${firstOptionText}</option>`; 
                     formats.forEach(format => {
                         const option = document.createElement('option'); option.value = format; option.textContent = format;
                         selectElement.appendChild(option);
@@ -387,16 +389,61 @@
             }
             function showLoginForm() { hideAllPageSections(); if (loginSection) loginSection.style.display = 'block'; }
             function showRegisterForm() { hideAllPageSections(); if (registerSection) registerSection.style.display = 'block'; }
-            function showCreateTeamForm() {
+            function showCreateTeamForm(teamToEdit = null) { // Acepta un equipo para modo edición
                 const user = localStorage.getItem('userData');
-                if (user) { hideAllPageSections(); if (createTeamSection) createTeamSection.style.display = 'block'; }
-                else { alert("Debes iniciar sesión para crear un equipo."); showLoginForm(); }
+                if (user || teamToEdit) { // Permitir editar incluso si no está logueado (si la lógica lo permite)
+                    hideAllPageSections();
+                    if (createTeamSection) createTeamSection.style.display = 'block';
+                    createTeamForm.reset(); // Limpiar formulario
+                    document.querySelectorAll('.ev-total').forEach(el => { el.textContent = 'Total EVs: 0 / 508'; el.style.color = 'var(--dark)';});
+                    document.getElementById('editing-team-id').value = ''; // Limpiar ID de edición
+
+                    if (teamToEdit) { // Rellenar formulario si estamos editando
+                        document.getElementById('editing-team-id').value = teamToEdit.id;
+                        document.getElementById('team-title-input').value = teamToEdit.title || '';
+                        document.getElementById('team-format-input').value = teamToEdit.format || '';
+                        document.getElementById('team-description-input').value = teamToEdit.description || '';
+                        document.getElementById('team-youtube-input').value = teamToEdit.youtube_link || '';
+                        
+                        (teamToEdit.pokemons || []).forEach((pokemon, index) => {
+                            if (index < 6) {
+                                document.getElementById(`pokemon-name-${index}`).value = pokemon.name || '';
+                                document.getElementById(`pokemon-item-${index}`).value = pokemon.item || '';
+                                document.getElementById(`pokemon-ability-${index}`).value = pokemon.ability || '';
+                                document.getElementById(`pokemon-desired-move-${index}`).value = pokemon.desired_move || '';
+                                document.getElementById(`pokemon-desired-ability-${index}`).value = pokemon.desired_ability || '';
+                                document.getElementById(`pokemon-nature-${index}`).value = pokemon.nature || '';
+                                document.getElementById(`pokemon-teratype-${index}`).value = pokemon.tera_type || '';
+
+                                const evs = parseEVsFromPokepasteString(pokemon.evs); // Reutilizar parser
+                                ['hp', 'atk', 'def', 'spa', 'spd', 'spe'].forEach(stat => {
+                                    document.getElementById(`pokemon-${index}-ev-${stat.toLowerCase()}`).value = evs[stat.toUpperCase()] || 0;
+                                });
+                                handleEvInputChange({ target: document.getElementById(`pokemon-${index}-ev-hp`) });
+
+
+                                (pokemon.moves || []).forEach((move, moveIdx) => {
+                                    if (moveIdx < 4) {
+                                        document.getElementById(`pokemon-${index}-move-${moveIdx}`).value = move;
+                                    }
+                                });
+                            }
+                        });
+                        createTeamSection.querySelector('h2').textContent = "Editar Equipo Pokémon";
+                        createTeamForm.querySelector('.submit-team-button').textContent = "Actualizar Equipo";
+                    } else {
+                        createTeamSection.querySelector('h2').textContent = "Crear Nuevo Equipo Pokémon";
+                        createTeamForm.querySelector('.submit-team-button').textContent = "Guardar Equipo";
+                    }
+
+
+                } else { alert("Debes iniciar sesión para crear un equipo."); showLoginForm(); }
             }
             function showAdvancedSearchForm() { hideAllPageSections(); if (advancedSearchSection) advancedSearchSection.style.display = 'block'; }
             function showMainContentPage() { 
                 hideAllPageSections(); 
                 if (mainContent) mainContent.style.display = 'block'; 
-                renderAllTeamCards(null, 'team-grid-destacados'); // Renderiza equipos destacados
+                renderAllTeamCards(null, 'team-grid-destacados');
             }
             function showSearchResults(teams, queryDescription) {
                 hideAllPageSections();
@@ -436,7 +483,7 @@
                         if (isRegister) {
                             showFeedback(feedbackElement, `¡Registro exitoso! ${result.message}. Ahora puedes iniciar sesión.`, false);
                             formElement.reset(); setTimeout(showLoginForm, 2000);
-                        } else { // Login
+                        } else {
                             showFeedback(feedbackElement, `¡Inicio de sesión exitoso! Bienvenido, ${result.user.username}.`, false);
                             formElement.reset(); localStorage.setItem('userData', JSON.stringify(result.user)); 
                             updateNavForLoggedInUser(result.user.username);
@@ -474,24 +521,28 @@
                 } catch (error) { console.error(`Error fetching de PokéAPI (${endpoint}):`, error); return null; }
             }
 
-            async function fetchTeamsFromBackend() {
+            async function fetchTeamsFromBackend(queryParams = {}) {
+                const url = new URL(TEAMS_URL);
+                Object.keys(queryParams).forEach(key => {
+                    if (queryParams[key]) url.searchParams.append(key, queryParams[key]);
+                });
                 try {
-                    const response = await fetch(GET_TEAMS_URL);
+                    const response = await fetch(url.toString());
                     if (!response.ok) {
                         console.error("Error fetching teams:", response.status, response.statusText);
-                        showFeedback(document.getElementById('team-grid-destacados'), "No se pudieron cargar los equipos.", true);
-                        return {};
+                        return { teams: [], total: 0 }; // Devuelve estructura esperada en caso de error
                     }
                     const data = await response.json();
                     const teamsObject = {};
                     if (data.teams && Array.isArray(data.teams)) {
                         data.teams.forEach(team => { teamsObject[team.id] = team; });
                     }
-                    return teamsObject;
+                    allTeamsData = teamsObject; // Actualizar la variable global
+                    localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData)); // Guardar para team_detail.html
+                    return { teams: Object.values(teamsObject), total: data.total || Object.keys(teamsObject).length };
                 } catch (error) {
                     console.error("Error fetching teams from backend:", error);
-                    showFeedback(document.getElementById('team-grid-destacados'), "Error de conexión al cargar equipos.", true);
-                    return {};
+                    return { teams: [], total: 0 };
                 }
             }
             
@@ -513,7 +564,7 @@
                             <div class="team-footer-top-row">
                                 <div class="team-stats">
                                     <div class="stat like-stat" data-team-id="${team.id}">👍 ${team.likes || 0}</div> 
-                                    <div class="stat">💬 ${team.comments?.length || 0}</div> 
+                                    <div class="stat">💬 ${team.comments_count || 0}</div> 
                                 </div>
                                 <div class="team-creator">Por: ${team.creator || 'Desconocido'}</div>
                             </div>
@@ -532,8 +583,8 @@
             const teamGridDestacados = document.getElementById('team-grid-destacados');
             const teamGridSearchResults = document.getElementById('team-grid-search-results');
 
-            async function renderAllTeamCards(filteredTeams = null, targetGridId = 'team-grid-destacados') {
-                const teamsToRenderArray = filteredTeams ? Object.values(filteredTeams) : Object.values(teamsData);
+            async function renderAllTeamCards(teamsArray = null, targetGridId = 'team-grid-destacados') {
+                const teamsToRenderArray = teamsArray || Object.values(allTeamsData); // Usar allTeamsData global
                 const targetGridElement = document.getElementById(targetGridId);
 
                 if (targetGridElement) {
@@ -541,7 +592,7 @@
                         if (targetGridId === 'team-grid-search-results') {
                             targetGridElement.innerHTML = "<p style='grid-column: 1 / -1; text-align: center;'>No se encontraron equipos con esos criterios.</p>";
                         } else { 
-                            targetGridElement.innerHTML = "<p style='grid-column: 1 / -1; text-align: center;'>No hay equipos. ¡Crea uno!</p>";
+                            targetGridElement.innerHTML = "<p style='grid-column: 1 / -1; text-align: center;'>No hay equipos. ¡Crea uno o espera a que se carguen!</p>";
                         }
                     } else {
                         targetGridElement.innerHTML = teamsToRenderArray.map(renderTeamCard).join('');
@@ -552,14 +603,27 @@
                             const teamCard = event.target.closest('.team-card');
                             if (teamCard) {
                                 const teamId = teamCard.dataset.teamId;
-                                if (teamsData[teamId]) {
-                                    localStorage.setItem('currentTeamDetails', JSON.stringify(teamsData[teamId]));
+                                if (allTeamsData[teamId]) { // Usar allTeamsData
+                                    localStorage.setItem('currentTeamDetails', JSON.stringify(allTeamsData[teamId]));
                                     window.open(`team_detail.html?teamId=${teamId}`, '_blank');
                                 } else { alert("Error: No se pudieron cargar los detalles del equipo."); }
                             }
                         });
                     });
-                    targetGridElement.querySelectorAll('.pokepaste-button').forEach(button => { /* ... */ });
+                    targetGridElement.querySelectorAll('.pokepaste-button').forEach(button => {
+                         button.addEventListener('click', (event) => {
+                            const teamCard = event.target.closest('.team-card');
+                            if (teamCard) {
+                                const team = allTeamsData[teamCard.dataset.teamId]; // Usar allTeamsData
+                                if (team) {
+                                    const pokepasteText = generatePokepasteStringFromTeamData(team);
+                                    navigator.clipboard.writeText(pokepasteText).then(() => {
+                                        alert('¡Equipo copiado a Pokepaste!\n\n' + pokepasteText);
+                                    }).catch(err => { alert('Error al copiar. Revisa la consola.'); });
+                                }
+                            }
+                        });
+                    });
                     targetGridElement.querySelectorAll('.like-team-button').forEach(button => button.addEventListener('click', handleLikeTeamClick));
                     targetGridElement.querySelectorAll('.edit-team-button').forEach(button => button.addEventListener('click', handleEditTeamClick));
                     targetGridElement.querySelectorAll('.delete-team-button').forEach(button => button.addEventListener('click', handleDeleteTeamClick));
@@ -571,17 +635,36 @@
                 if (storedUserData) {
                     try { const userData = JSON.parse(storedUserData); updateNavForLoggedInUser(userData.username); }
                     catch (e) { localStorage.removeItem('userData'); updateNavForLoggedOutUser(); }
-                } else { updateNavForLoggedOutUser(); }
-                
-                teamsData = await fetchTeamsFromBackend(); 
-                localStorage.setItem('allTeamsData', JSON.stringify(teamsData)); // Para team_detail.html
+                } else {
+                    updateNavForLoggedOutUser();
+                }
+                const fetchedData = await fetchTeamsFromBackend(); 
+                allTeamsData = fetchedData.teams.reduce((obj, team) => { obj[team.id] = team; return obj; }, {}); // Convertir array a objeto
+                localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
                 renderAllTeamCards(null, 'team-grid-destacados'); 
             }
             initializePage();
 
-            function generatePokepasteStringFromTeamData(teamDetails) { /* ... */ return ""; }
 
-            // --- Lógica para Crear Equipo ---
+            function generatePokepasteStringFromTeamData(teamDetails) {
+                if (!teamDetails || !teamDetails.pokemons) return "";
+                let pasteString = "";
+                teamDetails.pokemons.forEach(p => {
+                    pasteString += `${p.name.charAt(0).toUpperCase() + p.name.slice(1)} @ ${p.item ? p.item.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Ninguno'}\n`;
+                    pasteString += `Ability: ${p.ability ? p.ability.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'N/A'}\n`;
+                    if (p.level) pasteString += `Level: ${p.level}\n`;
+                    if (p.tera_type) pasteString += `Tera Type: ${p.tera_type.charAt(0).toUpperCase() + p.tera_type.slice(1)}\n`; // Corregido a tera_type
+                    pasteString += `EVs: ${p.evs}\n`;
+                    pasteString += `${p.nature} Nature\n`;
+                    (p.moves || []).forEach(move => { 
+                        pasteString += `- ${move.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}\n`;
+                    });
+                    pasteString += `\n`;
+                });
+                return pasteString.trim();
+            }
+
+            // --- Lógica para Crear y Editar Equipo ---
             function generatePokemonFormFields(index) {
                 const evStats = ['HP', 'Atk', 'Def', 'SpA', 'SpD', 'Spe'];
                 let evInputsHtml = `<label style="grid-column: 1 / -1; text-align:left; margin-bottom:0.3rem;">EVs:</label><div class="evs-grid">`;
@@ -610,15 +693,31 @@
                 for (let i = 0; i < 6; i++) { pokemonFormsContainer.innerHTML += generatePokemonFormFields(i); }
                 document.querySelectorAll('.ev-input').forEach(input => input.addEventListener('input', handleEvInputChange));
             }
-            function handleEvInputChange(event) { /* ... */ }
+            function handleEvInputChange(event) {
+                const targetInput = event.target; const pokemonIdx = targetInput.dataset.pokemonIdx;
+                const allEvInputsForPokemon = document.querySelectorAll(`.ev-input[data-pokemon-idx="${pokemonIdx}"]`);
+                let currentTotalEvs = 0;
+                allEvInputsForPokemon.forEach(input => {
+                    let value = parseInt(input.value) || 0; if (value < 0) value = 0; if (value > 252) value = 252;
+                    input.value = value; currentTotalEvs += value;
+                });
+                const totalDisplay = document.getElementById(`ev-total-display-${pokemonIdx}`);
+                if (totalDisplay) {
+                    totalDisplay.textContent = `Total EVs: ${currentTotalEvs} / 508`;
+                    totalDisplay.style.color = currentTotalEvs > 508 ? 'var(--danger)' : 'var(--dark)';
+                }
+                if (currentTotalEvs > 508 && createTeamFeedback) showFeedback(createTeamFeedback, `Total de EVs para Pokémon ${parseInt(pokemonIdx)+1} excede 508. (Actual: ${currentTotalEvs})`, true);
+                else if (createTeamFeedback && createTeamFeedback.classList.contains('error') && createTeamFeedback.textContent.includes(`Pokémon ${parseInt(pokemonIdx)+1}`)) { createTeamFeedback.style.display = 'none'; }
+            }
 
             if (createTeamForm) {
                 createTeamForm.addEventListener('submit', async function(event) {
                     event.preventDefault();
                     const formData = new FormData(createTeamForm); 
                     const loggedInUser = JSON.parse(localStorage.getItem('userData'));
-                    if (!loggedInUser) { showFeedback(createTeamFeedback, 'Debes iniciar sesión para guardar un equipo.', true); showLoginForm(); return; }
+                    if (!loggedInUser) { showFeedback(createTeamFeedback, 'Debes iniciar sesión.', true); showLoginForm(); return; }
 
+                    const editingTeamId = formData.get('editingTeamId');
                     const teamPayload = {
                         userId: loggedInUser.id, 
                         title: formData.get('teamTitle'), format: formData.get('teamFormat'),
@@ -643,11 +742,11 @@
                             teamPayload.pokemons.push({
                                 name: pokemonNameInput, item: formData.get(`pokemon-${i}-item`), 
                                 ability: formData.get(`pokemon-${i}-ability`),
-                                desired_move: formData.get(`pokemon-${i}-desired-move`), 
                                 desired_ability: formData.get(`pokemon-${i}-desired-ability`), 
+                                desired_move: formData.get(`pokemon-${i}-desired-move`), 
                                 evs: `${evs.HP} HP / ${evs.Atk} Atk / ${evs.Def} Def / ${evs.SpA} SpA / ${evs.SpD} SpD / ${evs.Spe} Spe`,
                                 nature: formData.get(`pokemon-${i}-nature`), 
-                                tera_type: formData.get(`pokemon-${i}-teraType`), // Corregido de teraType
+                                tera_type: formData.get(`pokemon-${i}-teraType`),
                                 moves: [1,2,3,4].map(mIdx => formData.get(`pokemon-${i}-move${mIdx}`)).filter(move => move && move.trim() !== ''),
                                 types: pokemonTypes
                             });
@@ -656,20 +755,24 @@
                     if (globalEvError) { showFeedback(createTeamFeedback, `Uno o más Pokémon exceden el total de 508 EVs.`, true); return; }
                     if (teamPayload.pokemons.length === 0) { showFeedback(createTeamFeedback, `Debes añadir al menos un Pokémon.`, true); return; }
 
+                    const url = editingTeamId ? `${TEAMS_URL}/${editingTeamId}` : TEAMS_URL;
+                    const method = editingTeamId ? 'PUT' : 'POST';
+
                     try {
-                        const response = await fetch(CREATE_TEAM_URL, {
-                            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(teamPayload)
+                        const response = await fetch(url, {
+                            method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(teamPayload)
                         });
                         const result = await response.json();
                         if (response.ok) {
-                            showFeedback(createTeamFeedback, `¡Equipo "${result.title || teamPayload.title}" guardado exitosamente!`, false);
+                            showFeedback(createTeamFeedback, `¡Equipo ${editingTeamId ? 'actualizado' : 'creado'} exitosamente!`, false);
                             createTeamForm.reset();
                             document.querySelectorAll('.ev-total').forEach(el => { el.textContent = 'Total EVs: 0 / 508'; el.style.color = 'var(--dark)';});
-                            teamsData = await fetchTeamsFromBackend(); 
-                            localStorage.setItem('allTeamsData', JSON.stringify(teamsData));
+                            const fetchedData = await fetchTeamsFromBackend(); 
+                            allTeamsData = fetchedData.teams.reduce((obj, team) => { obj[team.id] = team; return obj; }, {});
+                            localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
                             renderAllTeamCards();
                             setTimeout(showMainContentPage, 2000);
-                        } else { showFeedback(createTeamFeedback, `Error al guardar equipo: ${result.error || response.statusText}`, true); }
+                        } else { showFeedback(createTeamFeedback, `Error: ${result.error || response.statusText}`, true); }
                     } catch (error) { showFeedback(createTeamFeedback, 'Error de conexión al guardar el equipo.', true); }
                 });
             }
@@ -687,48 +790,90 @@
                 });
             }
 
-            function parsePokepaste(text) { /* ... */ return [];}
-            function fillCreateTeamForm(parsedPokemons) { /* ... */ }
-            function parseEVsFromPokepasteString(evString) { /* ... */ return {};}
+            function parsePokepaste(text) {
+                const pokemons = []; const sections = text.trim().split(/\n\s*\n/);
+                sections.forEach(section => {
+                    if (section.trim() === "") return;
+                    const lines = section.trim().split('\n');
+                    const pokemon = { name: '', item: '', ability: '', evs: '', nature: '', teraType: '', moves: [] };
+                    const firstLineMatch = lines[0].match(/^(.+?)(?:\s@\s(.+))?$/);
+                    if (firstLineMatch) { pokemon.name = firstLineMatch[1].trim(); if (firstLineMatch[2]) pokemon.item = firstLineMatch[2].trim(); }
+                    else { pokemon.name = lines[0].trim(); }
+                    lines.slice(1).forEach(line => {
+                        line = line.trim();
+                        if (line.startsWith('Ability: ')) pokemon.ability = line.substring('Ability: '.length).trim();
+                        else if (line.startsWith('EVs: ')) pokemon.evs = line.substring('EVs: '.length).trim();
+                        else if (line.endsWith(' Nature')) pokemon.nature = line.replace(' Nature', '').trim();
+                        else if (line.startsWith('Tera Type: ')) pokemon.teraType = line.substring('Tera Type: '.length).trim();
+                        else if (line.startsWith('- ')) pokemon.moves.push(line.substring(2).trim());
+                    });
+                    if (pokemon.name) pokemons.push(pokemon);
+                });
+                return pokemons.slice(0, 6);
+            }
+            function fillCreateTeamForm(parsedPokemons) {
+                parsedPokemons.forEach((pokemon, index) => {
+                    if (index >= 6) return;
+                    document.getElementById(`pokemon-name-${index}`).value = pokemon.name || '';
+                    document.getElementById(`pokemon-item-${index}`).value = pokemon.item || '';
+                    document.getElementById(`pokemon-ability-${index}`).value = pokemon.ability || '';
+                    document.getElementById(`pokemon-nature-${index}`).value = pokemon.nature || '';
+                    document.getElementById(`pokemon-teratype-${index}`).value = pokemon.teraType || '';
+                    const evSpread = parseEVsFromPokepasteString(pokemon.evs);
+                    ['hp', 'atk', 'def', 'spa', 'spd', 'spe'].forEach(stat => {
+                        document.getElementById(`pokemon-${index}-ev-${stat.toLowerCase()}`).value = evSpread[stat.toUpperCase()] || 0;
+                    });
+                    handleEvInputChange({ target: document.getElementById(`pokemon-${index}-ev-hp`) }); 
+                    (pokemon.moves || []).forEach((move, moveIdx) => {
+                        if (moveIdx < 4) document.getElementById(`pokemon-${index}-move-${moveIdx}`).value = move;
+                    });
+                });
+            }
+            function parseEVsFromPokepasteString(evString) {
+                const evs = { HP: 0, Atk: 0, Def: 0, SpA: 0, SpD: 0, Spe: 0 };
+                if (!evString) return evs;
+                const parts = evString.split('/');
+                parts.forEach(part => {
+                    const match = part.trim().match(/(\d+)\s+(HP|Atk|Def|SpA|SpD|Spe)/i);
+                    if (match && evs.hasOwnProperty(match[2].toUpperCase())) {
+                        evs[match[2].toUpperCase()] = parseInt(match[1]);
+                    }
+                });
+                return evs;
+            }
 
             // --- Búsqueda ---
-            function performSearch(filters, queryDescription) {
-                const allTeamsArray = Object.values(teamsData); // Usar los datos cargados del backend
-                const filteredTeams = allTeamsArray.filter(team => {
-                    let matchesTitle = true;
-                    if (filters.title) { 
-                        matchesTitle = (team.title && team.title.toLowerCase().includes(filters.title)) || 
-                                       (team.creator && team.creator.toLowerCase().includes(filters.title));
-                    }
-                    let matchesPokemon = true;
-                    if (filters.pokemon) {
-                        matchesPokemon = (team.pokemons || []).some(p => p.name.toLowerCase().includes(filters.pokemon));
-                    }
-                    let matchesItem = true;
-                    if (filters.item) {
-                        matchesItem = (team.pokemons || []).some(p => p.item && p.item.toLowerCase().includes(filters.item));
-                    }
-                    let matchesMove = true;
-                    if (filters.move) {
-                        matchesMove = (team.pokemons || []).some(p => (p.moves || []).some(m => m.toLowerCase().includes(filters.move)));
-                    }
-                    let matchesFormat = true;
-                    if (filters.format) {
-                        matchesFormat = team.format && team.format.toLowerCase() === filters.format.toLowerCase();
-                    }
-                    return matchesTitle && matchesPokemon && matchesItem && matchesMove && matchesFormat;
-                });
-                showSearchResults(filteredTeams, queryDescription);
+            async function performSearch(filters, queryDescription) {
+                const queryParams = new URLSearchParams();
+                if (filters.pokemon) queryParams.append('pokemon', filters.pokemon);
+                if (filters.item) queryParams.append('item', filters.item);
+                if (filters.move) queryParams.append('move', filters.move);
+                if (filters.format) queryParams.append('format', filters.format);
+                // Añadir paginación si se implementa
+
+                try {
+                    const response = await fetch(`${GET_TEAMS_URL}?${queryParams.toString()}`);
+                    if (!response.ok) throw new Error(`Error del servidor: ${response.statusText}`);
+                    const data = await response.json();
+                    showSearchResults(data.teams || [], queryDescription);
+                } catch (error) {
+                    console.error("Error en búsqueda avanzada:", error);
+                    if(advancedSearchFeedback) showFeedback(advancedSearchFeedback, "Error al realizar la búsqueda.", true);
+                }
             }
 
             if(mainSearchButton && mainSearchInput) {
                 mainSearchButton.addEventListener('click', () => {
-                    const searchTerm = mainSearchInput.value.trim().toLowerCase();
+                    const searchTerm = mainSearchInput.value.trim();
                     if (searchTerm) {
-                        performSearch({ title: searchTerm }, `"${mainSearchInput.value.trim()}"`);
-                    } else { 
-                        showMainContentPage(); // Vuelve a mostrar destacados
-                    }
+                        // Para búsqueda simple, podrías querer un endpoint diferente o un parámetro especial
+                        // Por ahora, lo trataremos como un filtro de título/creador en el frontend
+                        const filtered = Object.values(allTeamsData).filter(team => 
+                            (team.title && team.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                            (team.creator && team.creator.toLowerCase().includes(searchTerm.toLowerCase()))
+                        );
+                        showSearchResults(filtered, `"${searchTerm}"`);
+                    } else { showMainContentPage(); }
                 });
                 mainSearchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') mainSearchButton.click(); });
             }
@@ -738,19 +883,19 @@
                     e.preventDefault();
                     const formData = new FormData(advancedSearchForm);
                     const filters = {
-                        pokemon: formData.get('pokemon')?.trim().toLowerCase(),
-                        item: formData.get('item')?.trim().toLowerCase(),
-                        move: formData.get('move')?.trim().toLowerCase(),
+                        pokemon: formData.get('pokemon')?.trim(),
+                        item: formData.get('item')?.trim(),
+                        move: formData.get('move')?.trim(),
                         format: formData.get('format')
                     };
                     let queryParts = [];
-                    if(filters.pokemon) queryParts.push(`Pokémon: ${formData.get('pokemon')}`);
-                    if(filters.item) queryParts.push(`Objeto: ${formData.get('item')}`);
-                    if(filters.move) queryParts.push(`Movimiento: ${formData.get('move')}`);
+                    if(filters.pokemon) queryParts.push(`Pokémon: ${filters.pokemon}`);
+                    if(filters.item) queryParts.push(`Objeto: ${filters.item}`);
+                    if(filters.move) queryParts.push(`Movimiento: ${filters.move}`);
                     if(filters.format) queryParts.push(`Formato: ${filters.format}`);
                     const queryDescription = queryParts.length > 0 ? queryParts.join(', ') : "Todos los equipos";
                     
-                    performSearch(filters, queryDescription);
+                    performSearch(filters, queryDescription); // Esto ahora llama al backend
                     if (advancedSearchFeedback) showFeedback(advancedSearchFeedback, `Búsqueda avanzada aplicada.`, false);
                 });
             }
@@ -760,32 +905,29 @@
                 const teamId = event.target.dataset.teamId;
                 const user = JSON.parse(localStorage.getItem('userData'));
                 if (!user) { alert("Debes iniciar sesión para dar 'Me Gusta'."); return; }
-
                 try {
                     const response = await fetch(`${TEAMS_URL}/${teamId}/like`, { method: 'POST' });
                     const result = await response.json();
                     if (response.ok) {
-                        const likeStatElement = event.target.closest('.team-card').querySelector('.like-stat'); // Asumiendo que tienes una clase .like-stat
-                         if(teamsData[teamId]) teamsData[teamId].likes = result.likes; // Actualizar datos locales
-                         if(likeStatElement) likeStatElement.textContent = `👍 ${result.likes}`;
-                         else { // Si no hay .like-stat, re-renderizar
-                            const currentGrid = document.getElementById('team-grid-search-results').style.display === 'block' ? 'team-grid-search-results' : 'team-grid-destacados';
-                            const currentFilters = null; // O los filtros actuales si estás en búsqueda
-                            renderAllTeamCards(currentFilters, currentGrid);
-                         }
-                    } else {
-                        alert(`Error al dar Me Gusta: ${result.error}`);
-                    }
-                } catch (error) {
-                    console.error("Error al dar Me Gusta:", error);
-                    alert("Error de conexión al dar Me Gusta.");
-                }
+                        if(allTeamsData[teamId]) allTeamsData[teamId].likes = result.likes;
+                        localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData)); // Actualizar
+                        const currentGridId = searchResultsSection.style.display === 'block' ? 'team-grid-search-results' : 'team-grid-destacados';
+                        const teamsToReRender = searchResultsSection.style.display === 'block' ? 
+                            Object.values(allTeamsData).filter(team => { /* reaplicar filtros si es necesario o recargar */ return true; }) : 
+                            null;
+                        renderAllTeamCards(teamsToReRender, currentGridId);
+                    } else { alert(`Error al dar Me Gusta: ${result.error}`); }
+                } catch (error) { alert("Error de conexión al dar Me Gusta."); }
             }
 
             function handleEditTeamClick(event) {
                 const teamId = event.target.dataset.teamId;
-                alert(`Editar equipo ${teamId} - Funcionalidad pendiente.`);
-                // Aquí cargarías los datos del equipo en el formulario de creación para edición.
+                const teamToEdit = allTeamsData[teamId];
+                if (teamToEdit) {
+                    showCreateTeamForm(teamToEdit); // Pasar datos al formulario de creación para edición
+                } else {
+                    alert("No se encontraron los datos del equipo para editar.");
+                }
             }
             async function handleDeleteTeamClick(event) {
                 const teamId = event.target.dataset.teamId;
@@ -794,29 +936,19 @@
 
                 if (confirm("¿Estás seguro de que quieres eliminar este equipo? Esta acción no se puede deshacer.")) {
                     try {
-                        // En una app real, el token JWT se enviaría en el header Authorization
-                        // y el backend validaría que el user.id coincide con el team.user_id
                         const response = await fetch(`${TEAMS_URL}/${teamId}`, { 
                             method: 'DELETE',
-                            headers: { 
-                                'Content-Type': 'application/json',
-                                // 'Authorization': `Bearer ${user.token}` // Si tuvieras tokens
-                            },
-                            body: JSON.stringify({ userId: user.id }) // Enviar userId para verificación en backend
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userId: user.id }) 
                         });
                         const result = await response.json();
                         if (response.ok) {
                             alert(result.message);
-                            delete teamsData[teamId]; // Eliminar de datos locales
-                            localStorage.setItem('allTeamsData', JSON.stringify(teamsData));
+                            delete allTeamsData[teamId]; 
+                            localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
                             renderAllTeamCards(null, document.getElementById('team-grid-search-results').style.display === 'block' ? 'team-grid-search-results' : 'team-grid-destacados');
-                        } else {
-                            alert(`Error al eliminar: ${result.error}`);
-                        }
-                    } catch (error) {
-                        console.error("Error al eliminar equipo:", error);
-                        alert("Error de conexión al eliminar el equipo.");
-                    }
+                        } else { alert(`Error al eliminar: ${result.error}`); }
+                    } catch (error) { alert("Error de conexión al eliminar el equipo."); }
                 }
             }
         });
