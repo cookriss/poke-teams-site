@@ -348,7 +348,7 @@
 
             // --- Carga de Datalists ---
             async function populateDatalist(url, datalistElement, nameKey = 'name', processFn = (name) => name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())) {
-                if (!datalistElement) return;
+                if (!datalistElement) { console.warn("Datalist element not found for", url); return; }
                 try {
                     let allResults = []; let nextUrl = url; let count = 0;
                     while (nextUrl && count < 20) { 
@@ -452,6 +452,9 @@
                     } else {
                         if(createEditTitle) createEditTitle.textContent = "Crear Nuevo Equipo Pokémon";
                         if(submitButton) submitButton.textContent = "Guardar Equipo";
+                         // Limpiar el campo de texto de importación de Pokepaste al mostrar el formulario para crear nuevo
+                        const pokepasteImportText = document.getElementById('pokepaste-import-text');
+                        if (pokepasteImportText) pokepasteImportText.value = '';
                     }
                 } else { alert("Debes iniciar sesión para crear o editar un equipo."); showLoginForm(); }
             }
@@ -474,7 +477,7 @@
                 if (loginNav) loginNav.style.display = 'none';
                 if (registerNav) registerNav.style.display = 'none';
                 if (createTeamNavLink) createTeamNavLink.style.display = 'list-item';
-                if (userMenuContainer) userMenuContainer.style.display = 'list-item'; // Mostrar contenedor del menú
+                if (userMenuContainer) userMenuContainer.style.display = 'list-item'; 
                 if (userGreeting) userGreeting.textContent = `Hola, ${username}`;
                 showMainContentPage();
             }
@@ -482,7 +485,7 @@
                 if (loginNav) loginNav.style.display = 'list-item';
                 if (registerNav) registerNav.style.display = 'list-item';
                 if (createTeamNavLink) createTeamNavLink.style.display = 'none';
-                if (userMenuContainer) userMenuContainer.style.display = 'none'; // Ocultar contenedor del menú
+                if (userMenuContainer) userMenuContainer.style.display = 'none'; 
                 if (userGreeting) userGreeting.textContent = '';
                 showMainContentPage();
             }
@@ -494,18 +497,29 @@
                 const data = Object.fromEntries(formData.entries());
                 try {
                     const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-                    const result = await response.json();
+                    console.log("Auth Response Status:", response.status);
+                    const responseText = await response.text();
+                    console.log("Auth Response Text:", responseText);
+                    let result;
+                    try { result = JSON.parse(responseText); } catch (e) {
+                        showFeedback(feedbackElement, `Error: Respuesta inesperada del servidor. (${response.status})`, true);
+                        return;
+                    }
+
                     if (response.ok) {
                         if (isRegister) {
-                            showFeedback(feedbackElement, `¡Registro exitoso! ${result.message}. Ahora puedes iniciar sesión.`, false);
+                            showFeedback(feedbackElement, `¡Registro exitoso! ${result.message || ''}. Ahora puedes iniciar sesión.`, false);
                             formElement.reset(); setTimeout(showLoginForm, 2000);
-                        } else {
-                            showFeedback(feedbackElement, `¡Inicio de sesión exitoso! Bienvenido, ${result.user.username}.`, false);
+                        } else { // Login
+                            showFeedback(feedbackElement, `¡Inicio de sesión exitoso! Bienvenido, ${result.user?.username || 'usuario'}.`, false);
                             formElement.reset(); localStorage.setItem('userData', JSON.stringify(result.user)); 
-                            updateNavForLoggedInUser(result.user.username);
+                            updateNavForLoggedInUser(result.user?.username);
                         }
-                    } else { showFeedback(feedbackElement, `Error: ${result.error || response.statusText}`, true); }
-                } catch (error) { showFeedback(feedbackElement, 'Error de conexión. Intenta de nuevo.', true); }
+                    } else { showFeedback(feedbackElement, `Error: ${result.error || response.statusText || 'Error desconocido del servidor.'}`, true); }
+                } catch (error) { 
+                    console.error("Network/CORS error in auth:", error);
+                    showFeedback(feedbackElement, `Error de conexión: ${error.message}. Revisa la consola.`, true); 
+                }
             }
             if (registerForm) registerForm.addEventListener('submit', (e) => handleAuthSubmit(e, REGISTER_URL, registerForm, registerFeedback, true));
             if (loginForm) loginForm.addEventListener('submit', (e) => handleAuthSubmit(e, LOGIN_URL, loginForm, loginFeedback));
@@ -516,7 +530,7 @@
                     e.preventDefault();
                     userDropdownMenu.style.display = userDropdownMenu.style.display === 'block' ? 'none' : 'block';
                 });
-                document.addEventListener('click', (e) => { // Cerrar si se hace clic fuera
+                document.addEventListener('click', (e) => { 
                     if (userMenuContainer && !userMenuContainer.contains(e.target)) {
                         userDropdownMenu.style.display = 'none';
                     }
@@ -551,8 +565,6 @@
             });
             
             // --- Carga y Renderizado de Equipos ---
-            async function fetchFromPokeAPI(endpoint) { /* ... */ return null; }
-
             async function fetchTeamsFromBackend(queryParams = {}) {
                 const url = new URL(TEAMS_URL);
                 Object.keys(queryParams).forEach(key => {
@@ -665,7 +677,7 @@
                 }
                 const fetchedData = await fetchTeamsFromBackend(); 
                 allTeamsData = fetchedData.teams.reduce((obj, team) => { obj[team.id] = team; return obj; }, {});
-                localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData)); // Guardar para team_detail.html
+                localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
                 renderAllTeamCards(null, 'team-grid-destacados'); 
             }
             initializePage();
@@ -881,7 +893,7 @@
             // --- Búsqueda ---
             async function performSearch(filters, queryDescription) {
                 const queryParams = new URLSearchParams();
-                if (filters.title) queryParams.append('title', filters.title);
+                if (filters.title) queryParams.append('title', filters.title); 
                 if (filters.pokemon) queryParams.append('pokemon', filters.pokemon);
                 if (filters.item) queryParams.append('item', filters.item);
                 if (filters.move) queryParams.append('move', filters.move);
@@ -937,16 +949,17 @@
                 try {
                     const response = await fetch(`${TEAMS_URL}/${teamId}/like`, { 
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' }, // El backend espera userId en el body para esta acción
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ userId: user.id }) 
                     });
                     const result = await response.json();
                     if (response.ok) {
                         if(allTeamsData[teamId]) {
                             allTeamsData[teamId].likes = result.likes;
-                            // Actualizar el estado visual del botón de like si es necesario
-                            event.target.classList.toggle('liked', result.liked);
-                            event.target.closest('.team-card').querySelector('.like-stat').textContent = `👍 ${result.likes}`;
+                            // Actualizar visualmente el botón si es necesario
+                            const likeButton = event.target;
+                            likeButton.classList.toggle('liked', result.liked); // Asume que 'liked' es una clase CSS
+                            likeButton.closest('.team-card').querySelector('.like-stat').textContent = `👍 ${result.likes}`;
                         }
                         localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
                     } else { alert(`Error al dar Me Gusta: ${result.error}`); }
