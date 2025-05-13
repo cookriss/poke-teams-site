@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PokéTeams - Share & Discover Pokémon Teams</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         :root {
             --primary: #ff5350; --primary-dark: #d13330; --secondary: #3b4cca; --light: #f8f9fa;
@@ -50,6 +51,7 @@
         .action-button.danger { background-color: var(--danger); }
         .action-button.danger:hover { background-color: var(--primary-dark); }
 
+
         .auth-toggle-link { display: block; text-align: center; margin-top: 1.5rem; color: var(--primary); text-decoration: none; font-weight: 500; cursor:pointer; }
         .auth-toggle-link:hover { text-decoration: underline; }
         .feedback-message { padding: 0.75rem; margin-top: 1rem; border-radius: var(--border-radius); text-align: center; font-size: 0.9rem;}
@@ -74,6 +76,7 @@
         .user-dropdown a { display: block; padding: 0.8rem 1.2rem; text-decoration: none; color: var(--dark); font-size: 0.95rem;}
         .user-dropdown a:hover { background-color: #f0f2f5; }
 
+
         .pokemon-form-block { border: 1px solid #e0e0e0; background-color:#fdfdff; padding: 1.5rem; margin-bottom: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--shadow-sm); }
         .pokemon-form-block h4 { color: var(--secondary); margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
         .evs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;}
@@ -81,6 +84,11 @@
         .evs-grid input[type="number"] { text-align: center; padding: 0.5rem; font-size:0.9rem; }
         .ev-total { font-weight: bold; margin-top: 0.5rem; text-align: right; font-size: 0.9rem; color: #333;}
         .moves-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+        .tags-container { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+        .tag-checkbox { display: flex; align-items: center; background-color: #f0f2f5; padding: 0.3rem 0.6rem; border-radius: 15px; font-size: 0.85rem; cursor:pointer; border: 1px solid #ddd;}
+        .tag-checkbox input[type="checkbox"] { margin-right: 0.4rem; }
+        .tag-checkbox:hover { background-color: #e2e6ea; }
+
 
         .search-bar-container { display: flex; align-items: center; justify-content: center; margin: 1rem auto; max-width: 700px;}
         .search-bar { background-color: white; border-radius: 25px; padding: 0.6rem 1rem; display: flex; align-items: center; flex-grow: 1; max-width: 600px; box-shadow: var(--shadow-sm); }
@@ -88,7 +96,7 @@
         .search-bar button { background-color: var(--secondary); color: white; border: none; border-radius: 20px; padding: 0.4rem 1rem; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }
         .search-bar button:hover { background-color: #2a3ba9; }
         main.container { padding-top: 1rem; padding-bottom: 2rem; }
-        .featured-section { margin: 2rem 0; } /* Esta clase se usará para la sección principal de equipos */
+        .featured-section { margin: 2rem 0; } 
         .section-title { font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 3px solid var(--primary); padding-bottom: 0.5rem; display: inline-block; }
         .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
         .team-card { background-color: white; border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow-md); transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; }
@@ -111,7 +119,7 @@
         .team-action-button.view-details { background-color: var(--success); }
         .team-action-button.like-team-button { background-color: #6c757d; color: white; } 
         .team-action-button.like-team-button.liked { background-color: var(--primary); } 
-        .team-action-button.edit-team-button { background-color: #ffc107; color: var(--dark); } 
+        /* Edit button is removed from index.html cards */
         .team-action-button.delete-team-button { background-color: var(--danger); }
         .team-action-button:hover { filter: brightness(110%); }
         .cta-section { text-align: center; margin: 3rem 0; padding: 2.5rem 1rem; background: linear-gradient(45deg, var(--primary), var(--secondary)); color: white; border-radius: var(--border-radius); box-shadow: var(--shadow-md); }
@@ -148,7 +156,7 @@
                     <li id="user-menu-container" class="user-menu-container" style="display:none;">
                         <a href="#" id="user-greeting"></a>
                         <div class="user-dropdown" id="user-dropdown-menu">
-                            <a href="my_teams.html" id="my-teams-link">My Created Teams</a>
+                            <a href="my_teams.html" id="my-created-teams-link">My Created Teams</a>
                             <a href="liked_teams.html" id="liked-teams-link">My Liked Teams</a>
                             <a href="#" id="logout-nav-link-dropdown">Logout</a>
                         </div>
@@ -173,7 +181,12 @@
                 <div class="form-group"><label for="adv-search-item">Contains Item:</label><input type="text" id="adv-search-item" name="item" list="item-list-adv-search" placeholder="Item name"></div>
                 <div class="form-group"><label for="adv-search-move">Contains Move:</label><input type="text" id="adv-search-move" name="move" list="move-list-adv-search" placeholder="Move name"></div>
                 <div class="form-group"><label for="adv-search-format">Specific Format:</label><select id="adv-search-format" name="format"><option value="">Any Format</option></select></div>
-                <div class="form-group"><label for="adv-search-tags">Contains Tags (comma separated):</label><input type="text" id="adv-search-tags" name="tags" placeholder="E.g., Trick Room, Hyper Offense"></div>
+                <div class="form-group">
+                    <label for="adv-search-tags">Contains Tags (select one or more):</label>
+                    <div id="adv-search-tags-container" class="tags-container">
+                        {/* Tags checkboxes will be populated by JS */}
+                    </div>
+                </div>
                 <button type="submit" class="action-button" style="width:100%; background-color: var(--primary);">Search Teams</button>
             </form>
             <div id="advanced-search-feedback" class="feedback-message" style="display:none;"></div>
@@ -215,8 +228,10 @@
                     <select id="team-format-input" name="teamFormat" required><option value="">Select a format...</option></select>
                 </div>
                 <div class="form-group">
-                    <label for="team-tags-input">Team Tags (comma separated, e.g., Stall, Hyper Offense)</label>
-                    <input type="text" id="team-tags-input" name="teamTags" placeholder="Trick Room, Weather, Balance...">
+                    <label>Team Tags (select all that apply):</label>
+                    <div id="team-tags-checkbox-container" class="tags-container">
+                        {/* Checkboxes for tags will be populated by JS */}
+                    </div>
                 </div>
                  <div class="form-group">
                     <label for="pokepaste-import-text">Import from Pokepaste (Paste Text)</label>
@@ -233,8 +248,7 @@
                 </div>
                 <h3 style="color: var(--secondary); margin-top: 2rem; margin-bottom: 1rem;">Team Pokémon (up to 6)</h3>
                 <p style="font-size:0.85em; margin-bottom:1rem; color: #555;">Use the dropdown lists. "Desired Move/Ability" fields are for your reference and will be saved.</p>
-                <div id="pokemon-forms-container">
-                    </div>
+                <div id="pokemon-forms-container"></div>
                 <button type="submit" class="submit-team-button">Save Team</button>
             </form>
             <div id="create-team-feedback" class="feedback-message" style="display:none;"></div>
@@ -328,6 +342,7 @@
             const userGreeting = document.getElementById('user-greeting');
             const userDropdownMenu = document.getElementById('user-dropdown-menu');
             const likedTeamsLink = document.getElementById('liked-teams-link');
+            const myCreatedTeamsLink = document.getElementById('my-created-teams-link'); 
             const logoutNavDropdown = document.getElementById('logout-nav-link-dropdown'); 
             
             const showRegisterLink = document.getElementById('show-register-link'); 
@@ -348,10 +363,13 @@
             const moveDatalistAdv = document.getElementById('move-list-adv-search');
             const advSearchFormatSelect = document.getElementById('adv-search-format');
             const teamFormatSelect = document.getElementById('team-format-input');
+            const teamTagsContainer = document.getElementById('team-tags-checkbox-container');
+            const advSearchTagsContainer = document.getElementById('adv-search-tags-container');
+
 
             let allTeamsData = {}; 
 
-            // --- Carga de Datalists ---
+            // --- Carga de Datalists y Tags ---
             async function populateDatalist(url, datalistElement, nameKey = 'name', processFn = (name) => name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())) {
                 if (!datalistElement) { console.warn("Datalist element not found for", url); return; }
                 try {
@@ -391,10 +409,36 @@
                     });
                 }
             });
+            
+            const commonTags = ["Hyper Offense", "Balance", "Stall", "Trick Room", "Sun Team", "Rain Team", "Sand Team", "Snow Team", "VoltTurn", "Screens", "Entry Hazards", "Hazard Control", "Bulky Offense", "Choice User Spam"];
+            function populateTagsCheckboxes(container, namePrefix) {
+                if (!container) return;
+                container.innerHTML = '';
+                commonTags.forEach((tag, index) => {
+                    const checkboxId = `${namePrefix}-tag-${tag.replace(/\s+/g, '-')}`; // ID más específico
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'tag-checkbox';
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = checkboxId;
+                    checkbox.name = `${namePrefix}Tags`; 
+                    checkbox.value = tag;
+                    const label = document.createElement('label');
+                    label.htmlFor = checkboxId;
+                    label.appendChild(document.createTextNode(` ${tag}`));
+                    
+                    wrapper.appendChild(checkbox);
+                    wrapper.appendChild(label);
+                    container.appendChild(wrapper);
+                });
+            }
+            if (teamTagsContainer) populateTagsCheckboxes(teamTagsContainer, 'createTeam');
+            if (advSearchTagsContainer) populateTagsCheckboxes(advSearchTagsContainer, 'advSearch');
+
 
             // --- Funciones de UI ---
             function showFeedback(element, message, isError = false) {
-                if (!element) return;
+                if (!element) { console.warn("Feedback element not found for message:", message); return; }
                 element.textContent = message;
                 element.className = 'feedback-message ' + (isError ? 'error' : 'success');
                 element.style.display = 'block';
@@ -419,16 +463,31 @@
                     const createEditTitle = document.getElementById('create-edit-team-title');
                     const submitButton = createTeamForm.querySelector('.submit-team-button');
 
-                    if (pokemonFormsContainer && pokemonFormsContainer.children.length === 0) {
+                    if (pokemonFormsContainer && (pokemonFormsContainer.children.length === 0 || !teamToEdit || teamToEdit.id !== editingTeamIdInput.value )) { // Regenerar si es nuevo o diferente equipo
+                        pokemonFormsContainer.innerHTML = ''; 
                         for (let i = 0; i < 6; i++) { pokemonFormsContainer.innerHTML += generatePokemonFormFields(i); }
                         document.querySelectorAll('.ev-input').forEach(input => input.addEventListener('input', handleEvInputChange));
                     }
+                    if(teamTagsContainer) teamTagsContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+
 
                     if (teamToEdit) { 
                         if(editingTeamIdInput) editingTeamIdInput.value = teamToEdit.id;
                         if(document.getElementById('team-title-input')) document.getElementById('team-title-input').value = teamToEdit.title || '';
                         if(document.getElementById('team-format-input')) document.getElementById('team-format-input').value = teamToEdit.format || '';
-                        if(document.getElementById('team-tags-input')) document.getElementById('team-tags-input').value = (teamToEdit.tags || []).join(', ');
+                        
+                        if (teamTagsContainer && teamToEdit.tags && Array.isArray(teamToEdit.tags)) {
+                            teamToEdit.tags.forEach(tagValue => {
+                                const checkbox = teamTagsContainer.querySelector(`input[value="${tagValue}"]`);
+                                if (checkbox) checkbox.checked = true;
+                            });
+                        }
+                        // Si los tags se guardaban como string separado por comas en versiones anteriores:
+                        // else if (document.getElementById('team-tags-input') && typeof teamToEdit.tags === 'string') { 
+                        //      document.getElementById('team-tags-input').value = teamToEdit.tags;
+                        // }
+
+
                         if(document.getElementById('team-description-input')) document.getElementById('team-description-input').value = teamToEdit.description || '';
                         if(document.getElementById('team-youtube-input')) document.getElementById('team-youtube-input').value = teamToEdit.youtube_link || '';
                         
@@ -559,6 +618,17 @@
                     showLoginForm();
                 }
             });
+            if (myCreatedTeamsLink) myCreatedTeamsLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                 const user = JSON.parse(localStorage.getItem('userData'));
+                if (user && user.id) {
+                    window.open(`my_teams.html?userId=${user.id}`, '_self');
+                } else {
+                    alert("You must be logged in to see your created teams.");
+                    showLoginForm();
+                }
+            });
+
 
             // --- Manejo de Navegación ---
             if (navLogoLink) navLogoLink.addEventListener('click', (e) => { e.preventDefault(); showMainContentPage(); });
@@ -583,7 +653,13 @@
             async function fetchTeamsFromBackend(queryParams = {}) {
                 const url = new URL(TEAMS_URL);
                 Object.keys(queryParams).forEach(key => {
-                    if (queryParams[key]) url.searchParams.append(key, queryParams[key]);
+                    if (queryParams[key]) {
+                        if (key === 'tags' && Array.isArray(queryParams[key])) { // Si tags es un array
+                            queryParams[key].forEach(tag => url.searchParams.append('tag', tag));
+                        } else {
+                            url.searchParams.append(key, queryParams[key]);
+                        }
+                    }
                 });
                 try {
                     const response = await fetch(url.toString());
@@ -601,7 +677,8 @@
             
             function renderTeamCard(team) {
                 const currentUser = JSON.parse(localStorage.getItem('userData'));
-                const isOwner = currentUser && team.user_id === currentUser.id;
+                // No mostrar botones de editar/eliminar en index.html
+                // const isOwner = currentUser && team.user_id === currentUser.id; 
                 let pokemonIconsHtml = '';
                 (team.pokemons || []).slice(0, 6).forEach(p => {
                     const pokemonNameForSprite = p.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/gi, '');
@@ -624,10 +701,7 @@
                                 <button class="team-action-button pokepaste-button">Copy Pokepaste</button>
                                 <button class="team-action-button view-details-button">View Details</button>
                                 <button class="team-action-button like-team-button" data-team-id="${team.id}">Like</button>
-                                ${isOwner ? `
-                                    <button class="team-action-button edit-team-button" data-team-id="${team.id}">Edit</button>
-                                    <button class="team-action-button delete-team-button danger" data-team-id="${team.id}">Delete</button>
-                                ` : ''}
+                                {/* Edit/Delete buttons removed from here, will be on my_teams.html */}
                             </div>
                         </div></div>`;
             }
@@ -677,8 +751,7 @@
                         });
                     });
                     targetGridElement.querySelectorAll('.like-team-button').forEach(button => button.addEventListener('click', handleLikeTeamClick));
-                    targetGridElement.querySelectorAll('.edit-team-button').forEach(button => button.addEventListener('click', handleEditTeamClick));
-                    targetGridElement.querySelectorAll('.delete-team-button').forEach(button => button.addEventListener('click', handleDeleteTeamClick));
+                    // No hay botones de editar/eliminar aquí directamente
                 }
             }
             
@@ -692,8 +765,27 @@
                 }
                 const fetchedData = await fetchTeamsFromBackend(); 
                 allTeamsData = fetchedData.teams.reduce((obj, team) => { obj[team.id] = team; return obj; }, {});
-                localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData)); // Para team_detail.html y liked_teams.html
+                localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData)); 
                 renderAllTeamCards(null, 'team-grid-destacados'); 
+
+                if (window.location.hash === '#edit-team') {
+                    const teamToEditString = localStorage.getItem('teamToEdit');
+                    if (teamToEditString) {
+                        const teamToEdit = JSON.parse(teamToEditString);
+                        showCreateTeamForm(teamToEdit);
+                        localStorage.removeItem('teamToEdit'); 
+                    }
+                    window.location.hash = ''; 
+                } else if (window.location.hash === '#create-team') {
+                    showCreateTeamForm();
+                     window.location.hash = '';
+                } else if (window.location.hash === '#login') {
+                    showLoginForm();
+                     window.location.hash = '';
+                } else if (window.location.hash === '#register') {
+                    showRegisterForm();
+                     window.location.hash = '';
+                }
             }
             initializePage();
 
@@ -771,11 +863,16 @@
                     if (!loggedInUser) { showFeedback(createTeamFeedback, 'You must be logged in to save a team.', true); showLoginForm(); return; }
 
                     const editingTeamId = formData.get('editingTeamId');
+                    const selectedTags = [];
+                    teamTagsContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                        selectedTags.push(cb.value);
+                    });
+
                     const teamPayload = {
                         userId: loggedInUser.id, 
                         title: formData.get('teamTitle'), 
                         format: formData.get('teamFormat'),
-                        tags: formData.get('teamTags') ? formData.get('teamTags').split(',').map(tag => tag.trim()).filter(tag => tag) : [],
+                        tags: selectedTags,
                         description: formData.get('teamDescription'), 
                         youtubeLink: formData.get('teamYoutubeLink'),
                         pokemons: []
@@ -854,7 +951,7 @@
                 sections.forEach(section => {
                     if (section.trim() === "") return;
                     const lines = section.trim().split('\n');
-                    const pokemon = { name: '', item: '', ability: '', evs: '', nature: '', tera_type: '', moves: [] }; // tera_type
+                    const pokemon = { name: '', item: '', ability: '', evs: '', nature: '', tera_type: '', moves: [] };
                     const firstLineMatch = lines[0].match(/^(.+?)(?:\s@\s(.+))?$/);
                     if (firstLineMatch) { 
                         pokemon.name = firstLineMatch[1].trim(); 
@@ -866,7 +963,7 @@
                         if (line.startsWith('Ability: ')) pokemon.ability = line.substring('Ability: '.length).trim();
                         else if (line.startsWith('EVs: ')) pokemon.evs = line.substring('EVs: '.length).trim();
                         else if (line.endsWith(' Nature')) pokemon.nature = line.replace(' Nature', '').trim();
-                        else if (line.startsWith('Tera Type: ')) pokemon.tera_type = line.substring('Tera Type: '.length).trim(); // tera_type
+                        else if (line.startsWith('Tera Type: ')) pokemon.tera_type = line.substring('Tera Type: '.length).trim();
                         else if (line.startsWith('- ')) pokemon.moves.push(line.substring(2).trim());
                     });
                     if (pokemon.name) pokemons.push(pokemon);
@@ -880,7 +977,7 @@
                     if(document.getElementById(`pokemon-item-${index}`)) document.getElementById(`pokemon-item-${index}`).value = pokemon.item || '';
                     if(document.getElementById(`pokemon-ability-${index}`)) document.getElementById(`pokemon-ability-${index}`).value = pokemon.ability || '';
                     if(document.getElementById(`pokemon-nature-${index}`)) document.getElementById(`pokemon-nature-${index}`).value = pokemon.nature || '';
-                    if(document.getElementById(`pokemon-teratype-${index}`)) document.getElementById(`pokemon-teratype-${index}`).value = pokemon.tera_type || ''; // tera_type
+                    if(document.getElementById(`pokemon-teratype-${index}`)) document.getElementById(`pokemon-teratype-${index}`).value = pokemon.tera_type || '';
                     
                     const evSpread = parseEVsFromPokepasteString(pokemon.evs);
                     ['hp', 'atk', 'def', 'spa', 'spd', 'spe'].forEach(stat => {
@@ -918,37 +1015,24 @@
             // --- Búsqueda ---
             async function performSearch(filters) {
                 const queryParams = new URLSearchParams();
-                // Construir la descripción de la búsqueda para el título
                 let queryDescriptionParts = [];
 
-                if (filters.title) {
-                    queryParams.append('title', filters.title); // Asumiendo que el backend puede buscar por título
+                if (filters.title) { 
+                    queryParams.append('title', filters.title); 
                     queryDescriptionParts.push(`Title/Creator: "${filters.title}"`);
                 }
-                if (filters.pokemon) {
-                    queryParams.append('pokemon', filters.pokemon);
-                    queryDescriptionParts.push(`Pokémon: ${filters.pokemon}`);
-                }
-                if (filters.item) {
-                    queryParams.append('item', filters.item);
-                    queryDescriptionParts.push(`Item: ${filters.item}`);
-                }
-                if (filters.move) {
-                    queryParams.append('move', filters.move);
-                    queryDescriptionParts.push(`Move: ${filters.move}`);
-                }
-                if (filters.format) {
-                    queryParams.append('format', filters.format);
-                    queryDescriptionParts.push(`Format: ${filters.format}`);
-                }
-                if (filters.tags) { // Para tags, el backend espera 'tag'
-                    filters.tags.split(',').map(t => t.trim()).filter(t => t).forEach(tag => {
-                        queryParams.append('tag', tag); // Enviar múltiples tags si el backend lo soporta, o el primero
-                    });
-                     queryDescriptionParts.push(`Tags: ${filters.tags}`);
+                if (filters.pokemon) { queryParams.append('pokemon', filters.pokemon); queryDescriptionParts.push(`Pokémon: ${filters.pokemon}`);}
+                if (filters.item) { queryParams.append('item', filters.item); queryDescriptionParts.push(`Item: ${filters.item}`);}
+                if (filters.move) { queryParams.append('move', filters.move); queryDescriptionParts.push(`Move: ${filters.move}`);}
+                if (filters.format) { queryParams.append('format', filters.format); queryDescriptionParts.push(`Format: ${filters.format}`);}
+                if (filters.tags) { 
+                    // Si el backend espera 'tag' como parámetro único para un solo tag, o un array para múltiples.
+                    // Asumiendo que el backend puede manejar un string de tags separados por coma o un array.
+                    // Si el backend espera múltiples parámetros 'tag', se debe ajustar.
+                    queryParams.append('tags', filters.tags); // O iterar y append 'tag' para cada uno
+                    queryDescriptionParts.push(`Tags: ${filters.tags}`);
                 }
                 const queryDescription = queryDescriptionParts.length > 0 ? queryDescriptionParts.join(', ') : "All Teams";
-
 
                 try {
                     const { teams: fetchedTeams, total } = await fetchTeamsFromBackend(Object.fromEntries(queryParams));
@@ -974,12 +1058,17 @@
                 advancedSearchForm.addEventListener('submit', (e) => {
                     e.preventDefault();
                     const formData = new FormData(advancedSearchForm);
+                    const selectedTags = [];
+                    advSearchTagsContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                        selectedTags.push(cb.value);
+                    });
+
                     const filters = {
                         pokemon: formData.get('pokemon')?.trim(),
                         item: formData.get('item')?.trim(),
                         move: formData.get('move')?.trim(),
                         format: formData.get('format'),
-                        tags: formData.get('tags')?.trim()
+                        tags: selectedTags.join(',') // Enviar tags como string separado por comas
                     };
                     performSearch(filters);
                     if (advancedSearchFeedback) showFeedback(advancedSearchFeedback, `Advanced search applied.`, false);
@@ -1010,48 +1099,8 @@
                 } catch (error) { alert("Connection error while liking team."); }
             }
 
-            function handleEditTeamClick(event) {
-                const teamId = event.target.dataset.teamId;
-                const teamToEdit = allTeamsData[teamId];
-                if (teamToEdit) {
-                    showCreateTeamForm(teamToEdit); 
-                } else { alert("Could not find team data to edit."); }
-            }
-            async function handleDeleteTeamClick(event) {
-                const teamId = event.target.dataset.teamId;
-                const user = JSON.parse(localStorage.getItem('userData'));
-                if (!user) { alert("You must be logged in."); return; }
-
-                if (confirm("Are you sure you want to delete this team? This action cannot be undone.")) {
-                    try {
-                        const response = await fetch(`${TEAMS_URL}/${teamId}`, { 
-                            method: 'DELETE',
-                            headers: { 'Content-Type': 'application/json', 'X-User-Id': user.id },
-                            body: JSON.stringify({ userId: user.id }) 
-                        });
-                        const result = await response.json();
-                        if (response.ok) {
-                            alert(result.message);
-                            delete allTeamsData[teamId]; 
-                            localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
-                            // Re-render la vista actual
-                            const currentGridId = searchResultsSection.style.display === 'block' ? 'team-grid-search-results' : 'team-grid-destacados';
-                            const currentTeams = searchResultsSection.style.display === 'block' ? 
-                                                Object.values(allTeamsData).filter(team => {
-                                                    // Aquí deberías reaplicar los filtros de búsqueda actuales si los tienes guardados,
-                                                    // o simplemente recargar los destacados. Por simplicidad, recargamos destacados.
-                                                    return true; // Placeholder
-                                                }) 
-                                                : null;
-                            renderAllTeamCards(currentTeams, currentGridId);
-                            if (currentGridId === 'team-grid-search-results' && (!currentTeams || currentTeams.length === 0)) {
-                                showMainContentPage(); // Si no hay resultados de búsqueda, volver a la página principal
-                            }
-
-                        } else { alert(`Error deleting team: ${result.error}`); }
-                    } catch (error) { alert("Connection error while deleting team."); }
-                }
-            }
+            // handleEditTeamClick se llamará desde my_teams.html, no directamente desde las tarjetas de index.html
+            // async function handleDeleteTeamClick(event) { ... } // Se llamará desde my_teams.html
         });
     </script>
 </body>
