@@ -8,119 +8,127 @@
     <style>
         :root {
             --primary: #ff5350; --primary-dark: #d13330; --secondary: #3b4cca; --light: #f8f9fa;
-            --dark: #343a40; --success: #30c58b; --danger: #dc3545;
+            --dark: #343a40; --success: #30c58b; --danger: #dc3545; --info: #17a2b8;
             --type-normal: #A8A77A; --type-fire: #EE8130; --type-water: #6390F0; --type-electric: #F7D02C;
             --type-grass: #7AC74C; --type-ice: #96D9D6; --type-fighting: #C22E28; --type-poison: #A33EA1;
             --type-ground: #E2BF65; --type-flying: #A98FF3; --type-psychic: #F95587; --type-bug: #A6B91A;
             --type-rock: #B6A136; --type-ghost: #735797; --type-dragon: #6F35FC; --type-dark: #705746;
             --type-steel: #B7B7CE; --type-fairy: #D685AD;
+            --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --border-radius: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 10px rgba(0,0,0,0.1);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: #f4f4f4; color: var(--dark); line-height: 1.6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f0f2f5; color: var(--dark); line-height: 1.6; font-family: var(--font-sans); }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
         
-        header { background-color: var(--primary); color: white; padding: 1rem 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        header { background-color: var(--primary); color: white; padding: 1rem 0; box-shadow: var(--shadow-md); position: sticky; top: 0; z-index: 1000; }
         .navbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         .logo { font-size: 1.8rem; font-weight: bold; margin-bottom: 0.5rem; text-decoration: none; color: white; cursor:pointer;}
         .logo span { color: var(--secondary); }
         .nav-links { display: flex; list-style: none; flex-wrap: wrap; padding-left: 0; align-items: center;}
         .nav-links li { margin-left: 1rem; margin-bottom: 0.5rem; }
-        .nav-links a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s, background-color 0.3s; padding: 0.3rem 0.5rem; border-radius: 5px; cursor:pointer; }
+        .nav-links a { color: white; text-decoration: none; font-weight: 500; transition: color 0.2s, background-color 0.2s; padding: 0.4rem 0.8rem; border-radius: var(--border-radius); }
         .nav-links a:hover, .nav-links a.active { color: var(--primary); background-color: white; }
         .user-menu-container { position: relative; }
         #user-greeting-detail { 
-            cursor: pointer; padding: 0.3rem 0.5rem; border-radius: 5px; 
-            transition: background-color 0.3s; color:white; font-weight:500;
+            cursor: pointer; padding: 0.4rem 0.8rem; border-radius: var(--border-radius); 
+            transition: background-color 0.2s; color:white; font-weight:500;
             display: inline-block; 
         }
-        #user-greeting-detail:hover { background-color: rgba(255,255,255,0.1); }
+        #user-greeting-detail:hover { background-color: rgba(255,255,255,0.15); }
         .user-dropdown {
-            display: none; position: absolute; top: 100%; right: 0;
+            display: none; position: absolute; top: calc(100% + 0.5rem); right: 0;
             background-color: white; color: var(--dark);
-            border: 1px solid #ddd; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            min-width: 200px; z-index: 1001; margin-top: 0.5rem;
+            border: 1px solid #ddd; border-radius: var(--border-radius); box-shadow: var(--shadow-md);
+            min-width: 220px; z-index: 1001; overflow: hidden;
         }
-        .user-dropdown a { display: block; padding: 0.75rem 1rem; text-decoration: none; color: var(--dark); font-size: 0.9rem;}
-        .user-dropdown a:hover { background-color: #f0f0f0; }
+        .user-dropdown a { display: block; padding: 0.8rem 1.2rem; text-decoration: none; color: var(--dark); font-size: 0.95rem;}
+        .user-dropdown a:hover { background-color: #f0f2f5; }
         
-        main.detail-container { padding-top: 2rem; padding-bottom: 2rem; background-color: white; margin-top: 2rem; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); }
-        .detail-page-title { color: var(--primary); text-align: center; margin-bottom: 1.5rem; font-size: 2.2rem; }
-        .detail-section { margin-bottom: 2rem; padding: 0 1rem;}
-        .detail-section h3 { color: var(--secondary); margin-bottom: 0.75rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; font-size: 1.6rem;}
+        main.detail-container { padding: 2rem 1.5rem; background-color: white; margin-top: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow-md); }
+        .detail-page-title { color: var(--primary); text-align: center; margin-bottom: 1.5rem; font-size: 2.5rem; font-weight: 700; }
+        .detail-section { margin-bottom: 2.5rem; padding: 0 1rem;}
+        .detail-section h3 { color: var(--secondary); margin-bottom: 1rem; border-bottom: 2px solid var(--primary); padding-bottom: 0.6rem; font-size: 1.8rem; font-weight: 600;}
         
-        .pokemon-details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
-        .pokemon-detail-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; background-color: #f9f9f9; display: flex; flex-direction: column; }
+        .pokemon-details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        .pokemon-detail-card { border: 1px solid #e0e0e0; border-radius: var(--border-radius); padding: 1.5rem; background-color: #fdfdff; display: flex; flex-direction: column; box-shadow: var(--shadow-sm); transition: box-shadow 0.3s ease;}
+        .pokemon-detail-card:hover { box-shadow: var(--shadow-md); }
         .pokemon-detail-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
-        .pokemon-detail-sprite { width: 80px; height: 80px; object-fit: contain; background-color: #e9e9e9; border-radius: 50%; image-rendering: pixelated; border: 1px solid #ccc;}
+        .pokemon-detail-sprite { width: 96px; height: 96px; object-fit: contain; background-color: #f0f2f5; border-radius: 50%; image-rendering: pixelated; border: 2px solid #ddd;}
         .pokemon-detail-item-container { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; }
-        .pokemon-detail-item-sprite { width: 32px; height: 32px; object-fit: contain; background-color: #e9e9e9; border-radius: 5px; padding: 2px; border: 1px solid #ccc;}
-        .pokemon-detail-name { font-size: 1.3rem; font-weight: bold; color: var(--secondary); flex-grow: 1; }
-        .pokemon-detail-info { font-size: 0.9rem; margin-bottom: 0.4rem; }
-        .pokemon-detail-info strong { color: var(--dark); }
+        .pokemon-detail-item-sprite { width: 40px; height: 40px; object-fit: contain; background-color: #f0f2f5; border-radius: 5px; padding: 3px; border: 1px solid #ddd;}
+        .pokemon-detail-name { font-size: 1.5rem; font-weight: 700; color: var(--secondary); flex-grow: 1; }
+        .pokemon-detail-info { font-size: 0.95rem; margin-bottom: 0.5rem; color: #444; }
+        .pokemon-detail-info strong { color: var(--dark); font-weight: 600; }
         .pokemon-detail-info .stat-boost { color: var(--success); font-weight: bold;}
         .pokemon-detail-info .stat-nerf { color: var(--danger); font-weight: bold;}
-        .ability-box, .item-box { border: 1px solid #ddd; border-radius: 5px; padding: 0.5rem; margin-top: 0.5rem; background-color: #fff; }
-        .ability-box p, .item-box p { font-size: 0.8rem; color: #555; margin-top: 0.2rem; }
-        .hidden-ability-tag { font-size: 0.7rem; background-color: var(--primary-dark); color: white; padding: 0.1rem 0.4rem; border-radius: 3px; margin-left: 0.3rem; }
+        
+        .ability-box, .item-box { border: 1px solid #e0e0e0; border-radius: var(--border-radius); padding: 0.75rem; margin-top: 0.75rem; background-color: #ffffff; box-shadow: var(--shadow-sm); }
+        .ability-box p, .item-box p { font-size: 0.85rem; color: #555; margin-top: 0.3rem; line-height: 1.5; }
+        .hidden-ability-tag { font-size: 0.75rem; background-color: var(--primary-dark); color: white; padding: 0.2rem 0.5rem; border-radius: 3px; margin-left: 0.5rem; font-weight: 500;}
 
-        .pokemon-moves-title { font-weight: bold; margin-top: 1rem; margin-bottom: 0.5rem; font-size: 1rem;}
+        .pokemon-moves-title { font-weight: 600; margin-top: 1.2rem; margin-bottom: 0.6rem; font-size: 1.1rem;}
         .pokemon-moves-list { list-style: none; padding-left: 0; }
         .pokemon-moves-list li { 
             display: flex; align-items: center; justify-content: space-between; 
-            padding: 0.5rem 0.75rem; border-radius: 5px; margin-bottom: 0.4rem; 
-            font-size: 0.9rem; color: white; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 0 1px rgba(0,0,0,0.8); /* Contorno más fuerte */
-            position: relative; /* Para el tooltip */
+            padding: 0.6rem 0.8rem; border-radius: var(--border-radius); margin-bottom: 0.5rem; 
+            font-size: 0.95rem; color: white; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 0 1px rgba(0,0,0,0.8);
+            position: relative; cursor: help; transition: filter 0.2s ease;
         }
-        .move-name { flex-grow: 1; }
-        .move-category-icon { width: 24px; height: 24px; margin-left: 0.5rem; vertical-align: middle; filter: drop-shadow(0 0 1px rgba(0,0,0,0.5)); }
-        .move-power-accuracy { font-size: 0.75rem; margin-left: 0.5rem; opacity: 0.9; }
+        .pokemon-moves-list li:hover { filter: brightness(1.1); }
+        .move-name { flex-grow: 1; font-weight: 500; }
+        .move-category-icon { width: 24px; height: 24px; margin-left: 0.5rem; vertical-align: middle; filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.4)); }
+        .move-power-accuracy { font-size: 0.8rem; margin-left: 0.75rem; opacity: 0.9; font-weight: 300;}
         .move-tooltip {
-            visibility: hidden; width: 220px; background-color: var(--dark); color: #fff;
-            text-align: left; border-radius: 6px; padding: 8px; font-size: 0.8rem;
-            position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; /* Centrar tooltip */
-            opacity: 0; transition: opacity 0.3s; white-space: normal;
+            visibility: hidden; width: 240px; background-color: var(--dark); color: #fff;
+            text-align: left; border-radius: var(--border-radius); padding: 10px; font-size: 0.85rem; line-height: 1.4;
+            position: absolute; z-index: 10; bottom: 115%; left: 50%; margin-left: -120px; 
+            opacity: 0; transition: opacity 0.3s ease, visibility 0.3s ease; box-shadow: var(--shadow-md);
         }
         .pokemon-moves-list li:hover .move-tooltip { visibility: visible; opacity: 1; }
         
-        .youtube-embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 8px;}
+        .youtube-embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #111; border-radius: var(--border-radius); box-shadow: var(--shadow-sm); }
         .youtube-embed-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .type-tag { padding: 0.2em 0.6em; border-radius: 4px; color: white; font-size: 0.85em; text-transform: uppercase; margin-left: 5px; text-shadow: 0 0 2px rgba(0,0,0,0.5);}
+        .type-tag { padding: 0.25em 0.7em; border-radius: var(--border-radius); color: white; font-size: 0.9em; text-transform: uppercase; margin-left: 5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); display: inline-block;}
 
-        .type-analysis-table-container { overflow-x: auto; margin-bottom: 1.5rem; }
-        .type-analysis-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        .type-analysis-table th, .type-analysis-table td { border: 1px solid #ddd; padding: 0.5rem; text-align: center; }
-        .type-analysis-table th { background-color: #f0f0f0; font-weight: bold; cursor: pointer; }
-        .type-analysis-table th:hover { background-color: #e0e0e0; }
-        .type-analysis-table .type-header-cell { width: 80px; font-weight:bold; } 
-        .type-analysis-table .type-cell span { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; color: white; text-shadow: 0 0 1px black; }
-        .type-analysis-table td.count-cell { font-weight: bold; }
-        .type-analysis-table td.weak { background-color: rgba(220, 53, 69, 0.1); color: var(--danger); }
-        .type-analysis-table td.resist { background-color: rgba(48, 197, 139, 0.1); color: var(--success); }
-        .type-analysis-table td.immune { background-color: rgba(108, 117, 125, 0.1); color: #555; }
-        .type-analysis-table td.effective { background-color: rgba(48, 197, 139, 0.2); }
-        .type-analysis-table td.stab-effective { background-color: rgba(48, 197, 139, 0.4); font-weight: bold; }
+        .type-analysis-table-container { overflow-x: auto; margin-bottom: 1.5rem; border: 1px solid #e0e0e0; border-radius: var(--border-radius); box-shadow: var(--shadow-sm); }
+        .type-analysis-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .type-analysis-table th, .type-analysis-table td { border: 1px solid #e0e0e0; padding: 0.6rem 0.8rem; text-align: center; }
+        .type-analysis-table th { background-color: #f8f9fa; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease; }
+        .type-analysis-table th:hover { background-color: #e9ecef; }
+        .type-analysis-table .type-header-cell { width: 100px; font-weight:bold; } 
+        .type-analysis-table .type-cell span { display: inline-block; padding: 0.25rem 0.6rem; border-radius: var(--border-radius); color: white; text-shadow: 1px 1px 1px rgba(0,0,0,0.3); }
+        .type-analysis-table td.count-cell { font-weight: 600; font-size: 1em; }
+        .type-analysis-table td.weak { background-color: rgba(220, 53, 69, 0.05); color: var(--danger); }
+        .type-analysis-table td.resist { background-color: rgba(48, 197, 139, 0.05); color: var(--success); }
+        .type-analysis-table td.immune { background-color: rgba(108, 117, 125, 0.05); color: #555; }
+        .type-analysis-table td.effective { background-color: rgba(48, 197, 139, 0.1); }
+        .type-analysis-table td.stab-effective { background-color: rgba(48, 197, 139, 0.2); font-weight: bold; }
 
 
-        .ev-chart-container { max-width: 250px; margin: 0 auto 1rem auto; height: 220px; } /* Centrado y con margen inferior */
+        .ev-chart-container { max-width: 260px; margin: 0.5rem auto; height: 240px; /* Ajustar altura si es necesario */ } 
 
-        .comments-section { margin-top: 2rem; }
+        .comments-section { margin-top: 2.5rem; }
         .comments-toolbar { display: flex; justify-content: flex-end; align-items: center; margin-bottom: 1rem; gap: 1rem;}
-        .comments-toolbar label { font-size: 0.9rem; }
-        .comments-toolbar select { padding: 0.3rem 0.5rem; border-radius: 4px; border: 1px solid #ccc; font-size: 0.9rem;}
-        .comment-form textarea { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; min-height: 80px; margin-bottom: 0.5rem; font-size: 0.95rem; }
-        .comment-form button { background-color: var(--primary); color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        .comments-toolbar label { font-size: 0.9rem; color: #555; }
+        .comments-toolbar select { padding: 0.4rem 0.6rem; border-radius: var(--border-radius); border: 1px solid #ccc; font-size: 0.9rem; background-color: white;}
+        .comment-form textarea { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: var(--border-radius); min-height: 90px; margin-bottom: 0.75rem; font-size: 0.95rem; }
+        .comment-form button { background-color: var(--primary); color: white; padding: 0.7rem 1.5rem; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; transition: background-color 0.2s ease; }
         .comment-form button:hover { background-color: var(--primary-dark); }
         .comments-list { margin-top: 1.5rem; list-style: none; padding-left: 0; }
-        .comment-item { background-color: #f9f9f9; border: 1px solid #eee; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+        .comment-item { background-color: #fdfdff; border: 1px solid #e8e8e8; border-radius: var(--border-radius); padding: 1.2rem; margin-bottom: 1rem; box-shadow: var(--shadow-sm); }
         .comment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-        .comment-author { font-weight: bold; color: var(--secondary); }
+        .comment-author { font-weight: 600; color: var(--secondary); font-size: 1.05rem;}
         .comment-date { font-size: 0.8rem; color: #777; }
-        .comment-text { font-size: 0.95rem; white-space: pre-wrap; margin-bottom: 0.75rem; }
-        .comment-actions { display: flex; align-items: center; gap: 0.75rem; }
-        .comment-actions .vote-button { background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 0.2rem; line-height: 1; }
+        .comment-text { font-size: 0.95rem; white-space: pre-wrap; margin-bottom: 0.75rem; color: #333; }
+        .comment-actions { display: flex; align-items: center; gap: 1rem; margin-top:0.75rem; }
+        .comment-actions .vote-button { background: none; border: none; cursor: pointer; font-size: 1.2rem; padding: 0.2rem; line-height: 1; color: #777; transition: color 0.2s ease;}
         .comment-actions .vote-button:hover { color: var(--primary); }
-        .comment-actions .vote-count { font-size: 0.9rem; font-weight: bold; }
-        .comment-actions .reply-button { font-size: 0.8rem; color: var(--secondary); background: none; border: none; cursor: pointer; padding: 0.2rem; }
+        .comment-actions .vote-button.voted { color: var(--primary); font-weight: bold; } 
+        .comment-actions .vote-count { font-size: 0.9rem; font-weight: bold; color: var(--dark); }
+        .comment-actions .reply-button { font-size: 0.85rem; color: var(--secondary); background: none; border: none; cursor: pointer; padding: 0.2rem; font-weight: 500;}
         .comment-actions .reply-button:hover { text-decoration: underline; }
 
         #loading-indicator { text-align: center; font-size: 1.2rem; color: var(--secondary); padding: 2rem; }
@@ -153,6 +161,7 @@
                     <li id="user-menu-container-detail" class="user-menu-container" style="display:none;">
                         <a href="#" id="user-greeting-detail"></a>
                         <div class="user-dropdown" id="user-dropdown-menu-detail">
+                            <a href="my_teams.html" id="my-teams-link-detail">My Created Teams</a>
                             <a href="liked_teams.html" id="liked-teams-link-detail">My Liked Teams</a>
                             <a href="#" id="logout-nav-link-detail">Logout</a>
                         </div>
@@ -243,16 +252,62 @@
     </footer>
 
     <script>
-        const TYPE_EFFECTIVENESS = { /* ... (matriz de efectividad completa como en la v5) ... */ };
+        const TYPE_EFFECTIVENESS = {
+            normal: { rock: 0.5, steel: 0.5, ghost: 0, normal: 1, fire: 1, water: 1, electric: 1, grass: 1, ice: 1, fighting: 1, poison: 1, ground: 1, flying: 1, psychic: 1, bug: 1, dragon: 1, dark: 1, fairy: 1 },
+            fire: { fire: 0.5, water: 0.5, grass: 2, ice: 2, bug: 2, rock: 0.5, dragon: 0.5, steel: 2, normal: 1, electric: 1, fighting: 1, poison: 1, ground: 1, flying: 1, psychic: 1, ghost: 1, dark: 1, fairy: 1 },
+            water: { fire: 2, water: 0.5, grass: 0.5, ground: 2, rock: 2, dragon: 0.5, normal: 1, electric: 1, ice: 1, fighting: 1, poison: 1, flying: 1, psychic: 1, bug: 1, ghost: 1, dark: 1, steel: 1, fairy: 1 },
+            electric: { water: 2, grass: 0.5, electric: 0.5, ground: 0, flying: 2, dragon: 0.5, normal: 1, fire: 1, ice: 1, fighting: 1, poison: 1, psychic: 1, bug: 1, rock: 1, ghost: 1, dark: 1, steel: 1, fairy: 1 },
+            grass: { fire: 0.5, water: 2, grass: 0.5, poison: 0.5, ground: 2, flying: 0.5, bug: 0.5, rock: 2, dragon: 0.5, steel: 0.5, normal: 1, electric: 1, ice: 1, fighting: 1, psychic: 1, ghost: 1, dark: 1, fairy: 1 },
+            ice: { fire: 0.5, water: 0.5, grass: 2, ice: 0.5, ground: 2, flying: 2, dragon: 2, steel: 0.5, normal: 1, electric: 1, fighting: 1, poison: 1, psychic: 1, bug: 1, rock: 1, ghost: 1, dark: 1, fairy: 1 },
+            fighting: { normal: 2, ice: 2, poison: 0.5, flying: 0.5, psychic: 0.5, bug: 0.5, rock: 2, ghost: 0, dark: 2, steel: 2, fairy: 0.5, fire: 1, water: 1, electric: 1, grass: 1, ground: 1, dragon: 1 },
+            poison: { grass: 2, poison: 0.5, ground: 0.5, rock: 0.5, ghost: 0.5, steel: 0, fairy: 2, normal: 1, fire: 1, water: 1, electric: 1, ice: 1, fighting: 1, flying: 1, psychic: 1, bug: 1, dragon: 1, dark: 1 },
+            ground: { fire: 2, grass: 0.5, electric: 2, poison: 2, flying: 0, bug: 0.5, rock: 2, steel: 2, normal: 1, water: 1, ice: 1, fighting: 1, psychic: 1, ghost: 1, dragon: 1, dark: 1, fairy: 1 },
+            flying: { grass: 2, electric: 0.5, fighting: 2, bug: 2, rock: 0.5, steel: 0.5, normal: 1, fire: 1, water: 1, ice: 1, poison: 1, ground: 1, psychic: 1, ghost: 1, dragon: 1, dark: 1, fairy: 1 },
+            psychic: { fighting: 2, poison: 2, psychic: 0.5, dark: 0, steel: 0.5, normal: 1, fire: 1, water: 1, electric: 1, grass: 1, ice: 1, ground: 1, flying: 1, bug: 1, rock: 1, ghost: 1, dragon: 1, fairy: 1 },
+            bug: { fire: 0.5, grass: 2, fighting: 0.5, poison: 0.5, flying: 0.5, psychic: 2, ghost: 0.5, dark: 2, steel: 0.5, fairy: 0.5, normal: 1, water: 1, electric: 1, ice: 1, ground: 1, rock: 1, dragon: 1 },
+            rock: { fire: 2, ice: 2, fighting: 0.5, ground: 0.5, flying: 2, bug: 2, steel: 0.5, normal: 1, water: 1, electric: 1, grass: 1, poison: 1, psychic: 1, ghost: 1, dragon: 1, dark: 1, fairy: 1 },
+            ghost: { normal: 0, psychic: 2, ghost: 2, dark: 0.5, fire: 1, water: 1, electric: 1, grass: 1, ice: 1, fighting: 1, poison: 1, ground: 1, flying: 1, bug: 1, rock: 1, dragon: 1, steel: 1, fairy: 1 },
+            dragon: { dragon: 2, steel: 0.5, fairy: 0, normal: 1, fire: 1, water: 1, electric: 1, grass: 1, ice: 1, fighting: 1, poison: 1, ground: 1, flying: 1, psychic: 1, bug: 1, rock: 1, ghost: 1, dark: 1 },
+            dark: { fighting: 0.5, psychic: 2, ghost: 2, dark: 0.5, fairy: 0.5, normal: 1, fire: 1, water: 1, electric: 1, grass: 1, ice: 1, poison: 1, ground: 1, flying: 1, bug: 1, rock: 1, dragon: 1, steel: 1 },
+            steel: { fire: 0.5, water: 0.5, electric: 0.5, ice: 2, rock: 2, steel: 0.5, fairy: 2, normal: 1, grass: 1, fighting: 1, poison: 0, ground: 1, flying: 1, psychic: 1, bug: 1, ghost: 1, dragon: 1, dark: 1 }, 
+            fairy: { fire: 0.5, fighting: 2, poison: 0.5, dragon: 2, dark: 2, steel: 0.5, normal: 1, water: 1, electric: 1, grass: 1, ice: 1, ground: 1, flying: 1, psychic: 1, bug: 1, rock: 1, ghost: 1 }
+        };
         const ALL_TYPES = ["normal", "fire", "water", "electric", "grass", "ice", "fighting", "poison", "ground", "flying", "psychic", "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"];
+        const NATURES_CALC = {
+            Adamant: { atk: 1.1, spa: 0.9 }, Bold: { def: 1.1, atk: 0.9 }, Brave: { atk: 1.1, spe: 0.9 }, Calm: { spd: 1.1, atk: 0.9 },
+            Careful: { spd: 1.1, spa: 0.9 }, Gentle: { spd: 1.1, def: 0.9 }, Hasty: { spe: 1.1, def: 0.9 }, Impish: { def: 1.1, spa: 0.9 },
+            Jolly: { spe: 1.1, spa: 0.9 }, Lax: { def: 1.1, spd: 0.9 }, Lonely: { atk: 1.1, def: 0.9 }, Mild: { spa: 1.1, def: 0.9 },
+            Modest: { spa: 1.1, atk: 0.9 }, Naive: { spe: 1.1, spd: 0.9 }, Naughty: { atk: 1.1, spd: 0.9 }, Quiet: { spa: 1.1, spe: 0.9 },
+            Rash: { spa: 1.1, spd: 0.9 }, Relaxed: { def: 1.1, spe: 0.9 }, Sassy: { spd: 1.1, spe: 0.9 }, Timid: { spe: 1.1, atk: 0.9 },
+            Bashful: {}, Docile: {}, Hardy: {}, Quirky: {}, Serious: {}
+        };
         
         let currentTeamDataForDetail = null; 
         let evCharts = {}; 
         const WORKER_BASE_URL = 'https://poke-teams-auth.srcookriss.workers.dev'; 
 
-        // --- Funciones Auxiliares ---
-        function showFeedback(element, message, isError = false) { /* ... */ }
-        async function fetchFromPokeAPI(endpoint) { /* ... */ return null; }
+        function showFeedback(element, message, isError = false) {
+            if (!element) return;
+            element.textContent = message;
+            element.className = 'feedback-message ' + (isError ? 'error' : 'success');
+            element.style.display = 'block';
+            setTimeout(() => { if(element) element.style.display = 'none'; }, 3000);
+        }
+
+        async function fetchFromPokeAPI(endpoint) {
+            try {
+                const response = await fetch(`https://pokeapi.co/api/v2/${endpoint}`);
+                if (!response.ok) { 
+                    console.warn(`Resource not found in PokéAPI: ${endpoint} (Status: ${response.status})`); 
+                    return null; 
+                }
+                return await response.json();
+            } catch (error) { 
+                console.error(`Error fetching from PokéAPI (${endpoint}):`, error); 
+                return null; 
+            }
+        }
+
         function getTypeColor(typeName) { return `var(--type-${typeName.toLowerCase()}, var(--dark))`; }
         
         function getMoveCategoryIcon(category) {
@@ -263,9 +318,12 @@
             return '';
         }
 
-        function extractYouTubeVideoID(url) { /* ... */ return null; }
+        function extractYouTubeVideoID(url) {
+            if (!url) return null;
+            const regExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const match = url.match(regExp); return (match && match[1]) ? match[1] : null;
+        }
 
-        // --- Lógica de Renderizado de Detalles del Pokémon ---
         async function displayFullPokemonDetails(pokemonList, container) {
             if (!container || !pokemonList) return;
             container.innerHTML = ''; 
@@ -279,13 +337,11 @@
                 let abilityDescription = "No description available.";
                 let isHiddenAbility = false;
                 if (abilityApiData && pokeApiData) {
-                    const effectEntry = abilityApiData.effect_entries?.find(entry => entry.language.name === 'en'); // PokéAPI descripciones suelen estar mejor en inglés
+                    const effectEntry = abilityApiData.effect_entries?.find(entry => entry.language.name === 'en');
                     if (effectEntry) abilityDescription = effectEntry.short_effect || effectEntry.effect;
-                    
                     const foundAbilityInPokemon = pokeApiData.abilities?.find(a => a.ability.name === p.ability.toLowerCase().replace(/\s+/g, '-'));
                     if (foundAbilityInPokemon) isHiddenAbility = foundAbilityInPokemon.is_hidden;
                 }
-
 
                 let movesHtml = '<ul class="pokemon-moves-list">';
                 const movePromises = (p.moves || []).map(async (moveName) => {
@@ -300,7 +356,7 @@
                         const effectEntry = moveData.effect_entries?.find(e => e.language.name === 'en');
                         const moveDescription = effectEntry ? effectEntry.short_effect.replace('$effect_chance', moveData.effect_chance || '') : 'No description.';
                         
-                        return `<li style="background-color: ${getTypeColor(typeName)};" title="${moveDescription}">
+                        return `<li style="background-color: ${getTypeColor(typeName)};" title="${moveDescription.replace(/"/g, '&quot;')}">
                                     <span class="move-name">${moveDisplayName}</span>
                                     <span class="move-power-accuracy">(P: ${power}, Acc: ${accuracy}%)</span>
                                     ${getMoveCategoryIcon(category)}
@@ -315,17 +371,16 @@
                 const evChartHtml = `<div class="ev-chart-container"><canvas id="${evChartId}"></canvas></div>`;
                 
                 let spriteUrl = pokeApiData?.sprites?.front_default;
-                if (!spriteUrl) spriteUrl = `https://play.pokemonshowdown.com/sprites/ani/${pokeApiName}.gif`;
-                const fallbackSprite1 = `https://play.pokemonshowdown.com/sprites/gen5/${pokeApiName}.png`;
-                const fallbackSprite2 = `https://placehold.co/80x80/cccccc/969696?text=${p.name.substring(0,1).toUpperCase()}&font=roboto`;
-
+                let fallbackSprite1 = `https://play.pokemonshowdown.com/sprites/ani/${pokeApiName}.gif`;
+                let fallbackSprite2 = `https://play.pokemonshowdown.com/sprites/gen5/${pokeApiName}.png`;
+                let placeholderSprite = `https://placehold.co/80x80/cccccc/969696?text=${p.name.substring(0,1).toUpperCase()}&font=roboto`;
 
                 return `
                     <div class="pokemon-detail-card">
                         <div class="pokemon-detail-header">
-                            <img src="${spriteUrl}" 
+                            <img src="${spriteUrl || fallbackSprite1}" 
                                  alt="${p.name}" class="pokemon-detail-sprite" 
-                                 onerror="this.onerror=null; this.src='${fallbackSprite1}'; this.onerror=null; this.src='${fallbackSprite2}';">
+                                 onerror="this.onerror=null; this.src='${fallbackSprite1}'; this.onerror=null; this.src='${fallbackSprite2}'; this.onerror=null; this.src='${placeholderSprite}';">
                             <div>
                                 <h4 class="pokemon-detail-name">${p.name.charAt(0).toUpperCase() + p.name.slice(1)}</h4>
                                 ${p.tera_type ? `<div class="pokemon-detail-info"><strong>Tera Type:</strong> <span class="type-tag" style="background-color:${getTypeColor(p.tera_type)};">${p.tera_type.toUpperCase()}</span></div>` : ''}
@@ -336,15 +391,14 @@
                         </div>
                         <div class="item-box">
                             <div class="pokemon-detail-info"><strong>Item:</strong> ${p.item ? p.item.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'None'}</div>
-                            ${itemApiData?.effect_entries?.[0]?.short_effect ? `<p>${itemApiData.effect_entries[0].short_effect}</p>` : ''}
+                            ${itemApiData?.effect_entries?.find(e => e.language.name === 'en')?.short_effect ? `<p>${itemApiData.effect_entries.find(e => e.language.name === 'en').short_effect}</p>` : ''}
                         </div>
                         <div class="ability-box">
                             <div class="pokemon-detail-info"><strong>Ability:</strong> ${p.ability ? p.ability.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'N/A'} ${isHiddenAbility ? '<span class="hidden-ability-tag">Hidden</span>':''}</div>
                             <p>${abilityDescription}</p>
                         </div>
                         <div class="pokemon-detail-info"><strong>Nature:</strong> ${p.nature || 'N/A'} ${getNatureEffectString(p.nature)}</div>
-                        <div class="pokemon-detail-info"><strong>EVs:</strong> ${p.evs || 'N/A'}</div>
-                        ${evChartHtml}
+                        ${evChartHtml} {/* Gráfico de EVs se inserta aquí */}
                         <h5 class="pokemon-moves-title">Moves:</h5>
                         ${movesHtml}
                     </div>`;
@@ -355,17 +409,27 @@
             pokemonList.forEach((p, index) => {
                 const pokeApiName = p.name.toLowerCase().replace(/\s+/g, '-');
                 const evChartId = `ev-chart-${pokeApiName}-${index}`;
-                renderEVChart(p.evs, evChartId, p.nature); // Pasar naturaleza para colorear stats
+                renderEVChart(p.evs, evChartId, p.nature);
             });
         }
 
-        function parseEVs(evString) { /* ... (igual que antes) ... */ return [0,0,0,0,0,0];}
+        function parseEVs(evString) {
+            const evs = { HP: 0, Atk: 0, Def: 0, SpA: 0, SpD: 0, Spe: 0 };
+            if (!evString || typeof evString !== 'string') return Object.values(evs);
+            const parts = evString.split('/');
+            parts.forEach(part => {
+                const match = part.trim().match(/(\d+)\s+(HP|Atk|Def|SpA|SpD|Spe)/i);
+                if (match && evs.hasOwnProperty(match[2].toUpperCase())) { 
+                    evs[match[2].toUpperCase()] = parseInt(match[1]);
+                }
+            });
+            return [evs.HP || 0, evs.Atk || 0, evs.Def || 0, evs.SpA || 0, evs.SpD || 0, evs.Spe || 0];
+        }
         
         function getNatureEffectString(natureName) {
             if (!natureName || !NATURES_CALC[natureName]) return '';
             const effects = NATURES_CALC[natureName];
-            let boosted = null;
-            let nerfed = null;
+            let boosted = null; let nerfed = null;
             for (const stat in effects) {
                 if (effects[stat] > 1) boosted = stat.toUpperCase();
                 if (effects[stat] < 1) nerfed = stat.toUpperCase();
@@ -383,11 +447,10 @@
             const statLabels = ['HP', 'Atk', 'Def', 'SpA', 'SpD', 'Spe'];
             const pointColors = statLabels.map(label => {
                 const statKey = label.toLowerCase();
-                if (natureEffects[statKey] > 1) return 'var(--success)'; // Boosted
-                if (natureEffects[statKey] < 1) return 'var(--danger)';  // Nerfed
-                return 'rgba(59, 76, 202, 1)'; // Default
+                if (natureEffects[statKey] > 1) return 'rgba(48, 197, 139, 1)'; // var(--success)
+                if (natureEffects[statKey] < 1) return 'rgba(220, 53, 69, 1)';  // var(--danger)
+                return 'rgba(59, 76, 202, 1)'; // var(--secondary)
             });
-
 
             if (evCharts[canvasId]) { evCharts[canvasId].destroy(); }
 
@@ -398,22 +461,30 @@
                     datasets: [{
                         label: 'EVs', data: evValues, backgroundColor: 'rgba(59, 76, 202, 0.2)',
                         borderColor: 'rgba(59, 76, 202, 1)', borderWidth: 2, 
-                        pointBackgroundColor: pointColors, // Colores dinámicos para puntos
-                        pointBorderColor: pointColors,
-                        pointRadius: 4, 
-                        lineTension: 0.1 
+                        pointBackgroundColor: pointColors, pointBorderColor: pointColors,
+                        pointRadius: 4, lineTension: 0.1 
                     }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false, 
-                    scales: { r: { angleLines: { display: true }, suggestedMin: 0, suggestedMax: 252, pointLabels: { font: { size: 9 } }, ticks: { stepSize: 63, backdropColor: 'rgba(255,255,255,0.75)' } } }, 
-                    plugins: { legend: { display: false }, tooltip: { enabled: true } }
+                    scales: { r: { angleLines: { display: true }, suggestedMin: 0, suggestedMax: 252, pointLabels: { font: { size: 10 } }, ticks: { stepSize: 63, backdropColor: 'rgba(255,255,255,0.75)' } } }, 
+                    plugins: { legend: { display: false }, tooltip: { enabled: true, bodyFont: {size: 10}, titleFont: {size: 12} } }
                 }
             });
         }
 
         // --- Lógica de Análisis de Tipos (Tabla) ---
-        function getDefensiveEffectiveness(pokemonTypes, attackingType) { /* ... */ return 1; }
+        function getDefensiveEffectiveness(pokemonTypes, attackingType) {
+            let finalMultiplier = 1;
+            if (!pokemonTypes || pokemonTypes.length === 0) return 1;
+            for (const defType of pokemonTypes) {
+                const effectivenessChart = TYPE_EFFECTIVENESS[attackingType.toLowerCase()];
+                if (effectivenessChart && effectivenessChart[defType.toLowerCase()] !== undefined) { 
+                    finalMultiplier *= effectivenessChart[defType.toLowerCase()]; 
+                }
+            }
+            return finalMultiplier;
+        }
         function analyzeAndDisplayTypeTable(teamPokemons, tableBodyElement) {
              if (!tableBodyElement || !teamPokemons || teamPokemons.length === 0) return;
             tableBodyElement.innerHTML = ''; 
@@ -447,32 +518,26 @@
                 typeAnalysisData.push({type: attackingType, weak: weakCount, resist: resistCount, immune: immuneCount, offense: offensiveEffectiveCount, stabOffense: offensiveStabEffectiveCount});
             });
             
-            // Renderizar tabla
-            renderTypeAnalysisTable(typeAnalysisData, tableBodyElement);
+            renderTypeAnalysisTable(typeAnalysisData, tableBodyElement); // Render inicial
 
-            // Añadir listeners para ordenar tabla
             document.querySelectorAll('#type-analysis-table-content th[data-sortable="true"]').forEach(th => {
                 th.addEventListener('click', () => {
                     const sortKey = th.dataset.sortKey;
-                    const currentOrder = th.dataset.sortOrder || 'desc'; // default a desc
+                    const currentOrder = th.dataset.sortOrder || 'desc'; 
                     const newOrder = currentOrder === 'asc' ? 'desc' : 'asc';
-                    th.dataset.sortOrder = newOrder;
-
-                    // Quitar indicadores de orden de otras columnas
+                    
                     document.querySelectorAll('#type-analysis-table-content th[data-sortable="true"]').forEach(otherTh => {
                         if (otherTh !== th) delete otherTh.dataset.sortOrder;
-                        otherTh.innerHTML = otherTh.innerHTML.replace(/ (↑|↓)$/, ''); // Limpiar flechas
+                        otherTh.innerHTML = otherTh.innerHTML.replace(/ (↑|↓)$/, '');
                     });
-                    
+                    th.dataset.sortOrder = newOrder;
                     th.innerHTML = th.innerHTML.replace(/ (↑|↓)$/, '') + ` ${newOrder === 'asc' ? '↑' : '↓'}`;
-
 
                     typeAnalysisData.sort((a, b) => {
                         if (sortKey === 'type') {
                             return newOrder === 'asc' ? a.type.localeCompare(b.type) : b.type.localeCompare(a.type);
                         }
-                        const valA = a[sortKey];
-                        const valB = b[sortKey];
+                        const valA = a[sortKey]; const valB = b[sortKey];
                         return newOrder === 'asc' ? valA - valB : valB - valA;
                     });
                     renderTypeAnalysisTable(typeAnalysisData, tableBodyElement);
@@ -496,13 +561,143 @@
             });
         }
 
-        function getOffensiveEffectiveness(attackingMoveType, targetPokemonTypes) { /* ... */ return 1; }
+        function getOffensiveEffectiveness(attackingMoveType, targetPokemonTypes) {
+            let finalMultiplier = 1;
+            if (!targetPokemonTypes || targetPokemonTypes.length === 0 || !attackingMoveType) return 1;
+            for (const targetType of targetPokemonTypes) {
+                const effectivenessChart = TYPE_EFFECTIVENESS[attackingMoveType.toLowerCase()];
+                if (effectivenessChart && effectivenessChart[targetType.toLowerCase()] !== undefined) { 
+                    finalMultiplier *= effectivenessChart[targetType.toLowerCase()]; 
+                }
+            }
+            return finalMultiplier;
+        }
         
+        function analyzeAndDisplayTeamHighlights(teamPokemons, listElement) {
+            if (!listElement || !teamPokemons) return;
+            listElement.innerHTML = '';
+            const highlights = [];
+            const weatherAbilities = { "drizzle": "Rain", "drought": "Sun", "snow-warning": "Snow", "sand-stream": "Sand" };
+            const weatherMoves = { "rain-dance": "Rain", "sunny-day": "Sun", "snow-warning": "Snow", "sandstorm": "Sand" }; 
+            
+            teamPokemons.forEach(p => {
+                const pAbilityLower = p.ability?.toLowerCase().replace(/\s+/g, '-');
+                if (pAbilityLower && weatherAbilities[pAbilityLower]) {
+                    highlights.push(`Sets ${weatherAbilities[pAbilityLower]} with ${p.ability}.`);
+                }
+                (p.moves || []).forEach(move => {
+                    const moveLower = move.toLowerCase().replace(/\s+/g, '-');
+                    if (weatherMoves[moveLower]) {
+                        highlights.push(`Can set ${weatherMoves[moveLower]} with ${move}.`);
+                    }
+                    if (moveLower === "trick-room") highlights.push(`${p.name} can set Trick Room.`);
+                    if (["reflect", "light-screen", "aurora-veil"].includes(moveLower)) {
+                         highlights.push(`${p.name} can set screens (${move}).`);
+                    }
+                });
+                if (pAbilityLower === 'intimidate') {
+                    highlights.push(`${p.name} has Intimidate to lower opponent's Attack.`);
+                }
+            });
+            
+            const statDropMoves = ["leer", "tail-whip", "growl", "scary-face", "parting-shot", "fake-tears", "captivate", "charm", "eerie-impulse", "feather-dance", "string-shot", "tickle", "confide", "play-nice"];
+            let statDroppers = 0;
+            teamPokemons.forEach(p => {
+                if ((p.moves || []).some(m => statDropMoves.includes(m.toLowerCase().replace(/\s+/g, '-')))) {
+                    statDroppers++;
+                }
+            });
+            if (statDroppers > 0) highlights.push(`Team has ${statDroppers} Pokémon with stat-lowering moves.`);
+
+
+            if (highlights.length > 0) {
+                highlights.forEach(h => {
+                    const li = document.createElement('li');
+                    li.textContent = h;
+                    listElement.appendChild(li);
+                });
+            } else {
+                listElement.innerHTML = '<li>No specific team highlights detected (e.g., weather setters, screen setters).</li>';
+            }
+        }
 
         // --- Lógica de Comentarios ---
-        async function fetchCommentsForTeam(teamId, sortBy = 'newest') { /* ... */ return []; }
-        function renderComments(commentsArray = [], listElement, currentTeamId, currentSortBy) { /* ... */ }
-        async function handleVoteCommentClick(event, teamId) { /* ... */ }
+        async function fetchCommentsForTeam(teamId, sortBy = 'newest') {
+            try {
+                const response = await fetch(`${WORKER_BASE_URL}/api/teams/${teamId}/comments?sortBy=${sortBy}`);
+                if (!response.ok) { console.error("Error fetching comments:", response.statusText); return []; }
+                const data = await response.json();
+                return data.comments || [];
+            } catch (error) { console.error("Error fetching comments:", error); return []; }
+        }
+
+        function renderComments(commentsArray = [], listElement, currentTeamId, currentSortBy) {
+            if (!listElement) return;
+            listElement.innerHTML = ''; 
+            
+            let sortedComments = [...commentsArray]; 
+            // El backend ya debería devolverlos ordenados, pero se puede re-ordenar aquí si es necesario
+            // if (currentSortBy === 'newest') { sortedComments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); } 
+            // else if (currentSortBy === 'mostVoted') { sortedComments.sort((a, b) => (b.votes || 0) - (a.votes || 0)); }
+
+            if (sortedComments.length === 0) {
+                listElement.innerHTML = '<li>No comments yet. Be the first!</li>';
+                return;
+            }
+            sortedComments.forEach(comment => {
+                const li = document.createElement('li');
+                li.classList.add('comment-item');
+                li.dataset.commentId = comment.id;
+                li.innerHTML = `
+                    <div class="comment-header">
+                        <span class="comment-author">${comment.author || 'Anonymous'}</span>
+                        <span class="comment-date">${new Date(comment.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour:'2-digit', minute:'2-digit' })}</span>
+                    </div>
+                    <p class="comment-text">${comment.text.replace(/\n/g, '<br>')}</p>
+                    <div class="comment-actions">
+                        <button class="vote-button" data-action="upvote" title="Like">👍</button>
+                        <span class="vote-count">${comment.votes || 0}</span>
+                        <button class="reply-button" title="Reply (Coming Soon)">↪️ Reply</button>
+                    </div>`;
+                listElement.appendChild(li);
+            });
+
+            listElement.querySelectorAll('.vote-button').forEach(button => {
+                button.addEventListener('click', (e) => handleVoteCommentClick(e, currentTeamId));
+            });
+            listElement.querySelectorAll('.reply-button').forEach(button => {
+                button.addEventListener('click', () => alert("Replying to comments will be available soon."));
+            });
+        }
+        
+        async function handleVoteCommentClick(event, teamId) {
+            const button = event.currentTarget;
+            const commentItem = button.closest('.comment-item');
+            if (!commentItem) return;
+            const commentId = commentItem.dataset.commentId;
+            const sortDropdown = document.getElementById('sort-comments');
+            const user = JSON.parse(localStorage.getItem('userData'));
+            if (!user) { alert("You must be logged in to vote on comments."); return; }
+
+            try {
+                const response = await fetch(`${WORKER_BASE_URL}/api/comments/${commentId}/vote`, { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-User-Id': user.id }, // Enviar X-User-Id si el backend lo usa para algo
+                    body: JSON.stringify({ userId: user.id }) // El backend actual no usa userId para votar, pero es bueno tenerlo
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    const updatedComments = await fetchCommentsForTeam(teamId, sortDropdown.value); 
+                    currentTeamDataForDetail.comments = updatedComments;
+                    renderComments(updatedComments, document.getElementById('comments-list'), teamId, sortDropdown.value);
+                } else {
+                    alert(`Error voting on comment: ${result.error}`);
+                }
+            } catch (error) {
+                console.error("Error voting on comment:", error);
+                alert("Connection error while voting.");
+            }
+        }
 
         // --- Inicialización de la Página de Detalles ---
         async function initializeDetailPage() {
@@ -522,7 +717,6 @@
             const commentFeedback = document.getElementById('comment-feedback');
             const sortCommentsDropdown = document.getElementById('sort-comments');
             const teamHighlightsList = document.getElementById('team-highlights-list');
-
 
             // --- Lógica de UI para Header ---
             const userGreetingDetail = document.getElementById('user-greeting-detail');
@@ -594,14 +788,14 @@
                 if(youtubeEmbedContainer && youtubeVideoSection) {
                     youtubeEmbedContainer.innerHTML = '';
                     if (currentTeamDataForDetail.youtube_link) {
+                        youtubeVideoSection.style.display = 'block';
                         const videoId = extractYouTubeVideoID(currentTeamDataForDetail.youtube_link);
                         if (videoId) {
                             const iframe = document.createElement('iframe');
                             iframe.src = `https://www.youtube.com/embed/${videoId}`;
                             iframe.frameBorder = "0"; iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"; iframe.allowFullscreen = true;
                             youtubeEmbedContainer.appendChild(iframe);
-                            youtubeVideoSection.style.display = 'block';
-                        } else { youtubeVideoSection.style.display = 'none'; }
+                        } else { youtubeEmbedContainer.innerHTML = '<p>Invalid YouTube link.</p>'; }
                     } else { youtubeVideoSection.style.display = 'none'; }
                 }
 
@@ -668,51 +862,6 @@
                 if(loadingIndicator) loadingIndicator.style.display = 'none';
             }
         }
-
-        function analyzeAndDisplayTeamHighlights(teamPokemons, listElement) {
-            if (!listElement || !teamPokemons) return;
-            listElement.innerHTML = '';
-            const highlights = [];
-
-            // Chequeo de Weather Setters
-            const weatherAbilities = { "drizzle": "Rain", "drought": "Sun", "snow-warning": "Snow", "sand-stream": "Sand" };
-            const weatherMoves = { "rain-dance": "Rain", "sunny-day": "Sun", "hail": "Snow", "sandstorm": "Sand" };
-            teamPokemons.forEach(p => {
-                if (p.ability && weatherAbilities[p.ability.toLowerCase().replace(/\s+/g, '-')]) {
-                    highlights.push(`Sets ${weatherAbilities[p.ability.toLowerCase().replace(/\s+/g, '-')]} with ${p.ability}.`);
-                }
-                (p.moves || []).forEach(move => {
-                    if (weatherMoves[move.toLowerCase().replace(/\s+/g, '-')]) {
-                        highlights.push(`Can set ${weatherMoves[move.toLowerCase().replace(/\s+/g, '-')]} with ${move}.`);
-                    }
-                });
-            });
-
-            // Chequeo de Screens
-            if (teamPokemons.some(p => (p.moves || []).includes("reflect") || (p.moves || []).includes("light-screen") || (p.moves || []).includes("aurora-veil"))) {
-                highlights.push("Team has screen setting capabilities (Reflect, Light Screen, or Aurora Veil).");
-            }
-            // Chequeo de Stat Drops (ejemplo básico)
-            if (teamPokemons.some(p => (p.moves || []).some(m => ["leer", "growl", "scary-face", "parting-shot", "intimidate"].includes(m.toLowerCase().replace(/\s+/g, '-')) || (p.ability && p.ability.toLowerCase() === 'intimidate')))) {
-                highlights.push("Team has ways to lower opponent's stats.");
-            }
-             // Chequeo de Trick Room
-            if (teamPokemons.some(p => (p.moves || []).includes("trick-room"))) {
-                highlights.push("Team includes Trick Room setter(s).");
-            }
-
-
-            if (highlights.length > 0) {
-                highlights.forEach(h => {
-                    const li = document.createElement('li');
-                    li.textContent = h;
-                    listElement.appendChild(li);
-                });
-            } else {
-                listElement.innerHTML = '<li>No specific team highlights detected (e.g., weather setters, screen setters).</li>';
-            }
-        }
-
         initializeDetailPage(); 
     </script>
 </body>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Created Teams - PokéTeams</title>
+    <style>
+        /* Reutilizar estilos de index.html y team_detail.html para consistencia */
+        :root {
+            --primary: #ff5350; --primary-dark: #d13330; --secondary: #3b4cca; --light: #f8f9fa;
+            --dark: #343a40; --success: #30c58b; --danger: #dc3545;
+            --type-normal: #A8A77A; --type-fire: #EE8130; --type-water: #6390F0; --type-electric: #F7D02C;
+            --type-grass: #7AC74C; --type-ice: #96D9D6; --type-fighting: #C22E28; --type-poison: #A33EA1;
+            --type-ground: #E2BF65; --type-flying: #A98FF3; --type-psychic: #F95587; --type-bug: #A6B91A;
+            --type-rock: #B6A136; --type-ghost: #735797; --type-dragon: #6F35FC; --type-dark: #705746;
+            --type-steel: #B7B7CE; --type-fairy: #D685AD;
+            --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --border-radius: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #f0f2f5; color: var(--dark); line-height: 1.6; font-family: var(--font-sans); }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+        header { background-color: var(--primary); color: white; padding: 1rem 0; box-shadow: var(--shadow-md); position: sticky; top: 0; z-index: 1000; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo { font-size: 1.8rem; font-weight: bold; margin-bottom: 0.5rem; text-decoration: none; color: white; cursor:pointer;}
+        .logo span { color: var(--secondary); }
+        .nav-links { display: flex; list-style: none; flex-wrap: wrap; padding-left: 0; align-items: center;}
+        .nav-links li { margin-left: 1rem; margin-bottom: 0.5rem; }
+        .nav-links a { color: white; text-decoration: none; font-weight: 500; transition: color 0.2s, background-color 0.2s; padding: 0.4rem 0.8rem; border-radius: var(--border-radius); }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); background-color: white; }
+        .user-menu-container { position: relative; }
+        #user-greeting-myteams { 
+            cursor: pointer; padding: 0.4rem 0.8rem; border-radius: var(--border-radius); 
+            transition: background-color 0.2s; color:white; font-weight:500;
+            display: inline-block; 
+        }
+        #user-greeting-myteams:hover { background-color: rgba(255,255,255,0.15); }
+        .user-dropdown {
+            display: none; position: absolute; top: calc(100% + 0.5rem); right: 0;
+            background-color: white; color: var(--dark);
+            border: 1px solid #ddd; border-radius: var(--border-radius); box-shadow: var(--shadow-md);
+            min-width: 220px; z-index: 1001; overflow: hidden;
+        }
+        .user-dropdown a { display: block; padding: 0.8rem 1.2rem; text-decoration: none; color: var(--dark); font-size: 0.95rem;}
+        .user-dropdown a:hover { background-color: #f0f2f5; }
+
+        main.container { padding-top: 2rem; padding-bottom: 2rem; }
+        .page-title { color: var(--primary); text-align: center; margin-bottom: 2rem; font-size: 2.2rem; }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+        /* Estilos de .team-card, .team-header, etc., deben ser los mismos que en index.html */
+        .team-card { background-color: white; border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow-md); transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; }
+        .team-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .team-header { background-color: var(--primary); color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .team-title { font-size: 1.2rem; font-weight: bold; }
+        .team-format { background-color: var(--secondary); padding: 0.3rem 0.6rem; border-radius: 10px; font-size: 0.8rem; font-weight: bold; }
+        .team-pokemon-preview { display: flex; justify-content: space-around; padding: 1rem; flex-wrap: wrap; }
+        .pokemon-icon-preview { text-align: center; margin: 0.25rem; width: calc(100%/3 - 1rem); max-width: 80px; }
+        .pokemon-icon-preview img { width: 60px; height: 60px; object-fit: contain; border-radius: 50%; background-color: #e9e9e9; border: 1px solid #ccc; margin-bottom: 0.2rem; image-rendering: pixelated; }
+        .pokemon-name-preview { font-size: 0.75rem; margin-top: 0.1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+        .team-footer { padding: 1rem; background-color: #f8f8f8; border-top: 1px solid #eee; font-size: 0.9rem; margin-top: auto; }
+        .team-footer-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;}
+        .team-stats { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        .stat { display: flex; align-items: center; gap: 0.3rem; cursor: default; } 
+        .team-creator { font-weight: 500; color: var(--secondary); white-space: nowrap; }
+        .team-actions { display: flex; gap: 0.5rem; justify-content: center; margin-top: 0.5rem; flex-wrap: wrap; } 
+        .team-action-button { background-color: var(--secondary); color: white; border: none; border-radius: 20px; padding: 0.5rem 1rem; cursor: pointer; font-weight: bold; transition: background-color 0.3s; font-size: 0.8rem; flex-grow: 1; text-align: center; margin-bottom: 0.3rem; } 
+        .team-action-button.view-details { background-color: var(--success); }
+        .team-action-button.edit-team-button { background-color: #ffc107; color: var(--dark); } 
+        .team-action-button.delete-team-button { background-color: var(--danger); }
+        .team-action-button:hover { filter: brightness(110%); }
+
+        footer { /* ... (estilos del footer de index.html) ... */ }
+        #loading-indicator-myteams { text-align: center; font-size: 1.2rem; color: var(--secondary); padding: 2rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="navbar">
+                <a href="index.html" id="nav-logo-link-myteams" class="logo">Poké<span>Teams</span></a>
+                <ul class="nav-links">
+                    <li><a href="index.html" id="home-link-myteams">Home</a></li>
+                    <li id="create-team-nav-link-myteams" style="display:none;"><a href="index.html#create-team">Create Team</a></li>
+                    <li id="login-nav-link-myteams" style="display:list-item;"><a href="index.html#login">Login</a></li>
+                    <li id="register-nav-link-myteams" style="display:list-item;"><a href="index.html#register">Register</a></li>
+                    <li id="user-menu-container-myteams" class="user-menu-container" style="display:none;">
+                        <a href="#" id="user-greeting-myteams"></a>
+                        <div class="user-dropdown" id="user-dropdown-menu-myteams">
+                            <a href="my_teams.html" id="my-teams-link-myteams" class="active">My Created Teams</a>
+                            <a href="liked_teams.html" id="liked-teams-link-myteams">My Liked Teams</a>
+                            <a href="#" id="logout-nav-link-myteams-dropdown">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="page-title">My Created Teams</h1>
+        <div id="loading-indicator-myteams" style="text-align:center; padding:1rem; font-size:1.1em;">Loading my teams...</div>
+        <div class="team-grid" id="my-teams-grid">
+            </div>
+    </main>
+
+    <footer> </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const WORKER_BASE_URL = 'https://poke-teams-auth.srcookriss.workers.dev';
+            const TEAMS_URL = `${WORKER_BASE_URL}/api/teams`;
+            const myTeamsGrid = document.getElementById('my-teams-grid');
+            const loadingIndicator = document.getElementById('loading-indicator-myteams');
+
+            // --- Lógica de UI para Header ---
+            const userGreetingMyTeams = document.getElementById('user-greeting-myteams');
+            const userDropdownMenuMyTeams = document.getElementById('user-dropdown-menu-myteams');
+            const logoutNavMyTeamsDropdown = document.getElementById('logout-nav-link-myteams-dropdown');
+            const loginNavMyTeams = document.getElementById('login-nav-link-myteams');
+            const registerNavMyTeams = document.getElementById('register-nav-link-myteams');
+            const createTeamNavLinkMyTeams = document.getElementById('create-team-nav-link-myteams');
+            const userMenuContainerMyTeams = document.getElementById('user-menu-container-myteams');
+
+            function updateMyTeamsPageNavForLoggedInUser(username) {
+                if(loginNavMyTeams) loginNavMyTeams.style.display = 'none';
+                if(registerNavMyTeams) registerNavMyTeams.style.display = 'none';
+                if(createTeamNavLinkMyTeams) createTeamNavLinkMyTeams.style.display = 'list-item';
+                if(userMenuContainerMyTeams) userMenuContainerMyTeams.style.display = 'list-item';
+                if(userGreetingMyTeams) userGreetingMyTeams.textContent = `Hi, ${username}`;
+            }
+            function updateMyTeamsPageNavForLoggedOutUser() {
+                if(loginNavMyTeams) loginNavMyTeams.style.display = 'list-item';
+                if(registerNavMyTeams) registerNavMyTeams.style.display = 'list-item';
+                if(createTeamNavLinkMyTeams) createTeamNavLinkMyTeams.style.display = 'none';
+                if(userMenuContainerMyTeams) userMenuContainerMyTeams.style.display = 'none';
+                if(userGreetingMyTeams) userGreetingMyTeams.textContent = '';
+            }
+
+            const storedUser = JSON.parse(localStorage.getItem('userData'));
+            if (storedUser) {
+                updateMyTeamsPageNavForLoggedInUser(storedUser.username);
+                await loadMyTeams(storedUser.id);
+            } else {
+                updateMyTeamsPageNavForLoggedOutUser();
+                if (myTeamsGrid) myTeamsGrid.innerHTML = "<p>You must be logged in to see your created teams.</p>";
+                if (loadingIndicator) loadingIndicator.style.display = 'none';
+            }
+            
+            if (userGreetingMyTeams && userDropdownMenuMyTeams) {
+                userGreetingMyTeams.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    userDropdownMenuMyTeams.style.display = userDropdownMenuMyTeams.style.display === 'block' ? 'none' : 'block';
+                });
+                document.addEventListener('click', (e) => {
+                    if (userMenuContainerMyTeams && !userMenuContainerMyTeams.contains(e.target) && userDropdownMenuMyTeams) {
+                        userDropdownMenuMyTeams.style.display = 'none';
+                    }
+                });
+            }
+            if (logoutNavMyTeamsDropdown) logoutNavMyTeamsDropdown.addEventListener('click', (e) => { 
+                e.preventDefault(); localStorage.removeItem('userData'); 
+                if(userDropdownMenuMyTeams) userDropdownMenuMyTeams.style.display = 'none';
+                updateMyTeamsPageNavForLoggedOutUser(); 
+                window.location.href = 'index.html';
+            });
+             if(createTeamNavLinkMyTeams) createTeamNavLinkMyTeams.onclick = (e) => { e.preventDefault(); window.location.href = 'index.html#create-team';};
+
+
+            async function loadMyTeams(userId) {
+                if (!myTeamsGrid || !loadingIndicator) return;
+                loadingIndicator.style.display = 'block';
+                myTeamsGrid.innerHTML = '';
+
+                try {
+                    const response = await fetch(`${TEAMS_URL}?userId=${userId}`); // Filtrar por userId
+                    if (!response.ok) {
+                        const errData = await response.json().catch(() => ({error: `Error loading your teams: ${response.statusText}`}));
+                        throw new Error(errData.error);
+                    }
+                    const data = await response.json();
+                    if (data.teams && data.teams.length > 0) {
+                        // Guardar estos equipos en allTeamsData de localStorage para que team_detail pueda accederlos
+                        // y para que index.html los tenga si el usuario navega allí.
+                        let allTeams = JSON.parse(localStorage.getItem('allTeamsData')) || {};
+                        data.teams.forEach(team => {
+                            allTeams[team.id] = team; 
+                        });
+                        localStorage.setItem('allTeamsData', JSON.stringify(allTeams));
+
+                        data.teams.forEach(team => {
+                            myTeamsGrid.innerHTML += renderTeamCardForMyTeams(team);
+                        });
+                        
+                        // Re-asignar event listeners para los botones de las nuevas tarjetas
+                        myTeamsGrid.querySelectorAll('.view-details-button').forEach(button => {
+                            button.addEventListener('click', (event) => {
+                                const teamCard = event.target.closest('.team-card');
+                                if (teamCard) {
+                                    const teamId = teamCard.dataset.teamId;
+                                    const teamDataForDetail = data.teams.find(t => t.id === teamId);
+                                    if (teamDataForDetail) {
+                                        localStorage.setItem('currentTeamDetails', JSON.stringify(teamDataForDetail));
+                                        window.open(`team_detail.html?teamId=${teamId}`, '_blank');
+                                    }
+                                }
+                            });
+                        });
+                        myTeamsGrid.querySelectorAll('.edit-team-button').forEach(button => {
+                            button.addEventListener('click', (event) => {
+                                const teamCard = event.target.closest('.team-card');
+                                if (teamCard) {
+                                    const teamId = teamCard.dataset.teamId;
+                                    // Guardar en localStorage para que index.html lo recoja
+                                    localStorage.setItem('teamToEdit', JSON.stringify(allTeamsData[teamId]));
+                                    window.location.href = `index.html#edit-team`; // Redirigir a index para editar
+                                }
+                            });
+                        });
+                        myTeamsGrid.querySelectorAll('.delete-team-button').forEach(button => {
+                            button.addEventListener('click', (event) => handleDeleteTeamClick(event, userId)); // Pasar userId
+                        });
+
+                    } else {
+                        myTeamsGrid.innerHTML = "<p>You haven't created any teams yet.</p>";
+                    }
+                } catch (error) {
+                    console.error("Error loading your teams:", error);
+                    myTeamsGrid.innerHTML = `<p>There was an error loading your teams: ${error.message}. Please try again later.</p>`;
+                } finally {
+                    loadingIndicator.style.display = 'none';
+                }
+            }
+
+            function renderTeamCardForMyTeams(team) {
+                // Similar a renderTeamCard en index.html, pero con acciones específicas para "Mis Equipos"
+                let pokemonIconsHtml = '';
+                (team.pokemons || []).slice(0, 6).forEach(p => {
+                    const pokemonNameForSprite = p.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/gi, '');
+                    const pokemonSpriteUrl = `https://play.pokemonshowdown.com/sprites/gen5/${pokemonNameForSprite}.png`;
+                    pokemonIconsHtml += `<div class="pokemon-icon-preview"><img src="${pokemonSpriteUrl}" alt="${p.name}" onerror="this.src='https://placehold.co/60x60/cccccc/969696?text=${p.name.substring(0,1).toUpperCase()}&font=roboto'; this.alt='${p.name}'"><div class="pokemon-name-preview">${p.name.charAt(0).toUpperCase() + p.name.slice(1)}</div></div>`;
+                });
+                return `
+                    <div class="team-card" data-team-id="${team.id}">
+                        <div class="team-header"><div class="team-title">${team.title}</div><div class="team-format">${team.format}</div></div>
+                        <div class="team-pokemon-preview">${pokemonIconsHtml}</div>
+                        <div class="team-footer">
+                            <div class="team-footer-top-row">
+                                <div class="team-stats">
+                                    <div class="stat">👍 ${team.likes || 0}</div> 
+                                    <div class="stat">💬 ${team.comments_count || 0}</div> 
+                                </div>
+                                <div class="team-creator">By: You</div>
+                            </div>
+                            <div class="team-actions">
+                                <button class="team-action-button view-details-button">View Details</button>
+                                <button class="team-action-button edit-team-button">Edit</button>
+                                <button class="team-action-button delete-team-button danger">Delete</button>
+                            </div>
+                        </div></div>`;
+            }
+
+            async function handleDeleteTeamClick(event, currentUserId) {
+                const teamCard = event.target.closest('.team-card');
+                if (!teamCard) return;
+                const teamId = teamCard.dataset.teamId;
+
+                if (confirm("Are you sure you want to delete this team? This action cannot be undone.")) {
+                    try {
+                        const response = await fetch(`${WORKER_BASE_URL}/api/teams/${teamId}`, { 
+                            method: 'DELETE',
+                            headers: { 'Content-Type': 'application/json', 'X-User-Id': currentUserId }, // Simulación Auth
+                            body: JSON.stringify({ userId: currentUserId }) // El backend verifica este userId
+                        });
+                        const result = await response.json();
+                        if (response.ok) {
+                            alert(result.message || "Team deleted successfully.");
+                            // Recargar la lista de equipos
+                            await loadMyTeams(currentUserId); 
+                        } else {
+                            alert(`Error deleting team: ${result.error || "Unknown error"}`);
+                        }
+                    } catch (error) {
+                        console.error("Error deleting team:", error);
+                        alert("Connection error while deleting team.");
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
