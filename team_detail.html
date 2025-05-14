@@ -66,23 +66,25 @@
             display: flex; flex-direction: column; align-items: center;
             padding-right: 1.5rem; border-right: 1px solid #e0e0e0; margin-right: 1.5rem;
             width: 160px; 
-            flex-shrink: 0;
+            flex-shrink: 0; text-align: center;
         }
         .pokemon-nickname { font-size: 0.9rem; color: #555; background-color: #e9ecef; padding: 0.2rem 0.5rem; border-radius: 4px; margin-bottom: 0.5rem; display: inline-block; }
         .pokemon-detail-sprite { width: 96px; height: 96px; object-fit: contain; background-color: #f0f2f5; border-radius: 50%; image-rendering: pixelated; border: 2px solid #ddd; margin-bottom: 0.5rem;}
-        .pokemon-main-name { font-size: 1.3rem; font-weight: 700; color: var(--dark); text-align:center; }
+        .pokemon-main-name { font-size: 1.3rem; font-weight: 700; color: var(--dark); }
         
         .pokemon-info-right { 
             flex-grow: 1; display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            grid-template-columns: repeat(3, 1fr); 
             gap: 1.5rem;
         }
         .pokemon-info-col { display: flex; flex-direction: column; gap: 0.75rem; }
+        .pokemon-info-col h4 { font-size: 1.1rem; color: var(--secondary); margin-bottom: 0.5rem; padding-bottom: 0.3rem; border-bottom: 1px solid #eee;}
+
 
         .pokemon-detail-info { font-size: 0.95rem; margin-bottom: 0.5rem; color: #444; }
         .pokemon-detail-info strong { color: var(--dark); font-weight: 600; }
-        .pokemon-detail-info .stat-boost { color: var(--danger); font-weight: bold;} /* Rojo para boost */
-        .pokemon-detail-info .stat-nerf { color: var(--info); font-weight: bold;}   /* Azul para nerf */
+        .pokemon-detail-info .stat-boost { color: var(--danger); font-weight: bold;} 
+        .pokemon-detail-info .stat-nerf { color: var(--info); font-weight: bold;}   
         
         .info-box { border: 1px solid #d0d7e0; border-radius: var(--border-radius); padding: 0.75rem; margin-top: 0.5rem; background-color: #ffffff; box-shadow: var(--shadow-sm); cursor:pointer; transition: background-color 0.2s ease;}
         .item-box { background-color: var(--pastel-blue); }
@@ -90,12 +92,11 @@
         .info-box:hover { background-color: #e9ecef; }
         .info-box .info-header { display: flex; align-items: center; gap: 0.5rem; } 
         .info-box .info-header strong { font-size: 1.05rem; color: var(--dark); font-weight: 700; } 
-        .info-box .info-header .item-sprite-inline { width: 24px; height: 24px; vertical-align: middle; background-color: #fff; border-radius:4px; padding:1px;}
+        .info-box .info-header .item-sprite-inline { width: 24px; height: 24px; vertical-align: middle; background-color:transparent; border:none; padding:0; margin-right: 0.3em;}
         .info-box p { font-size: 0.85rem; color: #555; margin-top: 0.5rem; line-height: 1.5; display: none; padding-top: 0.5rem; border-top: 1px dashed #c0c9d4; }
         .info-box.expanded p { display: block; } 
         .hidden-ability-tag { font-size: 0.75rem; background-color: var(--primary-dark); color: white; padding: 0.2rem 0.5rem; border-radius: 3px; margin-left: 0.5rem; font-weight: 500;}
 
-        .pokemon-moves-title { font-weight: 600; margin-top: 0; margin-bottom: 0.6rem; font-size: 1.1rem;}
         .pokemon-moves-list { list-style: none; padding-left: 0; }
         .pokemon-moves-list li { 
             display: flex; align-items: center; justify-content: space-between; 
@@ -109,9 +110,9 @@
         .move-category-icon { width: 24px; height: 24px; margin-left: 0.5rem; vertical-align: middle; filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.4)); }
         .move-power-accuracy { font-size: 0.85rem; margin-left: 0.75rem; opacity: 0.9; font-weight: bold; text-shadow: 0 0 2px black; } 
         .move-tooltip {
-            visibility: hidden; width: 240px; background-color: var(--dark); color: #fff;
+            visibility: hidden; width: 220px; background-color: var(--dark); color: #fff;
             text-align: left; border-radius: var(--border-radius); padding: 10px; font-size: 0.85rem; line-height: 1.4;
-            position: absolute; z-index: 10; bottom: 115%; left: 50%; margin-left: -120px; 
+            position: absolute; z-index: 10; bottom: 115%; left: 50%; margin-left: -110px; 
             opacity: 0; transition: opacity 0.3s ease, visibility 0.3s ease; box-shadow: var(--shadow-md);
         }
         .pokemon-moves-list li.active .move-tooltip { visibility: visible; opacity: 1; } 
@@ -119,11 +120,13 @@
         .stats-evs-title { font-weight: 600; margin-bottom: 0.6rem; font-size: 1.1rem;}
         .ev-distribution-text { font-size: 0.9rem; margin-bottom: 0.75rem; }
         .base-stats-container { margin-top: 0.5rem; }
-        .stat-bar-container { display: flex; align-items: center; margin-bottom: 0.25rem; }
-        .stat-bar-label { width: 60px; font-size: 0.8rem; color: #555; text-align: right; padding-right: 0.5rem;}
-        .stat-bar { height: 12px; background-color: #e0e0e0; border-radius: 3px; flex-grow: 1; position: relative; }
-        .stat-bar-fill { height: 100%; background-color: var(--secondary); border-radius: 3px; transition: width 0.5s ease-out;}
-        .stat-bar-value { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); font-size: 0.7rem; color: white; text-shadow: 0 0 2px black;}
+        .stat-bar-container { display: flex; align-items: center; margin-bottom: 0.3rem; }
+        .stat-bar-label { width: 70px; font-size: 0.85rem; color: #444; text-align: right; padding-right: 0.5rem; font-weight:500;}
+        .stat-bar { height: 14px; background-color: #e9ecef; border-radius: 3px; flex-grow: 1; position: relative; border: 1px solid #ddd; overflow: hidden;}
+        .stat-bar-fill { height: 100%; border-radius: 2px 0 0 2px; transition: width 0.5s ease-out; display:flex; align-items:center; justify-content:flex-end;
+                         background-image: linear-gradient(to right, var(--info), var(--secondary)); 
+        }
+        .stat-bar-value { font-size: 0.75rem; color: white; text-shadow: 0 0 2px black; padding-right: 4px; }
 
 
         .youtube-embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #111; border-radius: var(--border-radius); box-shadow: var(--shadow-sm); }
@@ -134,28 +137,28 @@
         .type-analysis-visual-container { margin-bottom: 1.5rem; padding: 1rem; background-color: #f8f9fa; border-radius: var(--border-radius); box-shadow: var(--shadow-sm); }
         .type-analysis-visual-section { margin-bottom: 1.5rem; }
         .type-analysis-visual-section h4 { color: var(--primary-dark); margin-bottom: 0.75rem; font-size: 1.2rem; text-align: center; }
-        .type-icons-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0.5rem; justify-content: center; }
+        .type-icons-row { display: flex; flex-wrap: nowrap; gap: 4px; margin-bottom: 0.5rem; justify-content: space-between; overflow-x: auto; padding-bottom: 5px;}
+        .type-icon-analysis-wrapper { display: flex; flex-direction: column; align-items: center; min-width: 36px; }
         .type-icon-analysis { 
             width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; 
-            border-radius: 50%; color: white; font-size: 0.75rem; font-weight: bold; 
+            border-radius: 50%; color: white; font-size: 0.7rem; font-weight: bold; 
             text-shadow: 0 0 2px black; border: 1px solid rgba(0,0,0,0.2);
+            margin-bottom: 4px; 
         }
-        .analysis-indicators-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; align-items: flex-end; min-height: 20px; /* Para alinear barras/marcas */ }
-        .analysis-indicator-container { width: 32px; display: flex; flex-direction: column; align-items: center; }
-        .analysis-bar { width: 8px; background-color: #d0d7e0; margin: 2px auto 0 auto; border-radius: 2px 2px 0 0; transition: height 0.3s ease; }
-        .analysis-bar.weak-1 { height: 5px; background-color: var(--danger); opacity: 0.5; }
-        .analysis-bar.weak-2 { height: 10px; background-color: var(--danger); opacity: 0.75; }
-        .analysis-bar.weak-3 { height: 15px; background-color: var(--danger); }
-        .analysis-bar.resist-1 { height: 5px; background-color: var(--success); opacity: 0.5; }
-        .analysis-bar.resist-2 { height: 10px; background-color: var(--success); opacity: 0.75; }
-        .analysis-bar.resist-3 { height: 15px; background-color: var(--success); }
-        .analysis-mark { font-size: 1rem; line-height: 1; width: 32px; text-align: center; font-weight: bold; }
+        .analysis-indicators-row { display: flex; flex-wrap: nowrap; gap: 4px; justify-content: space-between; align-items: flex-end; min-height: 30px; }
+        .analysis-indicator-container { width: 30px; display: flex; flex-direction: column-reverse; align-items: center; height: 25px; margin: 2px;}
+        .analysis-bar { width: 5px; margin: 0 1px; border-radius: 1px; transition: height 0.3s ease; height: 0; } 
+        .analysis-bar.weak { background-color: var(--danger); }
+        .analysis-bar.resist { background-color: var(--success); }
+        
+        .offense-indicator-group { display: flex; flex-direction: row; align-items: center; width: 30px; min-height: 20px; margin: 2px; justify-content: center; gap: 2px;}
+        .analysis-mark { font-size: 0.9rem; line-height: 1; text-align: center; font-weight: bold; width: 12px; }
         .analysis-mark.stab { color: var(--secondary); }
         .analysis-mark.effective { color: var(--primary); }
         .analysis-mark.none { color: #bbb; }
 
 
-        .comments-section { margin-top: 2.5rem; } /* ... (Resto de estilos de comentarios sin cambios significativos) ... */
+        .comments-section { margin-top: 2.5rem; } 
         #loading-indicator { text-align: center; font-size: 1.2rem; color: var(--secondary); padding: 2rem; }
         footer { /* ... (estilos del footer como en index.html) ... */ }
     </style>
@@ -259,13 +262,40 @@
     </footer>
 
     <script>
-        const TYPE_EFFECTIVENESS = { /* ... (matriz de efectividad completa) ... */ };
+        const TYPE_EFFECTIVENESS = {
+            normal: { rock: 0.5, steel: 0.5, ghost: 0, normal: 1, fire: 1, water: 1, electric: 1, grass: 1, ice: 1, fighting: 1, poison: 1, ground: 1, flying: 1, psychic: 1, bug: 1, dragon: 1, dark: 1, fairy: 1 },
+            fire: { fire: 0.5, water: 0.5, grass: 2, ice: 2, bug: 2, rock: 0.5, dragon: 0.5, steel: 2, normal: 1, electric: 1, fighting: 1, poison: 1, ground: 1, flying: 1, psychic: 1, ghost: 1, dark: 1, fairy: 1 },
+            water: { fire: 2, water: 0.5, grass: 0.5, ground: 2, rock: 2, dragon: 0.5, normal: 1, electric: 1, ice: 1, fighting: 1, poison: 1, flying: 1, psychic: 1, bug: 1, ghost: 1, dark: 1, steel: 1, fairy: 1 },
+            electric: { water: 2, grass: 0.5, electric: 0.5, ground: 0, flying: 2, dragon: 0.5, normal: 1, fire: 1, ice: 1, fighting: 1, poison: 1, psychic: 1, bug: 1, rock: 1, ghost: 1, dark: 1, steel: 1, fairy: 1 },
+            grass: { fire: 0.5, water: 2, grass: 0.5, poison: 0.5, ground: 2, flying: 0.5, bug: 0.5, rock: 2, dragon: 0.5, steel: 0.5, normal: 1, electric: 1, ice: 1, fighting: 1, psychic: 1, ghost: 1, dark: 1, fairy: 1 },
+            ice: { fire: 0.5, water: 0.5, grass: 2, ice: 0.5, ground: 2, flying: 2, dragon: 2, steel: 0.5, normal: 1, electric: 1, fighting: 1, poison: 1, psychic: 1, bug: 1, rock: 1, ghost: 1, dark: 1, fairy: 1 },
+            fighting: { normal: 2, ice: 2, poison: 0.5, flying: 0.5, psychic: 0.5, bug: 0.5, rock: 2, ghost: 0, dark: 2, steel: 2, fairy: 0.5, fire: 1, water: 1, electric: 1, grass: 1, ground: 1, dragon: 1 },
+            poison: { grass: 2, poison: 0.5, ground: 0.5, rock: 0.5, ghost: 0.5, steel: 0, fairy: 2, normal: 1, fire: 1, water: 1, electric: 1, ice: 1, fighting: 1, flying: 1, psychic: 1, bug: 1, dragon: 1, dark: 1 },
+            ground: { fire: 2, grass: 0.5, electric: 2, poison: 2, flying: 0, bug: 0.5, rock: 2, steel: 2, normal: 1, water: 1, ice: 1, fighting: 1, psychic: 1, ghost: 1, dragon: 1, dark: 1, fairy: 1 },
+            flying: { grass: 2, electric: 0.5, fighting: 2, bug: 2, rock: 0.5, steel: 0.5, normal: 1, fire: 1, water: 1, ice: 1, poison: 1, ground: 1, psychic: 1, ghost: 1, dragon: 1, dark: 1, fairy: 1 },
+            psychic: { fighting: 2, poison: 2, psychic: 0.5, dark: 0, steel: 0.5, normal: 1, fire: 1, water: 1, electric: 1, grass: 1, ice: 1, ground: 1, flying: 1, bug: 1, rock: 1, ghost: 1, dragon: 1, fairy: 1 },
+            bug: { fire: 0.5, grass: 2, fighting: 0.5, poison: 0.5, flying: 0.5, psychic: 2, ghost: 0.5, dark: 2, steel: 0.5, fairy: 0.5, normal: 1, water: 1, electric: 1, ice: 1, ground: 1, rock: 1, dragon: 1 },
+            rock: { fire: 2, ice: 2, fighting: 0.5, ground: 0.5, flying: 2, bug: 2, steel: 0.5, normal: 1, water: 1, electric: 1, grass: 1, poison: 1, psychic: 1, ghost: 1, dragon: 1, dark: 1, fairy: 1 },
+            ghost: { normal: 0, psychic: 2, ghost: 2, dark: 0.5, fire: 1, water: 1, electric: 1, grass: 1, ice: 1, fighting: 1, poison: 1, ground: 1, flying: 1, bug: 1, rock: 1, dragon: 1, steel: 1, fairy: 1 },
+            dragon: { dragon: 2, steel: 0.5, fairy: 0, normal: 1, fire: 1, water: 1, electric: 1, grass: 1, ice: 1, fighting: 1, poison: 1, ground: 1, flying: 1, psychic: 1, bug: 1, rock: 1, ghost: 1, dark: 1 },
+            dark: { fighting: 0.5, psychic: 2, ghost: 2, dark: 0.5, fairy: 0.5, normal: 1, fire: 1, water: 1, electric: 1, grass: 1, ice: 1, poison: 1, ground: 1, flying: 1, bug: 1, rock: 1, dragon: 1, steel: 1 },
+            steel: { fire: 0.5, water: 0.5, electric: 0.5, ice: 2, rock: 2, steel: 0.5, fairy: 2, normal: 1, grass: 1, fighting: 1, poison: 0, ground: 1, flying: 1, psychic: 1, bug: 1, ghost: 1, dragon: 1, dark: 1 }, 
+            fairy: { fire: 0.5, fighting: 2, poison: 0.5, dragon: 2, dark: 2, steel: 0.5, normal: 1, water: 1, electric: 1, grass: 1, ice: 1, ground: 1, flying: 1, psychic: 1, bug: 1, rock: 1, ghost: 1 }
+        };
         const ALL_TYPES = ["normal", "fire", "water", "electric", "grass", "ice", "fighting", "poison", "ground", "flying", "psychic", "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"];
-        const NATURES_CALC = { /* ... (objeto de naturalezas completo) ... */ };
+        const NATURES_CALC = {
+            Adamant: { atk: 1.1, spa: 0.9 }, Bold: { def: 1.1, atk: 0.9 }, Brave: { atk: 1.1, spe: 0.9 }, Calm: { spd: 1.1, atk: 0.9 },
+            Careful: { spd: 1.1, spa: 0.9 }, Gentle: { spd: 1.1, def: 0.9 }, Hasty: { spe: 1.1, def: 0.9 }, Impish: { def: 1.1, spa: 0.9 },
+            Jolly: { spe: 1.1, spa: 0.9 }, Lax: { def: 1.1, spd: 0.9 }, Lonely: { atk: 1.1, def: 0.9 }, Mild: { spa: 1.1, def: 0.9 },
+            Modest: { spa: 1.1, atk: 0.9 }, Naive: { spe: 1.1, spd: 0.9 }, Naughty: { atk: 1.1, spd: 0.9 }, Quiet: { spa: 1.1, spe: 0.9 },
+            Rash: { spa: 1.1, spd: 0.9 }, Relaxed: { def: 1.1, spe: 0.9 }, Sassy: { spd: 1.1, spe: 0.9 }, Timid: { spe: 1.1, atk: 0.9 },
+            Bashful: {}, Docile: {}, Hardy: {}, Quirky: {}, Serious: {}
+        };
         
         let currentTeamDataForDetail = null; 
         const WORKER_BASE_URL = 'https://poke-teams-auth.srcookriss.workers.dev'; 
 
+        // --- Funciones Auxiliares ---
         function showFeedback(element, message, isError = false) { /* ... */ }
         async function fetchFromPokeAPI(endpoint) { /* ... */ return null; }
         function getTypeColor(typeName) { return `var(--type-${typeName.toLowerCase()}, var(--dark))`; }
@@ -280,6 +310,7 @@
 
         function extractYouTubeVideoID(url) { /* ... */ return null; }
 
+        // --- Lógica de Renderizado de Detalles del Pokémon ---
         async function displayFullPokemonDetails(pokemonList, container) {
             if (!container || !pokemonList) return;
             container.innerHTML = ''; 
@@ -292,7 +323,7 @@
 
                 const [pokeApiData, itemApiData, abilityApiData] = await Promise.all([pokeApiDataPromise, itemApiDataPromise, abilityApiDataPromise]);
                 
-                let abilityDescription = "No description available.";
+                let abilityDescription = "No English description available.";
                 let isHiddenAbility = false;
                 if (abilityApiData && pokeApiData) {
                     const effectEntry = abilityApiData.effect_entries?.find(entry => entry.language.name === 'en');
@@ -314,7 +345,7 @@
                         const effectEntry = moveData.effect_entries?.find(e => e.language.name === 'en');
                         const moveDescription = effectEntry ? effectEntry.short_effect.replace('$effect_chance', moveData.effect_chance || '') : 'No description.';
                         
-                        return `<li style="background-color: ${getTypeColor(typeName)};" data-description="${moveDescription.replace(/"/g, '&quot;')}">
+                        return `<li style="background-color: ${getTypeColor(typeName)};" data-description="${moveDescription.replace(/"/g, '"')}">
                                     <span class="move-name">${moveDisplayName}</span>
                                     <span class="move-power-accuracy">(P: ${power}, Acc: ${accuracy}%)</span>
                                     ${getMoveCategoryIcon(category)}
@@ -325,7 +356,7 @@
                 });
                 const resolvedMoves = await Promise.all(movePromises);
                 movesHtml += resolvedMoves.join('') + '</ul>';
-                
+
                 const evStringDisplay = p.evs || '0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe';
                 const evDisplayHtml = `<div class="pokemon-detail-info ev-distribution-text"><strong>EVs:</strong> ${getFormattedEVString(evStringDisplay, p.nature)}</div>`;
                 
@@ -355,7 +386,7 @@
                                     </div>
                                     <p>${itemApiData?.effect_entries?.find(e => e.language.name === 'en')?.short_effect || (itemApiData ? 'No English description available.' : '')}</p>
                                 </div>
-                                <div class="info-box ability-box" ${abilityDescription !== "No description available." ? 'onclick="this.classList.toggle(\'expanded\')"' : ''}>
+                                <div class="info-box ability-box" ${abilityDescription !== "No English description available." ? 'onclick="this.classList.toggle(\'expanded\')"' : ''}>
                                     <div class="info-header"><strong>${p.ability ? p.ability.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'N/A'}</strong> ${isHiddenAbility ? '<span class="hidden-ability-tag">Hidden</span>':''}</div>
                                     <p>${abilityDescription}</p>
                                 </div>
@@ -403,16 +434,17 @@
                         pokeApiData.stats.forEach(statInfo => {
                             const statName = statInfo.stat.name.toUpperCase().replace('-', '');
                             const baseStat = statInfo.base_stat;
-                            const barPercentage = (baseStat / 255) * 100; // Max base stat approx 255
+                            const barPercentage = Math.min((baseStat / 160) * 100, 100); 
 
                             const statDiv = document.createElement('div');
                             statDiv.className = 'stat-bar-container';
                             statDiv.innerHTML = `
                                 <span class="stat-bar-label">${statName}</span>
                                 <div class="stat-bar">
-                                    <div class="stat-bar-fill" style="width: ${barPercentage}%;"></div>
-                                </div>
-                                <span class="stat-bar-value">${baseStat}</span>`;
+                                    <div class="stat-bar-fill" style="width: ${barPercentage}%;">
+                                       <span class="stat-bar-value">${baseStat}</span>
+                                    </div>
+                                </div>`;
                             baseStatsContainer.appendChild(statDiv);
                         });
                     }
@@ -463,7 +495,6 @@
             }
             return finalMultiplier;
         }
-
         function getOffensiveEffectiveness(attackingMoveType, targetPokemonTypes) {
             let finalMultiplier = 1;
             if (!targetPokemonTypes || targetPokemonTypes.length === 0 || !attackingMoveType) return 1;
@@ -477,78 +508,76 @@
             return finalMultiplier;
         }
 
-        async function analyzeAndDisplayTypeTable(teamPokemons, tableBodyElement) {
-            // Esta función ahora se reemplaza por analyzeAndDisplayTypeVisual
-        }
-        
-        async function analyzeAndDisplayTypeVisual(teamPokemons, defenseIconsContainer, defenseBarsContainer, offenseIconsContainer, offenseMarksContainer) {
-            if (!teamPokemons || teamPokemons.length === 0 || !defenseIconsContainer || !defenseBarsContainer || !offenseIconsContainer || !offenseMarksContainer) return;
+        async function analyzeAndDisplayTypeVisual(teamPokemons, defenseIconsRow, defenseIndicatorsRow, offenseIconsRow, offenseIndicatorsRow) {
+            if (!teamPokemons || teamPokemons.length === 0 || !defenseIconsRow || !defenseIndicatorsRow || !offenseIconsRow || !offenseIndicatorsRow) return;
 
-            defenseIconsContainer.innerHTML = '';
-            defenseBarsContainer.innerHTML = '';
-            offenseIconsContainer.innerHTML = '';
-            offenseMarksContainer.innerHTML = '';
+            defenseIconsRow.innerHTML = ''; defenseIndicatorsRow.innerHTML = '';
+            offenseIconsRow.innerHTML = ''; offenseIndicatorsRow.innerHTML = '';
 
-            ALL_TYPES.forEach(type => {
+            for (const type of ALL_TYPES) {
+                // Defense Icons & Indicators
+                const defenseIconWrapper = document.createElement('div');
+                defenseIconWrapper.className = 'type-icon-analysis-wrapper';
                 const defenseIcon = document.createElement('div');
                 defenseIcon.className = 'type-icon-analysis';
                 defenseIcon.style.backgroundColor = getTypeColor(type);
                 defenseIcon.textContent = type.substring(0,3).toUpperCase();
-                defenseIconsContainer.appendChild(defenseIcon);
+                defenseIconWrapper.appendChild(defenseIcon);
+                defenseIconsRow.appendChild(defenseIconWrapper);
 
-                const offenseIcon = defenseIcon.cloneNode(true);
-                offenseIconsContainer.appendChild(offenseIcon);
-
-                const defenseBarCont = document.createElement('div');
-                defenseBarCont.className = 'analysis-indicator-container';
+                const defenseIndicatorCont = document.createElement('div');
+                defenseIndicatorCont.className = 'analysis-indicator-container';
                 let weakCount = 0; let resistCount = 0;
                 teamPokemons.forEach(pokemon => {
                     const effectiveness = getDefensiveEffectiveness(pokemon.apiTypes || pokemon.types || [], type);
                     if (effectiveness >= 2) weakCount++;
                     else if (effectiveness < 1 && effectiveness > 0) resistCount++;
                 });
-                const weakBar = document.createElement('div'); weakBar.className = 'analysis-bar weak';
-                weakBar.style.height = `${Math.min(weakCount * 5, 15)}px`; // Max 3 pokes para barra completa
                 const resistBar = document.createElement('div'); resistBar.className = 'analysis-bar resist';
-                resistBar.style.height = `${Math.min(resistCount * 5, 15)}px`;
-                defenseBarCont.appendChild(resistBar); defenseBarCont.appendChild(weakBar); // Resist arriba, Weak abajo
-                defenseBarsContainer.appendChild(defenseBarCont);
-                
+                resistBar.style.height = `${Math.min(resistCount * 7, 21)}px`; 
+                defenseIndicatorCont.appendChild(resistBar);
+                const weakBar = document.createElement('div'); weakBar.className = 'analysis-bar weak';
+                weakBar.style.height = `${Math.min(weakCount * 7, 21)}px`;
+                defenseIndicatorCont.appendChild(weakBar);
+                defenseIndicatorsRow.appendChild(defenseIndicatorCont);
+
+                // Offense Icons & Indicators
+                const offenseIconWrapper = defenseIconWrapper.cloneNode(true); 
+                offenseIconsRow.appendChild(offenseIconWrapper);
+
                 const offenseMarkCont = document.createElement('div');
-                offenseMarkCont.className = 'analysis-indicator-container';
-                let hasStabEffective = false; let hasEffective = false;
+                offenseMarkCont.className = 'analysis-mark-container';
+                let hasStabEffective = false; let hasNonStabEffective = false;
                  teamPokemons.forEach(pokemon => {
                     (pokemon.apiMoves || []).forEach(move => {
                         if (move.damage_class !== 'status') {
                             const effectiveness = getOffensiveEffectiveness(move.type, [type]);
                             if (effectiveness >= 2) {
-                                hasEffective = true;
-                                if ((pokemon.apiTypes || pokemon.types || []).includes(move.type)) {
-                                    hasStabEffective = true;
-                                }
+                                if ((pokemon.apiTypes || pokemon.types || []).includes(move.type)) hasStabEffective = true;
+                                else hasNonStabEffective = true;
                             }
                         }
                     });
                 });
                 const mark = document.createElement('span');
                 mark.className = 'analysis-mark';
-                if(hasStabEffective) { mark.textContent = '✓'; mark.classList.add('stab'); mark.style.color = 'var(--secondary)';}
-                else if(hasEffective) { mark.textContent = '✓'; mark.classList.add('effective'); mark.style.color = 'var(--primary)';}
-                else { mark.textContent = '✗'; mark.classList.add('none');}
+                if(hasStabEffective) { mark.innerHTML = '<i class="fas fa-star" style="color:var(--secondary);"></i>'; mark.title="STAB Super Effective"; } 
+                else if(hasNonStabEffective) { mark.innerHTML = '<i class="fas fa-check" style="color:var(--primary);"></i>'; mark.title="Super Effective"; } 
+                else { mark.innerHTML = '<i class="fas fa-times" style="color:#bbb;"></i>'; mark.title="Not very effective or no coverage"; } 
                 offenseMarkCont.appendChild(mark);
-                offenseMarksContainer.appendChild(offenseMarkCont);
-            });
+                offenseIndicatorsRow.appendChild(offenseMarkCont);
+            }
         }
-
-
-        function analyzeAndDisplayTeamHighlights(teamPokemons, listElement) { /* ... (igual que antes) ... */ }
         
-        // --- Lógica de Comentarios ---
+        // --- TEAM HIGHLIGHTS ---
+        function analyzeAndDisplayTeamHighlights(teamPokemons, listElement) { /* ... */ }
+        
+        // --- COMMENTS LOGIC ---
         async function fetchCommentsForTeam(teamId, sortBy = 'newest') { /* ... */ return []; }
         function renderComments(commentsArray = [], listElement, currentTeamId, currentSortBy) { /* ... */ }
         async function handleVoteCommentClick(event, teamId) { /* ... */ }
 
-        // --- Inicialización de la Página de Detalles ---
+        // --- INITIALIZE PAGE ---
         async function initializeDetailPage() {
             const params = new URLSearchParams(window.location.search);
             const teamId = params.get('teamId');
@@ -560,20 +589,20 @@
             const youtubeEmbedContainer = document.getElementById('detail-youtube-embed');
             const youtubeVideoSection = document.getElementById('youtube-video-section');
             const pokemonContainer = document.getElementById('detail-pokemon-container');
-            // const typeAnalysisTableBody = document.getElementById('type-analysis-tbody'); // Ya no se usa tabla
+            
             const defenseTypeIconsRow = document.getElementById('defense-type-icons-row');
-            const defenseAnalysisBarRow = document.getElementById('defense-analysis-indicator-row');
+            const defenseAnalysisIndicatorRow = document.getElementById('defense-analysis-indicator-row');
             const offenseTypeIconsRow = document.getElementById('offense-type-icons-row');
-            const offenseAnalysisMarkRow = document.getElementById('offense-analysis-indicator-row'); // Corregido ID
+            const offenseAnalysisIndicatorRow = document.getElementById('offense-analysis-indicator-row');
+
             const commentForm = document.getElementById('comment-form');
             const commentsListElement = document.getElementById('comments-list');
             const commentFeedback = document.getElementById('comment-feedback');
             const sortCommentsDropdown = document.getElementById('sort-comments');
             const teamHighlightsList = document.getElementById('team-highlights-list');
 
-            // --- Lógica de UI para Header ---
+            // --- Header UI Logic ---
             const userGreetingDetail = document.getElementById('user-greeting-detail');
-            // ... (resto de selectores y funciones de UI del header como en la v6) ...
             const userDropdownMenuDetail = document.getElementById('user-dropdown-menu-detail');
             const logoutNavDetail = document.getElementById('logout-nav-link-detail');
             const loginNavDetail = document.getElementById('login-nav-link-detail');
@@ -583,54 +612,145 @@
             const myCreatedTeamsLinkDetail = document.getElementById('my-created-teams-link-detail');
             const likedTeamsLinkDetail = document.getElementById('liked-teams-link-detail');
 
-            function updateDetailNavForLoggedInUser(username) { /* ... */ }
-            function updateDetailNavForLoggedOutUser() { /* ... */ }
+            function updateDetailNavForLoggedInUser(username) {
+                if(loginNavDetail) loginNavDetail.style.display = 'none';
+                if(registerNavDetail) registerNavDetail.style.display = 'none';
+                if(createTeamNavLinkDetail) createTeamNavLinkDetail.style.display = 'list-item';
+                if(userMenuContainerDetail) userMenuContainerDetail.style.display = 'list-item';
+                if(userGreetingDetail) userGreetingDetail.textContent = `Hi, ${username}`;
+            }
+            function updateDetailNavForLoggedOutUser() {
+                if(loginNavDetail) loginNavDetail.style.display = 'list-item';
+                if(registerNavDetail) registerNavDetail.style.display = 'list-item';
+                if(createTeamNavLinkDetail) createTeamNavLinkDetail.style.display = 'none';
+                if(userMenuContainerDetail) userMenuContainerDetail.style.display = 'none';
+                if(userGreetingDetail) userGreetingDetail.textContent = '';
+            }
+
             const storedUser = JSON.parse(localStorage.getItem('userData'));
             if (storedUser) { updateDetailNavForLoggedInUser(storedUser.username); } 
             else { updateDetailNavForLoggedOutUser(); }
-            // ... (event listeners del header) ...
+
+            if (userGreetingDetail && userDropdownMenuDetail) {
+                userGreetingDetail.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    userDropdownMenuDetail.style.display = userDropdownMenuDetail.style.display === 'block' ? 'none' : 'block';
+                });
+                document.addEventListener('click', (e) => {
+                    if (userMenuContainerDetail && !userMenuContainerDetail.contains(e.target) && userDropdownMenuDetail) {
+                        userDropdownMenuDetail.style.display = 'none';
+                    }
+                });
+            }
+            if (logoutNavDetail) logoutNavDetail.addEventListener('click', (e) => { 
+                e.preventDefault(); localStorage.removeItem('userData'); 
+                if(userDropdownMenuDetail) userDropdownMenuDetail.style.display = 'none';
+                updateDetailNavForLoggedOutUser(); 
+                window.location.href = 'index.html';
+            });
+             if(createTeamNavLinkDetail) createTeamNavLinkDetail.onclick = (e) => { e.preventDefault(); window.location.href = 'index.html#create-team';};
+             if(loginNavDetail) loginNavDetail.onclick = (e) => { e.preventDefault(); window.location.href = 'index.html#login';};
+             if(registerNavDetail) registerNavDetail.onclick = (e) => { e.preventDefault(); window.location.href = 'index.html#register';};
+             if(myCreatedTeamsLinkDetail) myCreatedTeamsLinkDetail.onclick = (e) => {e.preventDefault(); window.location.href = 'my_teams.html';}
+             if(likedTeamsLinkDetail) likedTeamsLinkDetail.onclick = (e) => {e.preventDefault(); window.location.href = 'liked_teams.html';}
 
 
             if (!teamId) { 
-                currentTeamDataForDetail = { /* ... (Sample Ninetales Team Data) ... */ };
-            } else {
-                 try {
-                    const response = await fetch(`${WORKER_BASE_URL}/api/teams/${teamId}`);
-                    if (!response.ok) {
-                        const errData = await response.json().catch(() => ({error: `Team not found (Status: ${response.status})`}));
-                        throw new Error(errData.error);
-                    }
-                    currentTeamDataForDetail = await response.json();
-                } catch (error) { /* ... (manejo de error) ... */ return; }
+                // Si no hay teamId, mostrar error y no intentar cargar datos de ejemplo
+                if(pageTitleElement) pageTitleElement.textContent = "Error: Team ID not provided.";
+                if(loadingIndicator) loadingIndicator.style.display = 'none';
+                if(teamDetailContent) teamDetailContent.style.display = 'none'; // Ocultar contenido principal
+                return; 
             }
+            
+            // Proceder a cargar datos del backend si hay teamId
+            try {
+                const response = await fetch(`${WORKER_BASE_URL}/api/teams/${teamId}`);
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({error: `Team not found (Status: ${response.status})`}));
+                    throw new Error(errData.error);
+                }
+                currentTeamDataForDetail = await response.json();
                 
-            if(pageTitleElement) pageTitleElement.textContent = currentTeamDataForDetail.title || "Team Details";
-            if(descriptionElement) descriptionElement.textContent = currentTeamDataForDetail.description || "No description available.";
-            
-            if(youtubeEmbedContainer && youtubeVideoSection) { /* ... (lógica de video) ... */ }
-            if (pokemonContainer) await displayFullPokemonDetails(currentTeamDataForDetail.pokemons, pokemonContainer);
-            
-            const detailedPokemonsForAnalysis = await Promise.all((currentTeamDataForDetail.pokemons || []).map(async (p) => {
-                const pokeApiName = p.name.toLowerCase().replace(/\s+/g, '-');
-                const apiData = (p.types && p.types.length > 0) 
-                    ? { types: p.types.map(t => ({type: {name: t}})) } 
-                    : await fetchFromPokeAPI(`pokemon/${pokeApiName}`);
-                const movesData = await Promise.all((p.moves || []).map(m => fetchFromPokeAPI(`move/${m.toLowerCase().replace(/\s+/g, '-')}`)));
-                return { ...p, apiTypes: apiData ? apiData.types.map(t => t.type.name) : [], apiMoves: movesData.filter(m => m).map(m => ({ name: m.name, type: m.type.name, damage_class: m.damage_class.name })) };
-            }));
+                if(pageTitleElement) pageTitleElement.textContent = currentTeamDataForDetail.title || "Team Details";
+                if(descriptionElement) descriptionElement.textContent = currentTeamDataForDetail.description || "No description available.";
+                
+                if(youtubeEmbedContainer && youtubeVideoSection) {
+                    youtubeEmbedContainer.innerHTML = '';
+                    if (currentTeamDataForDetail.youtube_link) {
+                        youtubeVideoSection.style.display = 'block';
+                        const videoId = extractYouTubeVideoID(currentTeamDataForDetail.youtube_link);
+                        if (videoId) {
+                            const iframe = document.createElement('iframe');
+                            iframe.src = `https://www.youtube.com/embed/${videoId}`;
+                            iframe.frameBorder = "0"; iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"; iframe.allowFullscreen = true;
+                            youtubeEmbedContainer.appendChild(iframe);
+                        } else { youtubeVideoSection.style.display = 'none'; }
+                    } else { youtubeVideoSection.style.display = 'none'; }
+                }
 
-            await analyzeAndDisplayTypeVisual(detailedPokemonsForAnalysis, defenseTypeIconsRow, defenseAnalysisBarRow, offenseTypeIconsRow, offenseAnalysisMarkRow);
-            if(teamHighlightsList) analyzeAndDisplayTeamHighlights(detailedPokemonsForAnalysis, teamHighlightsList);
-            
-            const initialComments = currentTeamDataForDetail.comments || await fetchCommentsForTeam(teamId || "samplePreviewTeam", sortCommentsDropdown ? sortCommentsDropdown.value : 'newest');
-            currentTeamDataForDetail.comments = initialComments; 
-            if(commentsListElement) renderComments(initialComments, commentsListElement, teamId || "samplePreviewTeam", sortCommentsDropdown ? sortCommentsDropdown.value : 'newest');
+                if (pokemonContainer) await displayFullPokemonDetails(currentTeamDataForDetail.pokemons, pokemonContainer);
+                
+                const detailedPokemonsForAnalysis = await Promise.all((currentTeamDataForDetail.pokemons || []).map(async (p) => {
+                    const pokeApiName = p.name.toLowerCase().replace(/\s+/g, '-');
+                    const apiData = (p.types && p.types.length > 0) 
+                        ? { types: p.types.map(t => ({type: {name: t}})) } 
+                        : await fetchFromPokeAPI(`pokemon/${pokeApiName}`);
+                    
+                    const movesData = await Promise.all((p.moves || []).map(m => fetchFromPokeAPI(`move/${m.toLowerCase().replace(/\s+/g, '-')}`)));
+                    return { ...p, apiTypes: apiData ? apiData.types.map(t => t.type.name) : [], apiMoves: movesData.filter(m => m).map(m => ({ name: m.name, type: m.type.name, damage_class: m.damage_class.name })) };
+                }));
 
-            if (commentForm) { /* ... (lógica de envío de comentarios) ... */ }
-            if (sortCommentsDropdown) { /* ... (lógica de ordenación de comentarios) ... */ }
+                if(defenseTypeIconsRow && defenseAnalysisIndicatorRow && offenseTypeIconsRow && offenseAnalysisIndicatorRow) {
+                     await analyzeAndDisplayTypeVisual(detailedPokemonsForAnalysis, defenseTypeIconsRow, defenseAnalysisIndicatorRow, offenseTypeIconsRow, offenseAnalysisIndicatorRow);
+                }
+                if(teamHighlightsList) analyzeAndDisplayTeamHighlights(detailedPokemonsForAnalysis, teamHighlightsList);
+                
+                const initialComments = currentTeamDataForDetail.comments || await fetchCommentsForTeam(teamId, sortCommentsDropdown ? sortCommentsDropdown.value : 'newest');
+                currentTeamDataForDetail.comments = initialComments; 
+                if(commentsListElement) renderComments(initialComments, commentsListElement, teamId, sortCommentsDropdown ? sortCommentsDropdown.value : 'newest');
 
-            if(loadingIndicator) loadingIndicator.style.display = 'none';
-            if(teamDetailContent) teamDetailContent.style.display = 'block';
+                if (commentForm) {
+                    commentForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const commentTextElement = document.getElementById('comment-text');
+                        const commentText = commentTextElement.value.trim();
+                        const storedUser = JSON.parse(localStorage.getItem('userData'));
+                        if (!storedUser) { alert("You must be logged in to comment."); return; }
+
+                        if (commentText) {
+                            try {
+                                const commentPayload = { userId: storedUser.id, text: commentText, parentCommentId: null };
+                                const postCommentResponse = await fetch(`${WORKER_BASE_URL}/api/teams/${teamId}/comments`, {
+                                    method: 'POST', headers: { 'Content-Type': 'application/json', 'X-User-Id': storedUser.id }, body: JSON.stringify(commentPayload)
+                                });
+                                const newCommentResult = await postCommentResponse.json();
+                                if (postCommentResponse.ok && newCommentResult.comment) {
+                                    if (!currentTeamDataForDetail.comments) currentTeamDataForDetail.comments = [];
+                                    currentTeamDataForDetail.comments.push(newCommentResult.comment); 
+                                    renderComments(currentTeamDataForDetail.comments, commentsListElement, teamId, sortCommentsDropdown.value);
+                                    commentTextElement.value = '';
+                                    if(commentFeedback) showFeedback(commentFeedback, "Comment added.", false);
+                                } else { if(commentFeedback) showFeedback(commentFeedback, `Error: ${newCommentResult.error || 'Could not add comment.'}`, true); }
+                            } catch (err) { if(commentFeedback) showFeedback(commentFeedback, "Connection error while posting comment.", true); }
+                        } else { if(commentFeedback) showFeedback(commentFeedback, "Comment cannot be empty.", true); }
+                    });
+                }
+                if (sortCommentsDropdown) {
+                    sortCommentsDropdown.addEventListener('change', async () => {
+                        const newSortBy = sortCommentsDropdown.value;
+                        const comments = await fetchCommentsForTeam(teamId, newSortBy);
+                        currentTeamDataForDetail.comments = comments;
+                        renderComments(comments, commentsListElement, teamId, newSortBy);
+                    });
+                }
+            } catch (error) {
+                console.error("Error initializing page content:", error);
+                if(pageTitleElement) pageTitleElement.textContent = `Error rendering page: ${error.message}`;
+            } finally { 
+                if(loadingIndicator) loadingIndicator.style.display = 'none';
+                if(teamDetailContent) teamDetailContent.style.display = 'block';
+            }
         }
         initializeDetailPage(); 
     </script>
